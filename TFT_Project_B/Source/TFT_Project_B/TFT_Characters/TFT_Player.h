@@ -29,25 +29,34 @@ public:
 
 	// virtual void Interact(ATFT_Item* item) override;
 
+	virtual void SetMesh(FString path) override;
+
 protected:
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 	void JumpA(const FInputActionValue& value);
-	virtual void AttackA(const FInputActionValue& value);
+	void AttackA(const FInputActionValue& value);
 	void InvenopenA(const FInputActionValue& value);
 	void EquipmentA(const FInputActionValue& value);
 	void Rolling();
 
-	virtual void PlayE_Skill(const FInputActionValue& value) {};
-	virtual void PlayQ_Skill(const FInputActionValue& value) {};
-	virtual void PlayAttack(const FInputActionValue& value) {};
-	virtual void Dash(const FInputActionValue& value) {};
-	virtual void DoubleTapDash_Front(const FInputActionValue& value) {};
-	virtual void DoubleTapDash_Back(const FInputActionValue& value) {};
-	virtual void DoubleTapDash_Left(const FInputActionValue& value) {};
-	virtual void DoubleTapDash_Right(const FInputActionValue& value) {};
-	virtual void StartSprint();
-	virtual void StopSprint();
+	void E_Skill(const FInputActionValue& value);
+	void Q_Skill(const FInputActionValue& value);
+
+	void DoubleTapDash_Front(const FInputActionValue& value);
+	void DoubleTapDash_Back(const FInputActionValue& value);
+	void DoubleTapDash_Left(const FInputActionValue& value);
+	void DoubleTapDash_Right(const FInputActionValue& value);
+	void DashEnd();
+	void SetBlockInputOnDash_False() { bBlockInputOnDash = false; }
+	void StartRunning();
+	void StopRunning();
+
+	virtual void AttackStart() override;
+	UFUNCTION()
+	void AttackHit();
+	UFUNCTION()
+	void AttackHit_Q();
 
 public:
 	void AddItemPlayer(ATFT_Item* item);
@@ -70,9 +79,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _jumpAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AlllowPrivateAccess = "true"))
-	UInputAction* _dashAction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AlllowPrivateAccess = "true"))
 	bool _canMove = true;
 
@@ -92,22 +98,16 @@ public:
 	UInputAction* _EquipmentAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _skillAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _interactAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _playESkillAction;
+	UInputAction* _ESkillAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _playQSkillAction;
+	UInputAction* _QSkillAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _playAttackAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* SprintAction;
+	UInputAction* _runningAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* _rollingAction;
@@ -145,4 +145,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	UBoxComponent* _triggerBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	bool bIsRunning = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float runningSpeed = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float walkSpeed = 600.0f;
 };

@@ -28,8 +28,17 @@
 #include "TimerManager.h"
 #include "Engine/DamageEvents.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+
 ATFT_Player::ATFT_Player()
 {
+	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
+
+	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
+
+	SetMesh("/Script/Engine.SkeletalMesh'/Game/ControlRig/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'");
+
 	_springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	_springArm->SetupAttachment(GetCapsuleComponent());
 	_springArm->TargetArmLength = 500.0f;
@@ -51,12 +60,12 @@ void ATFT_Player::BeginPlay()
 	{
 		_invenCom->_itemAddedEvent.AddUObject(this, &ATFT_Player::AddItemHendle);
 		_invenCom->_GoldChangeEvnet.AddUObject(this, &ATFT_Player::UIGold);
-		UIMANAGER->_EquipmentCloseResetEvent.AddUObject(this, &ATFT_Player::CloseResetEquipment);
+		/*UIMANAGER->_EquipmentCloseResetEvent.AddUObject(this, &ATFT_Player::CloseResetEquipment);
 		UIMANAGER->GetInvenUI()->_SlotItemEvent.AddUObject(this, &ATFT_Player::DropItemPlayer);
 		UIMANAGER->GetInvenUI()->_itemSellEvent.AddUObject(this, &ATFT_Player::SellItemPlayer);
 		UIMANAGER->GetInvenUI()->_itemUesEvent.AddUObject(this, &ATFT_Player::UseItemPlayer);
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent.AddUObject(this, &ATFT_Player::ChangeEquipment);
-		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);
+		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);*/
 	}
 }
 
@@ -86,8 +95,6 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(_jumpAction, ETriggerEvent::Started, this, &ATFT_Player::JumpA);
 
-		EnhancedInputComponent->BindAction(_dashAction, ETriggerEvent::Started, this, &ATFT_Player::Dash);
-
 		EnhancedInputComponent->BindAction(_doubleTapDash_W_Action, ETriggerEvent::Triggered, this, &ATFT_Player::DoubleTapDash_Front);
 		EnhancedInputComponent->BindAction(_doubleTapDash_A_Action, ETriggerEvent::Triggered, this, &ATFT_Player::DoubleTapDash_Left);
 		EnhancedInputComponent->BindAction(_doubleTapDash_S_Action, ETriggerEvent::Triggered, this, &ATFT_Player::DoubleTapDash_Back);
@@ -99,17 +106,20 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(_EquipmentAction, ETriggerEvent::Started, this, &ATFT_Player::EquipmentA);
 
-		EnhancedInputComponent->BindAction(_playESkillAction, ETriggerEvent::Started, this, &ATFT_Player::PlayE_Skill);
+		EnhancedInputComponent->BindAction(_ESkillAction, ETriggerEvent::Started, this, &ATFT_Player::E_Skill);
 
-		EnhancedInputComponent->BindAction(_playQSkillAction, ETriggerEvent::Started, this, &ATFT_Player::PlayQ_Skill);
-
-		EnhancedInputComponent->BindAction(_playAttackAction, ETriggerEvent::Started, this, &ATFT_Player::PlayAttack);
+		EnhancedInputComponent->BindAction(_QSkillAction, ETriggerEvent::Started, this, &ATFT_Player::Q_Skill);
 
 		EnhancedInputComponent->BindAction(_rollingAction, ETriggerEvent::Started, this, &ATFT_Player::Rolling);
 
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ATFT_Player::StartSprint);
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ATFT_Player::StopSprint);
+		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Started, this, &ATFT_Player::StartRunning);
+		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Completed, this, &ATFT_Player::StopRunning);
 	}
+}
+
+void ATFT_Player::SetMesh(FString path)
+{
+	_meshCom->SetMesh(path);
 }
 
 void ATFT_Player::Move(const FInputActionValue& value)
@@ -162,8 +172,41 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 void ATFT_Player::AttackA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
+	if (_invenCom->_currentWeapon == nullptr) return;
 
 	bool isPressed = value.Get<bool>();
+
+	//if (_isAttacking == false && isPressed && _animInstanceTM != nullptr)
+	//{
+	//	if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+	//	{
+	//		if (_invenCom->_currentWeapon->_Itemid == 1)
+	//		{
+	//			_animInstTM->PlayAttackMontage();
+	//			_isAttacking = true;
+
+	//			_curAttackIndex %= 3;
+	//			_curAttackIndex++;
+
+	//			_animInstTM->JumpToSection(_curAttackIndex);
+	//		}
+	//		else if (_invenCom->_currentWeapon->_Itemid == 3)
+	//		{
+	//			_animInstTM->PlayAttackMontage2Hend();
+	//			_isAttacking = true;
+
+	//			_curAttackIndex %= 2;
+	//			_curAttackIndex++;
+
+	//			_animInstTM->JumpToSection(_curAttackIndex);
+	//		}
+	//		else
+	//		{
+	//			//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
+	//			_animInstTM->PlayAttackMontage();
+	//		}
+	//	}
+	//}
 }
 
 void ATFT_Player::InvenopenA(const FInputActionValue& value)
@@ -184,12 +227,253 @@ void ATFT_Player::Rolling()
 	AnimInstance->Montage_Play(_rollingMontage);
 }
 
-void ATFT_Player::StartSprint()
+void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
+	if (GetCurHp() <= 0) return;
+
+	bool isPressed = value.Get<bool>();
+
+	/*if (_invenCom->_currentWeapon == nullptr) return;
+
+	if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 3)
+	{
+		if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+		{
+			_animInstTM->PlayE_SkillMontage();
+
+
+			UIMANAGER->GetSkillUI()->RunCDT(1);
+		}
+	}*/
 }
 
-void ATFT_Player::StopSprint()
+void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
+	if (GetCurHp() <= 0) return;
+
+	bool isPressed = value.Get<bool>();
+
+	/*if (_invenCom->_currentWeapon == nullptr) return;
+
+	if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 1)
+	{
+		if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+		{
+			_animInstTM->PlayQ_SkillMontage();
+
+
+			UIMANAGER->GetSkillUI()->RunCDT(0);
+		}
+	}*/
+}
+
+void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
+{
+	if (GetCurHp() <= 0) return;
+
+	if (bCanDash && !GetCharacterMovement()->IsFalling())
+	{
+		isDashing = true;
+		bBlockInputOnDash = true;
+		bCanDash = false;
+
+		FVector from = GetActorLocation();
+		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
+		to.Z = from.Z;
+
+		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(180.0f, FVector(0, 0, 1));
+
+		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle _timerHandle;
+		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+	}
+}
+
+void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
+{
+	if (GetCurHp() <= 0) return;
+
+	if (bCanDash && !GetCharacterMovement()->IsFalling())
+	{
+		isDashing = true;
+		bBlockInputOnDash = true;
+		bCanDash = false;
+
+		FVector from = GetActorLocation();
+		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
+		to.Z = from.Z;
+
+		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to);
+
+		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle _timerHandle;
+		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+	}
+}
+
+void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
+{
+	if (GetCurHp() <= 0) return;
+
+	if (bCanDash && !GetCharacterMovement()->IsFalling())
+	{
+		isDashing = true;
+		bBlockInputOnDash = true;
+		bCanDash = false;
+
+		FVector from = GetActorLocation();
+		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
+		to.Z = from.Z;
+
+		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(90.0f, FVector(0, 0, 1));
+
+		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle _timerHandle;
+		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+	}
+}
+
+void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
+{
+	if (GetCurHp() <= 0) return;
+
+	if (bCanDash && !GetCharacterMovement()->IsFalling())
+	{
+		isDashing = true;
+		bBlockInputOnDash = true;
+		bCanDash = false;
+
+		FVector from = GetActorLocation();
+		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
+		to.Z = from.Z;
+
+		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(270.0f, FVector(0, 0, 1));
+
+		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle _timerHandle;
+		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+	}
+}
+
+void ATFT_Player::DashEnd()
+{
+	if (!bCanDash)
+	{
+		bCanDash = true;
+		bBlockInputOnDash = false;
+
+		GetCharacterMovement()->StopMovementImmediately();
+
+		isDashing = false;
+	}
+}
+
+void ATFT_Player::StartRunning()
+{
+	bIsRunning = true;
+	GetCharacterMovement()->MaxWalkSpeed = runningSpeed;
+
+	/*if (_animInstanceTM)
+	{
+		_animInstanceTM->PlaySprintMontage();
+	}*/
+}
+
+void ATFT_Player::StopRunning()
+{
+	bIsRunning = false;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+	/*if (_animInstanceTM)
+	{
+		_animInstanceTM->StopSprintMontage();
+	}*/
+}
+
+void ATFT_Player::AttackStart()
+{
+	/*if (_invenCom->_currentWeapon->_Itemid == 1)
+	{
+		SoundManager->Play("Knight_Swing", GetActorLocation());
+	}
+	else if (_invenCom->_currentWeapon->_Itemid == 3)
+	{
+		SoundManager->Play("Hammer_Swing", GetActorLocation());
+	}*/
+}
+
+void ATFT_Player::AttackHit()
+{
+	FHitResult hitResult;
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	float attackRange = 500.0f;
+	float attackRadius = 100.0f;
+
+	bool bResult = GetWorld()->SweepSingleByChannel
+	(
+		hitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * attackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel9,
+		FCollisionShape::MakeSphere(attackRadius),
+		params
+	);
+
+	FVector vec = GetActorForwardVector() * attackRange;
+	FVector center = GetActorLocation() + vec * 0.5f;
+	FColor drawColor = FColor::Green;
+
+	if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	{
+		drawColor = FColor::Red;
+		FDamageEvent damageEvent;
+
+		hitResult.GetActor()->TakeDamage(50.0f, damageEvent, GetController(), this);
+		_hitPoint = hitResult.ImpactPoint;
+	}
+
+	// DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+}
+
+void ATFT_Player::AttackHit_Q()
+{
+	FHitResult hitResult;
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	float attackRange = 500.0f;
+	float attackRadius = 100.0f;
+
+	bool bResult = GetWorld()->SweepSingleByChannel
+	(
+		hitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * attackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel9,
+		FCollisionShape::MakeSphere(attackRadius),
+		params
+	);
+
+	FVector vec = GetActorForwardVector() * attackRange;
+	FVector center = GetActorLocation() + vec * 0.5f;
+	FColor drawColor = FColor::Green;
+
+	if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	{
+		drawColor = FColor::Red;
+		FDamageEvent damageEvent;
+
+		hitResult.GetActor()->TakeDamage(300.0f, damageEvent, GetController(), this);
+		_hitPoint = hitResult.ImpactPoint;
+	}
+
+	// DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)

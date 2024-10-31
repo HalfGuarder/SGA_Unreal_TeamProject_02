@@ -13,5 +13,10 @@ UCLASS()
 class TFT_PROJECT_B_API ATFT_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputMappingContext* _inputMappingContext;
 };

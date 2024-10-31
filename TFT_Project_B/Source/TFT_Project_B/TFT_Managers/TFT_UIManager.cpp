@@ -33,21 +33,18 @@ void ATFT_UIManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	OpenWidget(UIType::Inventory);
+	/*OpenWidget(UIType::Inventory);
 	CloseWidget(UIType::Inventory);
 
-	// OpenWidget(UIType::CrossHair);
 	OpenWidget(UIType::SkillUI);
 
 	OpenWidget(UIType::EquipmentUI);
 	CloseWidget(UIType::EquipmentUI);
 
-	// OpenWidget(UIType::PartyHPUI);
-
 	_invenOpenEvent.AddUObject(this, &ATFT_UIManager::OpenInvenUIA);
 	_invenWidget->_CloseInvenBtn.AddUObject(this, &ATFT_UIManager::CloseInvenBtn);
 	_EquipmentOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffEquipmentUIA);
-	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);
+	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);*/
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
