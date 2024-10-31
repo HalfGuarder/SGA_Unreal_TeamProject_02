@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\TFT_Project_B.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\TFT_Project_B.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\TFT_Project_BEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.vsconfig" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\TFT_Project_B">
+      <UniqueIdentifier>{0667A559-CF04-3705-9468-96D828E2CE22}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_GameInstance.cpp">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_GameInstance.h">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_GameModeBase.cpp">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_GameModeBase.h">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Item.cpp">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Item.h">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\TFT_Project_B\TFT_Project_B.Build.cs">
+      <Filter>Source\TFT_Project_B</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Project_B.cpp">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Project_B.h">
+      <Filter>Source\TFT_Project_B</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_AnimInstances">
+      <UniqueIdentifier>{77BBC72F-1AB2-32B8-AE48-E5282D22AAF3}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_AnimInstances\TFT_AnimInstance_Player.cpp">
+      <Filter>Source\TFT_Project_B\TFT_AnimInstances</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_AnimInstances\TFT_AnimInstance_Player.h">
+      <Filter>Source\TFT_Project_B\TFT_AnimInstances</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_Characters">
+      <UniqueIdentifier>{9079745E-8249-36CB-A94C-C5073F6D4E80}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Creature.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Creature.h">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Monster.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Monster.h">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Player.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Characters\TFT_Player.h">
+      <Filter>Source\TFT_Project_B\TFT_Characters</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_Components">
+      <UniqueIdentifier>{E27E7CD5-F451-3AB5-AF21-D66A02D61E65}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_InvenComponent.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_InvenComponent.h">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_MeshComponent.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_MeshComponent.h">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_StatComponent.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_StatComponent.h">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_StateComponent.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Components\TFT_StateComponent.h">
+      <Filter>Source\TFT_Project_B\TFT_Components</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_Controllers">
+      <UniqueIdentifier>{6589A98C-E026-39FF-9F9C-114E6B5FC429}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Controllers\TFT_PlayerController.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Controllers</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Controllers\TFT_PlayerController.h">
+      <Filter>Source\TFT_Project_B\TFT_Controllers</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_FXs">
+      <UniqueIdentifier>{03B616F5-2627-3256-A5B5-E3A5C8C56BA1}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_FXs\TFT_Effect.cpp">
+      <Filter>Source\TFT_Project_B\TFT_FXs</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_FXs\TFT_Effect.h">
+      <Filter>Source\TFT_Project_B\TFT_FXs</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_Managers">
+      <UniqueIdentifier>{079353B1-67C4-3F88-9AC8-F0250CED251D}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_EffectManager.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_EffectManager.h">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_SoundManager.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_SoundManager.h">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_UIManager.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Managers\TFT_UIManager.h">
+      <Filter>Source\TFT_Project_B\TFT_Managers</Filter>
+    </ClInclude>
+    <Filter Include="Source\TFT_Project_B\TFT_Widgets">
+      <UniqueIdentifier>{5C1D002D-383F-33E9-9F66-460F2DD9F5C8}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_EquipmentWidget.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_EquipmentWidget.h">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_HPBarWidget.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_HPBarWidget.h">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_InvenWidget.cpp">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\TFT_Project_B\TFT_Widgets\TFT_InvenWidget.h">
+      <Filter>Source\TFT_Project_B\TFT_Widgets</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
