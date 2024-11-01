@@ -82,6 +82,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AlllowPrivateAccess = "true"))
 	bool _canMove = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = "true"))
+	class UTFT_AnimInstance_Player* _animInstancePlayer;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AlllowPrivateAccess = "true"))
 	UInputAction* _doubleTapDash_W_Action;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AlllowPrivateAccess = "true"))

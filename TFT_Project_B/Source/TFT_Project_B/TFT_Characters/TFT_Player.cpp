@@ -5,6 +5,8 @@
 
 #include "TFT_Creature.h"
 
+#include "TFT_AnimInstance_Player.h"
+
 #include "Components/CapsuleComponent.h"
 
 #include "GameFramework/SpringArmComponent.h"
@@ -37,7 +39,7 @@ ATFT_Player::ATFT_Player()
 
 	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
 
-	SetMesh("/Script/Engine.SkeletalMesh'/Game/ControlRig/Characters/Mannequins/Meshes/SKM_Manny.SKM_Manny'");
+	SetMesh("/Script/Engine.SkeletalMesh'/Game/Blueprints/Characters/Player/Mesh/TFT_SK_SciFi_Soldier_Female_Skin1.TFT_SK_SciFi_Soldier_Female_Skin1'");
 
 	_springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	_springArm->SetupAttachment(GetCapsuleComponent());
@@ -72,6 +74,12 @@ void ATFT_Player::BeginPlay()
 void ATFT_Player::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	_animInstancePlayer = Cast<UTFT_AnimInstance_Player>(GetMesh()->GetAnimInstance());
+	if (_animInstancePlayer->IsValidLowLevel())
+	{
+		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
+	}
 }
 
 void ATFT_Player::Tick(float DeltaTime)
@@ -273,7 +281,8 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
-		isDashing = true;
+		bIsDashing = true;
+		bFDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
 
@@ -296,7 +305,8 @@ void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
-		isDashing = true;
+		bIsDashing = true;
+		bBDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
 
@@ -319,7 +329,8 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
-		isDashing = true;
+		bIsDashing = true;
+		bLDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
 
@@ -342,7 +353,8 @@ void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
-		isDashing = true;
+		bIsDashing = true;
+		bRDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
 
@@ -368,7 +380,12 @@ void ATFT_Player::DashEnd()
 
 		GetCharacterMovement()->StopMovementImmediately();
 
-		isDashing = false;
+		bIsDashing = false;
+
+		bFDashing = false;
+		bBDashing = false;
+		bLDashing = false;
+		bRDashing = false;	
 	}
 }
 
