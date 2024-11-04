@@ -55,7 +55,9 @@ void ATFT_Creature::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ATFT_Creature::OnAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 {
+	bUseControllerRotationYaw = true;
 	_isAttacking = false;
+	_canMove = true;
 	_attackEndedDelegate.Broadcast();
 }
 

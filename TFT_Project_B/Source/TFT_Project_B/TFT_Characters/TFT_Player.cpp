@@ -79,6 +79,7 @@ void ATFT_Player::PostInitializeComponents()
 	if (_animInstancePlayer->IsValidLowLevel())
 	{
 		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
+		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
 	}
 }
 
@@ -145,6 +146,23 @@ void ATFT_Player::Move(const FInputActionValue& value)
 		_vertical = MovementVector.Y;
 		_horizontal = MovementVector.X;
 
+		if (bIsRunning)
+		{
+			if (_vertical < 0)
+			{
+				StopRunning();
+				
+				return;
+			}
+
+			if (_horizontal != 0)
+			{
+				AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+
+				return;
+			}
+		}
+
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
 	}
@@ -156,10 +174,17 @@ void ATFT_Player::Look(const FInputActionValue& value)
 
 	FVector2D LookAxisVector = value.Get<FVector2D>();
 
+	if (!_canMove)
+	{
+		bUseControllerRotationYaw = false;
+	}
+
 	if (Controller != nullptr)
 	{
-		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(-LookAxisVector.Y);
+
+
+		AddControllerYawInput(LookAxisVector.X);
 	}
 }
 
@@ -167,9 +192,11 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
-	bool isPressed = value.Get<bool>();
+	if (!_canMove) return;
 
 	if (bBlockInputOnDash) return;
+
+	bool isPressed = value.Get<bool>();
 
 	if (isPressed)
 	{
@@ -180,41 +207,49 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 void ATFT_Player::AttackA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
-	if (_invenCom->_currentWeapon == nullptr) return;
+	// if (_invenCom->_currentWeapon == nullptr) return;
 
 	bool isPressed = value.Get<bool>();
 
-	//if (_isAttacking == false && isPressed && _animInstanceTM != nullptr)
-	//{
-	//	if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
-	//	{
-	//		if (_invenCom->_currentWeapon->_Itemid == 1)
-	//		{
-	//			_animInstTM->PlayAttackMontage();
-	//			_isAttacking = true;
+	if (_isAttacking == false && isPressed && _animInstancePlayer != nullptr)
+	{
+		// _animInstancePlayer->StopRunningMontage();
+		_animInstancePlayer->PlayAttackMontage();
+		_isAttacking = true;
+		_canMove = false;
+		_curAttackIndex %= 3;
+		_curAttackIndex++;
+		_animInstancePlayer->JumpToSection(_curAttackIndex);
+		
+		//if (auto _animInstTM = Cast<UTFT_AnimInstance_Player>(_animInstancePlayer))
+		//{
+		//	if (_invenCom->_currentWeapon->_Itemid == 1)
+		//	{
+		//		_animInstTM->PlayAttackMontage();
+		//		_isAttacking = true;
 
-	//			_curAttackIndex %= 3;
-	//			_curAttackIndex++;
+		//		_curAttackIndex %= 3;
+		//		_curAttackIndex++;
 
-	//			_animInstTM->JumpToSection(_curAttackIndex);
-	//		}
-	//		else if (_invenCom->_currentWeapon->_Itemid == 3)
-	//		{
-	//			_animInstTM->PlayAttackMontage2Hend();
-	//			_isAttacking = true;
+		//		_animInstTM->JumpToSection(_curAttackIndex);
+		//	}
+		//	else if (_invenCom->_currentWeapon->_Itemid == 3)
+		//	{
+		//		_animInstTM->PlayAttackMontage2Hend();
+		//		_isAttacking = true;
 
-	//			_curAttackIndex %= 2;
-	//			_curAttackIndex++;
+		//		_curAttackIndex %= 2;
+		//		_curAttackIndex++;
 
-	//			_animInstTM->JumpToSection(_curAttackIndex);
-	//		}
-	//		else
-	//		{
-	//			//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
-	//			_animInstTM->PlayAttackMontage();
-	//		}
-	//	}
-	//}
+		//		_animInstTM->JumpToSection(_curAttackIndex);
+		//	}
+		//	else
+		//	{
+		//		//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
+		//		_animInstTM->PlayAttackMontage();
+		//	}
+		//}
+	}
 }
 
 void ATFT_Player::InvenopenA(const FInputActionValue& value)
@@ -279,6 +314,10 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
+	if (bIsRunning) return;
+
+	if (!_canMove) return;
+
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
 		bIsDashing = true;
@@ -302,6 +341,10 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
+
+	if (bIsRunning) return;
+
+	if (!_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -327,6 +370,10 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
+	if (bIsRunning) return;
+
+	if (!_canMove) return;
+
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
 		bIsDashing = true;
@@ -350,6 +397,10 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
+
+	if (bIsRunning) return;
+
+	if (!_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -380,24 +431,26 @@ void ATFT_Player::DashEnd()
 
 		GetCharacterMovement()->StopMovementImmediately();
 
-		bIsDashing = false;
-
 		bFDashing = false;
 		bBDashing = false;
 		bLDashing = false;
 		bRDashing = false;	
+
+		bIsDashing = false;
 	}
 }
 
 void ATFT_Player::StartRunning()
 {
+	if (!_canMove) return;
+
 	bIsRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = runningSpeed;
 
-	/*if (_animInstanceTM)
+	if (_animInstancePlayer)
 	{
-		_animInstanceTM->PlaySprintMontage();
-	}*/
+		_animInstancePlayer->PlayRunningMontage();
+	}
 }
 
 void ATFT_Player::StopRunning()
@@ -405,10 +458,10 @@ void ATFT_Player::StopRunning()
 	bIsRunning = false;
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
-	/*if (_animInstanceTM)
+	if (_animInstancePlayer)
 	{
-		_animInstanceTM->StopSprintMontage();
-	}*/
+		_animInstancePlayer->StopRunningMontage();
+	}
 }
 
 void ATFT_Player::AttackStart()

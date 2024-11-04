@@ -7,6 +7,7 @@
 #include "TFT_AnimInstance_Player.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
+DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHit_QDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
@@ -67,6 +68,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _attackMontage;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
-	// UAnimMontage* _runningMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _runningMontage;
 };

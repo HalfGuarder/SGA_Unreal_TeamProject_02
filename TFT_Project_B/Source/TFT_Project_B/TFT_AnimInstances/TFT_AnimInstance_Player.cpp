@@ -15,12 +15,12 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_attackMontage = am.Object;
 	}
 
-	/*static ConstructorHelpers::FObjectFinder<UAnimMontage> rm
-	(TEXT(""));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> rm
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Running_AnimMontage.TFT_Player_Running_AnimMontage'"));
 	if (rm.Succeeded())
 	{
 		_runningMontage = rm.Object;
-	}*/
+	}
 }
 
 void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
@@ -35,9 +35,9 @@ void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
 		bIsDead = (player->GetCurHp() <= 0);
 		bIsDashing = (player->bIsDashing);
 		bFDashing = (player->bFDashing);
-		bBDashing = (player->bFDashing);
-		bLDashing = (player->bFDashing);
-		bRDashing = (player->bFDashing);
+		bBDashing = (player->bBDashing);
+		bLDashing = (player->bLDashing);
+		bRDashing = (player->bRDashing);
 	}
 }
 
@@ -72,16 +72,16 @@ void UTFT_AnimInstance_Player::AnimNotify_AttackHit()
 
 void UTFT_AnimInstance_Player::PlayRunningMontage()
 {
-	/*if (!Montage_IsPlaying(_runningMontage))
+	if (!Montage_IsPlaying(_runningMontage))
 	{
 		Montage_Play(_runningMontage, 1.0f);
-	}*/
+	}
 }
 
 void UTFT_AnimInstance_Player::StopRunningMontage()
 {
-	/*if (Montage_IsPlaying(_runningMontage))
+	if (Montage_IsPlaying(_runningMontage))
 	{
 		Montage_Stop(0.2f, _runningMontage);
-	}*/
+	}
 }
