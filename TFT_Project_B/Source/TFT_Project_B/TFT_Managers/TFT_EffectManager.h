@@ -12,15 +12,30 @@ class TFT_PROJECT_B_API ATFT_EffectManager : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	
+
 	ATFT_EffectManager();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void CreateParticleClass(FString name, FString path);
+
+	void CreateEffect();
 public:	
-	// Called every frame
+	
 	virtual void Tick(float DeltaTime) override;
 
+	void Play(FString name, int32 effectType, FVector location, FRotator rotator = FRotator::ZeroRotator);
+
+private:
+	int32 _poolCount = 5;
+
+	UPROPERTY()
+	TMap<FString, TSubclassOf<ATFT_Effect>> _classTable;
+
+	TMap<FString, TArray<ATFT_Effect*>> _effectTable;
+
+	UPROPERTY()
+	class USceneComponent* _rootComponent;
 };

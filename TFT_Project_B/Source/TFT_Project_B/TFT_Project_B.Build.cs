@@ -20,7 +20,8 @@ public class TFT_Project_B : ModuleRules
             "TFT_Project_B/TFT_Controllers",
             "TFT_Project_B/TFT_Managers",
             "TFT_Project_B/TFT_Widgets",
-            "TFT_Project_B/TFT_FXs"
+            "TFT_Project_B/TFT_FXs",
+            "TFT_Project_B/TFT_AI"
         });
 
         // Uncomment if you are using Slate UI
