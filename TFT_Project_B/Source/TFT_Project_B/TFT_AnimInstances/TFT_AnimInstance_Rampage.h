@@ -21,6 +21,8 @@ class TFT_PROJECT_B_API UTFT_AnimInstance_Rampage : public UAnimInstance
 public:
 	UTFT_AnimInstance_Rampage();
 
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
 	void PlayAttackMontage();
 	void PlaySkillMontage();
 
@@ -67,4 +69,6 @@ private:
 	float _horizontal;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _attackMontage;
+
+
 };

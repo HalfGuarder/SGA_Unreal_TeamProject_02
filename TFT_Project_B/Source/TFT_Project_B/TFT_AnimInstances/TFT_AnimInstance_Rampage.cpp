@@ -6,6 +6,8 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "Animation/AnimMontage.h"
 
+
+
 UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> am
@@ -15,10 +17,32 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 		_attackMontage = am.Object;
 	}
 
+
+
+}
+
+void UTFT_AnimInstance_Rampage::NativeUpdateAnimation(float DeltaSeconds)
+{
+	ATFT_Creature* myCharacter = Cast<ATFT_Creature>(TryGetPawnOwner());
+
+	if (myCharacter != nullptr)
+	{
+		_speed = myCharacter->GetVelocity().Size();
+		_isFalling = myCharacter->GetMovementComponent()->IsFalling();
+		_vertical = _vertical + (myCharacter->_vertical - _vertical) * DeltaSeconds;
+		_horizontal = _horizontal + (myCharacter->_horizontal - _horizontal) * DeltaSeconds;
+		_isDead = (myCharacter->GetCurHp() <= 0);
+	}
 }
 
 void UTFT_AnimInstance_Rampage::PlayAttackMontage()
 {
+	if (!Montage_IsPlaying(_myAnimMontage))
+	{
+		Montage_Play(_myAnimMontage);
+
+		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+	}
 }
 
 void UTFT_AnimInstance_Rampage::PlaySkillMontage()
