@@ -56,7 +56,7 @@ protected:
 	UFUNCTION()
 	void AttackHit();
 	UFUNCTION()
-	void AttackHit_Q();
+	void Q_SkillHit();
 
 public:
 	void AddItemPlayer(ATFT_Item* item);
@@ -68,6 +68,9 @@ public:
 	void UIGold(int32 gold);
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
+
+	UFUNCTION()
+	void ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -143,8 +146,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta =(UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
 	float dashEndDempener;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-	UBoxComponent* _triggerBox;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	// UBoxComponent* _triggerBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsRunning = false;
@@ -154,4 +157,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float walkSpeed = 600.0f;
+
+	// Shield Dash
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
+	bool bIsShieldDashing = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	class USphereComponent* _shieldDashAttackSphere;
 };

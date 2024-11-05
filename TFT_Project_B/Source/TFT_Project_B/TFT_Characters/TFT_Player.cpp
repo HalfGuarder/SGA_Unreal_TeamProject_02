@@ -4,10 +4,12 @@
 #include "TFT_Player.h"
 
 #include "TFT_Creature.h"
+#include "TFT_Monster.h"
 
 #include "TFT_AnimInstance_Player.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -32,6 +34,7 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine/OverlapResult.h"
 
 ATFT_Player::ATFT_Player()
 {
@@ -52,6 +55,10 @@ ATFT_Player::ATFT_Player()
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	_statCom->SetExp(0);
+
+	_shieldDashAttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ShieldDashAttackSphere"));
+	_shieldDashAttackSphere->SetupAttachment(GetCapsuleComponent());
+	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATFT_Player::BeginPlay()
@@ -69,6 +76,11 @@ void ATFT_Player::BeginPlay()
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent.AddUObject(this, &ATFT_Player::ChangeEquipment);
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);*/
 	}
+
+	if (_shieldDashAttackSphere != nullptr)
+	{
+		_shieldDashAttackSphere->OnComponentBeginOverlap.AddDynamic(this, &ATFT_Player::ShieldDash_OnOverlapBegin);
+	}
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -80,6 +92,7 @@ void ATFT_Player::PostInitializeComponents()
 	{
 		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+		// _animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
 	}
 }
 
@@ -296,6 +309,10 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 	bool isPressed = value.Get<bool>();
 
+	_animInstancePlayer->PlayShieldDashMontage();
+
+	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
 	/*if (_invenCom->_currentWeapon == nullptr) return;
 
 	if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 1)
@@ -508,10 +525,10 @@ void ATFT_Player::AttackHit()
 		_hitPoint = hitResult.ImpactPoint;
 	}
 
-	// DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
-void ATFT_Player::AttackHit_Q()
+void ATFT_Player::Q_SkillHit()
 {
 	FHitResult hitResult;
 	FCollisionQueryParams params(NAME_None, false, this);
@@ -525,7 +542,7 @@ void ATFT_Player::AttackHit_Q()
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * attackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel9,
+		ECC_Visibility,
 		FCollisionShape::MakeSphere(attackRadius),
 		params
 	);
@@ -543,7 +560,7 @@ void ATFT_Player::AttackHit_Q()
 		_hitPoint = hitResult.ImpactPoint;
 	}
 
-	// DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
 }
 
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)
@@ -605,4 +622,14 @@ void ATFT_Player::ChangeEquipment(ATFT_Item* item)
 void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
+}
+
+void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto enemy = Cast<ATFT_Monster>(OtherActor);
+
+	if (enemy != nullptr)
+	{
+		Q_SkillHit();
+	}
 }

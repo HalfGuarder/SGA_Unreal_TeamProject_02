@@ -21,6 +21,15 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 	{
 		_runningMontage = rm.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> sd
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/Skill_Test/Use/TFT_Player_ShieldDash_AnimMontage.TFT_Player_ShieldDash_AnimMontage'"));
+	if (sd.Succeeded())
+	{
+		_shieldDashMontage = sd.Object;
+	}
+
+
 }
 
 void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
@@ -70,6 +79,12 @@ void UTFT_AnimInstance_Player::AnimNotify_AttackHit()
 	_attackHitDelegate.Broadcast();
 }
 
+void UTFT_AnimInstance_Player::AnimNotify_QSkillHit()
+{
+	bIsShieldDashing = true;
+	_qSkillHitDelegate.Broadcast();
+}
+
 void UTFT_AnimInstance_Player::PlayRunningMontage()
 {
 	if (!Montage_IsPlaying(_runningMontage))
@@ -84,4 +99,22 @@ void UTFT_AnimInstance_Player::StopRunningMontage()
 	{
 		Montage_Stop(0.2f, _runningMontage);
 	}
+}
+
+void UTFT_AnimInstance_Player::PlayShieldDashMontage()
+{
+	if (!Montage_IsPlaying(_shieldDashMontage))
+	{
+		Montage_Play(_shieldDashMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopShiedlDashMontage()
+{
+
+}
+
+void UTFT_AnimInstance_Player::AnimNotify_ShieldDashEnd()
+{
+	bIsShieldDashing = false;
 }

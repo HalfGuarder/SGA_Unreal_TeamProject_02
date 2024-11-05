@@ -9,7 +9,7 @@
 DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackHit_QDelegate);
+DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
 
 UCLASS()
@@ -35,12 +35,21 @@ public:
 	UFUNCTION()
 	void AnimNotify_AttackHit();
 
+	UFUNCTION()
+	void AnimNotify_QSkillHit();
+
 	void PlayRunningMontage();
 	void StopRunningMontage();
+
+	void PlayShieldDashMontage();
+	void StopShiedlDashMontage();
+	UFUNCTION()
+	void AnimNotify_ShieldDashEnd();
 
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
 	DashEndDelegate _dashEndDelegate;
+	QSkillHitDelegate _qSkillHitDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -70,4 +79,13 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _runningMontage;
+
+	// Skills
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _shieldDashMontage;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, Meta = (AllowPrivateAccess = true))
+	bool bIsShieldDashing = false;
+
 };
