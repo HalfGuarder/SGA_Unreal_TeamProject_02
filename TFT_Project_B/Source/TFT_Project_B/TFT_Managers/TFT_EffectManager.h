@@ -32,7 +32,7 @@ private:
 	int32 _poolCount = 5;
 
 	UPROPERTY()
-	TMap<FString, TSubclassOf<ATFT_Effect>> _classTable;
+	TMap<FString, TSubclassOf<class ATFT_Effect>> _classTable;
 
 	TMap<FString, TArray<ATFT_Effect*>> _effectTable;
 
