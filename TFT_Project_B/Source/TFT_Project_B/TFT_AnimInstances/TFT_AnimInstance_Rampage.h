@@ -69,6 +69,4 @@ private:
 	float _horizontal;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _attackMontage;
-
-
 };
