@@ -23,11 +23,15 @@ bool UTFT_BT_BOSS_DECO_CANATTACK::CalculateRawConditionValue(UBehaviorTreeCompon
 	auto target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(FName(TEXT("Target"))));
 
 	if (currentPawn == nullptr || target == nullptr)
+		
 		return false;
 
 	float distance = target->GetDistanceTo(currentPawn);
 
-	return distance < 200.0f;
+
+
+
+	return distance < 300.0f;
 
 	return false;
 }

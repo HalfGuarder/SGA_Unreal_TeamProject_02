@@ -9,15 +9,15 @@ ATFT_BossMonster_CG::ATFT_BossMonster_CG()
 {
 	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
 
-    // Body mesh component ÃÊ±âÈ­ ¹× ¼³Á¤
+    // Body mesh component ï¿½Ê±ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     BodyMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BodyMeshComponent"));
     BodyMeshComponent->SetupAttachment(RootComponent);
 
-    //// Helmet mesh component ÃÊ±âÈ­ ¹× ¼³Á¤
+    //// Helmet mesh component ï¿½Ê±ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     HelmetMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HelmetMeshComponent"));
     HelmetMeshComponent->SetupAttachment(RootComponent);
 
-    // Body¿Í HelmetÀÇ ¸Þ½Ã °æ·Î ¼³Á¤
+    // Bodyï¿½ï¿½ Helmetï¿½ï¿½ ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> BodyMeshAsset(TEXT("/Game/Custom_CG/charaecter/Meshes/SK_CombatSuit_Base_No_Head.SK_CombatSuit_Base_No_Head"));
     if (BodyMeshAsset.Succeeded())
     {
@@ -36,7 +36,7 @@ ATFT_BossMonster_CG::ATFT_BossMonster_CG()
         (FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
     }
 
-    //// Helmet mesh°¡ Body mesh ¾Ö´Ï¸ÞÀÌ¼ÇÀ» µû¶ó°¡µµ·Ï ¼³Á¤
+    //// Helmet meshï¿½ï¿½ Body mesh ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ó°¡µï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     HelmetMeshComponent->SetMasterPoseComponent(BodyMeshComponent);
 
 }
@@ -45,7 +45,7 @@ void ATFT_BossMonster_CG::BeginPlay()
 {
     Super::BeginPlay();
 
-    // BeginPlay¿¡¼­µµ ´Ù½Ã Master Pose ¼³Á¤ °¡´É
+    // BeginPlayï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ Master Pose ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     HelmetMeshComponent->SetMasterPoseComponent(BodyMeshComponent);
 }
 

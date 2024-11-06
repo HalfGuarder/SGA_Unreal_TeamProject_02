@@ -38,6 +38,8 @@ void UTFT_BT_TASK_BOSS_ATTACK::TickTask(UBehaviorTreeComponent& OwnerComp, uint8
 {
     Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
+	
+
     if (_isAttacking == false)
         FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 }

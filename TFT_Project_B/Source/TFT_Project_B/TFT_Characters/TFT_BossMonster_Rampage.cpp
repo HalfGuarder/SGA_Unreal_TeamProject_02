@@ -133,16 +133,7 @@ void ATFT_BossMonster_Rampage::Attack_AI()
         if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
             !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage))
         {
-            if (FMath::RandRange(0, 100) < 15)
-            {
-                //_animInstance_Boss->PlaySkillMontage();
-                //StartParticleSpawnDelay();
-               
-            }
-            else
-            {
-                _animInstance_Boss->PlayAttackMontage();
-            }
+            _animInstance_Boss->PlayAttackMontage();
 
             _isAttacking = true;
 
