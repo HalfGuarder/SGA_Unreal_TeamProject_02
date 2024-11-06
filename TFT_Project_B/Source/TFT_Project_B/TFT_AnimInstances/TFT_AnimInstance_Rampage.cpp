@@ -5,6 +5,7 @@
 #include "TFT_Characters/TFT_BossMonster_Rampage.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Animation/AnimMontage.h"
+#include "TFT_Monster.h"
 
 
 
@@ -12,12 +13,10 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> am
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Montager.TFT_Rampage_Montager'"));
-	if (am.Succeeded())
-	{
-		_attackMontage = am.Object;
-	}
-
-
+    if (am.Succeeded())
+    {
+        _myAnimMontage = am.Object;
+    }
 
 }
 
@@ -37,12 +36,32 @@ void UTFT_AnimInstance_Rampage::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_Rampage::PlayAttackMontage()
 {
-	if (!Montage_IsPlaying(_myAnimMontage))
-	{
-		Montage_Play(_myAnimMontage);
+    if (!Montage_IsPlaying(_myAnimMontage))
+    {
+       
+        float playResult = Montage_Play(_myAnimMontage);
 
-		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
-	}
+        
+        if (playResult > 0.0f)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Montage Play Successful"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to Play Montage"));
+        }
+
+      
+        ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+        if (myCharacter)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Pawn Owner Cast Successful"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Pawn Owner Cast Failed"));
+        }
+    }
 }
 
 void UTFT_AnimInstance_Rampage::PlaySkillMontage()

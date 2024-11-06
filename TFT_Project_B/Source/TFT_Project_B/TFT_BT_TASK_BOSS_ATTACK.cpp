@@ -7,6 +7,7 @@
 #include "TFT_Creature.h"
 #include "TFT_Boss_BJ.h"
 #include "TFT_Player.h"
+#include "TFT_Monster.h"
 
 UTFT_BT_TASK_BOSS_ATTACK::UTFT_BT_TASK_BOSS_ATTACK()
 {
@@ -17,7 +18,7 @@ EBTNodeResult::Type UTFT_BT_TASK_BOSS_ATTACK::ExecuteTask(UBehaviorTreeComponent
 {
 	EBTNodeResult::Type result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	auto character = Cast<ATFT_Boss_BJ>(OwnerComp.GetAIOwner()->GetPawn());
+	auto character = Cast<ATFT_Monster>(OwnerComp.GetAIOwner()->GetPawn());
 	if (character == nullptr)
 		return EBTNodeResult::Failed;
 

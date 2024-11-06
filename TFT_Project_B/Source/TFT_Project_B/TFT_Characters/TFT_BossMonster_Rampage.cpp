@@ -4,6 +4,8 @@
 #include "TFT_Characters/TFT_BossMonster_Rampage.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
 
+#include "Engine/DamageEvents.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
@@ -62,10 +64,93 @@ void ATFT_BossMonster_Rampage::SetMesh(FString path)
 
 void ATFT_BossMonster_Rampage::AttackHit_Boss()
 {
+    FHitResult hitResult;
+    FCollisionQueryParams params(NAME_None, false, this);
+
+    float attackRange = 500.0f;
+    float attackRadius = 100.0f;
+
+    bool bResult = GetWorld()->SweepSingleByChannel(
+        hitResult,
+        GetActorLocation(),
+        GetActorLocation() + GetActorForwardVector() * attackRange,
+        FQuat::Identity,
+        ECollisionChannel::ECC_GameTraceChannel10,
+        FCollisionShape::MakeSphere(attackRadius),
+        params
+    );
+
+    FVector vec = GetActorForwardVector() * attackRange;
+    FVector center = GetActorLocation() + vec * 0.5f;
+
+    FColor drawColor = FColor::Green;
+
+    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    {
+        float hpRatio = _statCom->HpRatio();
+        float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
+
+        float baseDamage = _statCom->GetAttackDamage();
+        float damage = baseDamage * damageMultiplier;
+
+        FDamageEvent damageEvent;
+        hitResult.GetActor()->TakeDamage(damage, damageEvent, GetController(), this);
+        _hitPoint = hitResult.ImpactPoint;
+        drawColor = FColor::Red;
+
+        //EffectManager->Play("N_Monster_Boss_Attack_Hit", 1, _hitPoint);
+
+
+        ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+        if (target != nullptr)
+        {
+            switch (_curAttackIndex)
+            {
+            case 1:
+                target->SetState(StateType::Airborne);
+                break;
+            case 2:
+                target->SetState(StateType::Stun);
+                break;
+            case 3:
+                target->SetState(StateType::Slow);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_BossMonster_Rampage::Attack_AI()
 {
+    Super::Attack_AI();
+
+    if (!_isAttacking && _animInstance_Boss != nullptr)
+    {
+        if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
+            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage))
+        {
+            if (FMath::RandRange(0, 100) < 15)
+            {
+                //_animInstance_Boss->PlaySkillMontage();
+                //StartParticleSpawnDelay();
+               
+            }
+            else
+            {
+                _animInstance_Boss->PlayAttackMontage();
+            }
+
+            _isAttacking = true;
+
+            _curAttackIndex %= 3;
+            _curAttackIndex++;
+            _animInstance_Boss->JumpToSection(_curAttackIndex);
+        }
+    }
 }
 
 void ATFT_BossMonster_Rampage::AttackEnd()
