@@ -130,7 +130,7 @@ void ATFT_Boss_BJ::Attack_AI()
 
             _isAttacking = true;
 
-            _curAttackIndex %= 3;
+            _curAttackIndex %= 4;
             _curAttackIndex++;
             _animInstance_BJ->JumpToSection(_curAttackIndex);
         }
