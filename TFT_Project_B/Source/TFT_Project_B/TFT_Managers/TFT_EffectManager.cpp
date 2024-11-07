@@ -12,7 +12,10 @@ ATFT_EffectManager::ATFT_EffectManager()
 {
  	
 	PrimaryActorTick.bCanEverTick = true;
+	_rootComponent = CreateDefaultSubobject<USceneComponent>("RootCom");
+	RootComponent = _rootComponent;
 
+	CreateParticleClass(TEXT("FirePunch"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/FirePunch.FirePunch_C'"));
 }
 
 
