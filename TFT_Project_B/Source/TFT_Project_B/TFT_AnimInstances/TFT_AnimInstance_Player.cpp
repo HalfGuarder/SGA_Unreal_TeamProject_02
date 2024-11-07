@@ -24,6 +24,7 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> sd
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/Skill_Test/Use/TFT_Player_ShieldDash_AnimMontage.TFT_Player_ShieldDash_AnimMontage'"));
+	//(TEXT("/Script/Engine.AnimMontage'/Game/Custom_CG/Test/dddtestsss.dddtestsss'")); // 테스트용 몽타주 제거해도됨
 	if (sd.Succeeded())
 	{
 		_shieldDashMontage = sd.Object;

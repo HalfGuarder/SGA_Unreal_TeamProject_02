@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "TFT_Project_B",
+			"Path": "..\\Source\\TFT_Project_B.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "TFT_Project_BEditor",
+			"Path": "..\\Source\\TFT_Project_BEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
