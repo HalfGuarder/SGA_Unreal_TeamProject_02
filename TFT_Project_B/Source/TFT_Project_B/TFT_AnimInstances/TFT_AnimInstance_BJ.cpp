@@ -8,7 +8,7 @@
 
 UTFT_AnimInstance_BJ::UTFT_AnimInstance_BJ()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm (TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Attack.Boss_Attack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm (TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/NEW_BOSS_ATTACKBoss_Attack.NEW_BOSS_ATTACKBoss_Attack'"));
 	if (bm.Succeeded())
 	{
 		_attackMontage = bm.Object;
