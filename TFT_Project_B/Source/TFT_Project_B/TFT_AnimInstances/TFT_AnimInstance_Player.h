@@ -43,10 +43,6 @@ public:
 
 	void PlayShieldDashMontage();
 	void StopShiedlDashMontage();
-
-	void PlayDefenseMontage();
-	void StopDefenseMontage();
-
 	UFUNCTION()
 	void AnimNotify_ShieldDashEnd();
 
@@ -84,21 +80,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _runningMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Defense, Meta = (AllowPrivateAccess = true))
-	UAnimMontage* _defenseMontage;
-
 	// Skills
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _shieldDashMontage;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
-	UAnimMontage* _Montage;*/
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, Meta = (AllowPrivateAccess = true))
 	bool bIsShieldDashing = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Defense, Meta = (AllowPrivateAccess = true))
-	bool bIsDefensing = false;
 
 };

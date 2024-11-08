@@ -19,14 +19,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void CreateSoundCue(FString keyName, FString path);
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Play(FString keyName, FVector playLocation, FRotator playRotator = FRotator::ZeroRotator);
-private:
-	int32 _poolCount = 5;
-	TMap<FString, class USoundCue*> _table;
 };

@@ -51,8 +51,6 @@ protected:
 	void SetBlockInputOnDash_False() { bBlockInputOnDash = false; }
 	void StartRunning();
 	void StopRunning();
-	void StartDefense();
-	void StopDefense();
 
 	virtual void AttackStart() override;
 	UFUNCTION()
@@ -115,10 +113,7 @@ public:
 	UInputAction* _runningAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _rollingAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _defenseAction;
+	class UInputAction* _rollingAction;
 
 	class ITFT_InteractionInterface* _interface = nullptr;
 
@@ -143,7 +138,7 @@ protected:
 	bool bBlockInputOnDash = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float dashStrength_Ground = 4000.0f;
+	float dashStrength_Ground = 3000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float dashStrength_Air = 300.0f;
@@ -162,17 +157,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float walkSpeed = 600.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float defenseWalkSpeed = 300.0f;
-
-	// Shield
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* _shield;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
-	class UMaterialInterface* _shieldMaterial;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
-	bool bIsDefense = false;
 
 	// Shield Dash
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
