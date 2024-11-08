@@ -10,6 +10,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -56,8 +57,21 @@ ATFT_Player::ATFT_Player()
 
 	_statCom->SetExp(0);
 
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> sm
+	(TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Blueprints/Characters/Player/FX/M_Steel_Armor_ShieldSphere_Impact_Inst.M_Steel_Armor_ShieldSphere_Impact_Inst'"));
+	if (sm.Succeeded())
+	{
+		_shieldMaterial = sm.Object;
+	}
+	_shield = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Shield"));
+	_shield->SetupAttachment(GetCapsuleComponent());
+	_shield->SetMaterial(0, _shieldMaterial);
+	_shield->SetRelativeScale3D(FVector(3.0f, 3.0f, 3.0f));
+	_shield->SetVisibility(false);
+
 	_shieldDashAttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ShieldDashAttackSphere"));
 	_shieldDashAttackSphere->SetupAttachment(GetCapsuleComponent());
+	_shieldDashAttackSphere->SetupAttachment(_shield);
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
@@ -92,6 +106,7 @@ void ATFT_Player::PostInitializeComponents()
 	{
 		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+		_animInstancePlayer->_shieldDashEndDelegate.AddUObject(this, &ATFT_Player::StopShieldDash);
 		// _animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
 	}
 }
@@ -136,6 +151,11 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Started, this, &ATFT_Player::StartRunning);
 		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Completed, this, &ATFT_Player::StopRunning);
+
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::StartDefense);
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::OnShield);
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::StopDefense);
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
 	}
 }
 
@@ -206,6 +226,8 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 	if (GetCurHp() <= 0) return;
 
 	if (!_canMove) return;
+
+	if (bIsRunning) return;
 
 	if (bBlockInputOnDash) return;
 
@@ -287,7 +309,15 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
+	if (!bIsDefense) return;
+
 	bool isPressed = value.Get<bool>();
+
+	StopDefense();
+
+	_animInstancePlayer->PlayUpperSwingMontage();
+
+	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	/*if (_invenCom->_currentWeapon == nullptr) return;
 
@@ -307,7 +337,13 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
+	if (!bIsDefense) return;
+
 	bool isPressed = value.Get<bool>();
+
+	bIsShieldDashing = true;
+
+	StopDefense();
 
 	_animInstancePlayer->PlayShieldDashMontage();
 
@@ -479,6 +515,51 @@ void ATFT_Player::StopRunning()
 	{
 		_animInstancePlayer->StopRunningMontage();
 	}
+}
+
+void ATFT_Player::StartDefense()
+{
+	if (bIsShieldDashing) return;
+
+	bIsDefense = true;
+	GetCharacterMovement()->MaxWalkSpeed = defenseWalkSpeed;
+
+	if (_animInstancePlayer)
+	{
+		_animInstancePlayer->bIsDefensing = true;
+		_animInstancePlayer->PlayDefenseMontage();		
+	}
+}
+
+void ATFT_Player::StopDefense()
+{
+	bIsDefense = false;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+	if (_animInstancePlayer)
+	{
+		_animInstancePlayer->bIsDefensing = false;
+		_animInstancePlayer->StopDefenseMontage();		
+	}
+}
+
+void ATFT_Player::StopShieldDash()
+{
+	bIsShieldDashing = false;
+
+	OffShield();
+}
+
+void ATFT_Player::OffShield()
+{
+	if (bIsShieldDashing) return;
+
+	_shield->SetVisibility(false);
+}
+
+void ATFT_Player::OnShield()
+{
+	_shield->SetVisibility(true);
 }
 
 void ATFT_Player::AttackStart()

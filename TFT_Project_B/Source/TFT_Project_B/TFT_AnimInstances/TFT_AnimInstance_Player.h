@@ -11,6 +11,7 @@ DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
 DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
+DECLARE_MULTICAST_DELEGATE(ShieldDashEndDelegate);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Player : public UAnimInstance
@@ -43,6 +44,13 @@ public:
 
 	void PlayShieldDashMontage();
 	void StopShiedlDashMontage();
+
+	void PlayUpperSwingMontage();
+	void StopUpperSwingMontage();
+
+	void PlayDefenseMontage();
+	void StopDefenseMontage();
+
 	UFUNCTION()
 	void AnimNotify_ShieldDashEnd();
 
@@ -50,6 +58,7 @@ public:
 	AttackHitDelegate _attackHitDelegate;
 	DashEndDelegate _dashEndDelegate;
 	QSkillHitDelegate _qSkillHitDelegate;
+	ShieldDashEndDelegate _shieldDashEndDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -80,12 +89,21 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _runningMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Defense, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _defenseMontage;
+
 	// Skills
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _shieldDashMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _upperSwingMontage;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, Meta = (AllowPrivateAccess = true))
 	bool bIsShieldDashing = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Defense, Meta = (AllowPrivateAccess = true))
+	bool bIsDefensing = false;
 
 };

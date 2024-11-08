@@ -22,6 +22,13 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_runningMontage = rm.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> dfs
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Defense_AnimMontage.TFT_Player_Defense_AnimMontage'"));
+	if (dfs.Succeeded())
+	{
+		_defenseMontage = dfs.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> sd
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/Skill_Test/Use/TFT_Player_ShieldDash_AnimMontage.TFT_Player_ShieldDash_AnimMontage'"));
 	if (sd.Succeeded())
@@ -29,7 +36,12 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_shieldDashMontage = sd.Object;
 	}
 
-
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> us
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_UpperSwing_AnimMontage.TFT_Player_UpperSwing_AnimMontage'"));
+	if (us.Succeeded())
+	{
+		_upperSwingMontage = us.Object;
+	}
 }
 
 void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
@@ -114,7 +126,35 @@ void UTFT_AnimInstance_Player::StopShiedlDashMontage()
 
 }
 
+void UTFT_AnimInstance_Player::PlayUpperSwingMontage()
+{
+	if (!Montage_IsPlaying(_upperSwingMontage))
+	{
+		Montage_Play(_upperSwingMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopUpperSwingMontage()
+{
+
+}
+
+void UTFT_AnimInstance_Player::PlayDefenseMontage()
+{
+	if (!Montage_IsPlaying(_defenseMontage))
+	{
+		Montage_Play(_defenseMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopDefenseMontage()
+{
+	bIsDefensing = false;
+	Montage_Stop(0.2f, _defenseMontage);
+}
+
 void UTFT_AnimInstance_Player::AnimNotify_ShieldDashEnd()
 {
 	bIsShieldDashing = false;
+	_shieldDashEndDelegate.Broadcast();
 }
