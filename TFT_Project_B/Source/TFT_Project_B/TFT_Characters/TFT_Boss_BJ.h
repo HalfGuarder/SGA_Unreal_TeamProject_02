@@ -28,7 +28,6 @@ public:
 
 	virtual void Attack_AI();
 
-
 	virtual void AttackEnd();
 
 

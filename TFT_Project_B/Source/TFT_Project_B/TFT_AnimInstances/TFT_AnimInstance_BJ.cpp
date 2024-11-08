@@ -13,6 +13,14 @@ UTFT_AnimInstance_BJ::UTFT_AnimInstance_BJ()
 	{
 		_attackMontage = bm.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
+	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Skill.Boss_Skill'"));
+
+	if (sm.Succeeded())
+	{
+		_skillMontage = sm.Object;
+	}
 }
 
 void UTFT_AnimInstance_BJ::NativeUpdateAnimation(float DeltaSeconds)
@@ -50,6 +58,21 @@ void UTFT_AnimInstance_BJ::PlayAttackMontage()
 
 void UTFT_AnimInstance_BJ::PlaySkillMontage()
 {
+	if (!Montage_IsPlaying(_skillMontage))
+	{
+		Montage_Play(_skillMontage);
+
+		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+		if (myCharacter)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Skill Cast Successful"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Skill Cast Failed"));
+		}
+
+	}
 }
 
 void UTFT_AnimInstance_BJ::JumpToSection(int32 sectionIndex)

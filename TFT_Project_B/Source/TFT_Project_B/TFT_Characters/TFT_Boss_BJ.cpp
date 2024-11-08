@@ -126,7 +126,14 @@ void ATFT_Boss_BJ::Attack_AI()
         if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_myAnimMontage) &&
             !_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
         {
-            _animInstance_BJ->PlayAttackMontage();
+            if (FMath::RandRange(0, 100) < 15)
+            {
+                _animInstance_BJ->PlaySkillMontage();
+            }
+            else
+            {
+                _animInstance_BJ->PlayAttackMontage();
+            }
 
             _isAttacking = true;
 
