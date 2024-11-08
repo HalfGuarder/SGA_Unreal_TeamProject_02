@@ -3,11 +3,14 @@
 
 #include "TFT_Characters/TFT_BossMonster_Rampage.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
+#include "TFT_Widgets/TFT_HPBarWidget.h"
+#include "TFT_Characters/TFT_Player.h"
 
 #include "Engine/DamageEvents.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/WidgetComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
@@ -18,6 +21,11 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 
 	SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Elemental/Meshes/Rampage_Elemental.Rampage_Elemental'");
 
+    static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
+    if (HpBar.Succeeded())
+    {
+        HpBarWidgetClass = HpBar.Class;
+    }
 
     armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
@@ -30,11 +38,22 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 
     armcapsule_L->SetCapsuleRadius(10.f);
     armcapsule_L->SetCapsuleHalfHeight(30.f);
+
+    HpBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBarWidgetComponent"));
+    HpBarWidgetComponent->SetupAttachment(RootComponent);
+    HpBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);  
+     
+    if (HpBarWidgetClass)
+    {
+        HpBarWidgetComponent->SetWidgetClass(HpBarWidgetClass);  
+    }
 }
 
 void ATFT_BossMonster_Rampage::BeginPlay()
 {
     Super::BeginPlay();
+
+    PlayerController = GetWorld()->GetFirstPlayerController();
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
@@ -50,11 +69,48 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         _animInstance_Boss->_bossDeathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::Boss_DeathEnd);
         _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
     }
+
+    if (HpBarWidgetComponent)
+    {
+       
+        HpBarWidgetComponent->SetRelativeLocation(FVector(0, 0, 250));
+
+        
+        if (HpBarWidgetComponent->GetWidget())
+        {
+            UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetComponent->GetWidget());
+            if (HpBar)
+            {
+                _statCom->_hpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
+            }
+        }
+    }
 }
 
 void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    if (PlayerController && HpBarWidgetComponent)
+    {
+        
+        APawn* PlayerPawn = PlayerController->GetPawn();
+        if (PlayerPawn)
+        {
+            
+            float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
+
+            
+            if (DistanceToPlayer <= HpBarVisibilityDistance)
+            {
+                HpBarWidgetComponent->SetVisibility(true);
+            }
+            else
+            {
+                HpBarWidgetComponent->SetVisibility(false);
+            }
+        }
+    }
 }
 
 void ATFT_BossMonster_Rampage::SetMesh(FString path)
