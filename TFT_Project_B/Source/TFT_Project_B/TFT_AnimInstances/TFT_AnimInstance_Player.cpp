@@ -4,7 +4,6 @@
 #include "TFT_AnimInstance_Player.h"
 #include "TFT_Creature.h"
 #include "GameFramework/PawnMovementComponent.h"
-// #include "Animation/AnimMontage.h"
 
 UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 {
@@ -22,15 +21,19 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_runningMontage = rm.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> dfs
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/Skill_Test/Use/TFT_Player_Defense_AnimMontage.TFT_Player_Defense_AnimMontage'"));
+	if (dfs.Succeeded())
+	{
+		_defenseMontage = dfs.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> sd
-	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/Skill_Test/Use/TFT_Player_ShieldDash_AnimMontage.TFT_Player_ShieldDash_AnimMontage'"));
-	//(TEXT("/Script/Engine.AnimMontage'/Game/Custom_CG/Test/dddtestsss.dddtestsss'")); // 테스트용 몽타주 제거해도됨
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_ShieldDash_AnimMontage.TFT_Player_ShieldDash_AnimMontage'"));
 	if (sd.Succeeded())
 	{
 		_shieldDashMontage = sd.Object;
 	}
-
-
 }
 
 void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
@@ -113,6 +116,19 @@ void UTFT_AnimInstance_Player::PlayShieldDashMontage()
 void UTFT_AnimInstance_Player::StopShiedlDashMontage()
 {
 
+}
+
+void UTFT_AnimInstance_Player::PlayDefenseMontage()
+{
+	if (!Montage_IsPlaying(_defenseMontage))
+	{
+		Montage_Play(_defenseMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopDefenseMontage()
+{
+	Montage_Stop(0.2f, _defenseMontage);
 }
 
 void UTFT_AnimInstance_Player::AnimNotify_ShieldDashEnd()
