@@ -23,7 +23,7 @@ public:
 
 	UFUNCTION()
 	void AttackHit_Boss();
-
+	
 	virtual void Attack_AI();
 
 	
@@ -35,6 +35,10 @@ public:
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void DeathStart() override;
+
+	UFUNCTION()
+	void ResetMovementLock(UAnimMontage* Montage, bool bInterrupted); // 이동 고정 해제 함수
+
 
 	UFUNCTION()
 	void Boss_DeathEnd();
@@ -61,4 +65,6 @@ private:
 
 	
 	APlayerController* PlayerController;
+
+	FVector LockedLocation; 
 };

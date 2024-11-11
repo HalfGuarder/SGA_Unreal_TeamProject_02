@@ -47,6 +47,8 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
     {
         HpBarWidgetComponent->SetWidgetClass(HpBarWidgetClass);  
     }
+
+  
 }
 
 void ATFT_BossMonster_Rampage::BeginPlay()
@@ -85,6 +87,7 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
             }
         }
     }
+
 }
 
 void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
@@ -110,6 +113,11 @@ void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
                 HpBarWidgetComponent->SetVisibility(false);
             }
         }
+    }
+
+    if (_isAttacking)
+    {
+        SetActorLocation(LockedLocation);
     }
 }
 
@@ -189,15 +197,30 @@ void ATFT_BossMonster_Rampage::Attack_AI()
         if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
             !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage))
         {
-            _animInstance_Boss->PlayAttackMontage();
+            
+            LockedLocation = GetActorLocation();
+
+            if (FMath::RandRange(0, 100) < 50)
+            {
+                _animInstance_Boss->PlaySkillMontage();
+               
+            }
+            else
+            {
+                _animInstance_Boss->PlayAttackMontage();
+            }
 
             _isAttacking = true;
 
             _curAttackIndex %= 3;
             _curAttackIndex++;
             _animInstance_Boss->JumpToSection(_curAttackIndex);
+
+            // 공격이 끝나면 이동 고정 해제
+            _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
         }
     }
+   
 }
 
 void ATFT_BossMonster_Rampage::AttackEnd()
@@ -216,6 +239,16 @@ float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& Dam
 void ATFT_BossMonster_Rampage::DeathStart()
 {
 }
+
+void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
+{
+    _isAttacking = false;
+
+    // 델리게이트 해제
+    _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
+}
+
+
 
 void ATFT_BossMonster_Rampage::Boss_DeathEnd()
 {

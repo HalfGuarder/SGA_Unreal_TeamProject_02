@@ -16,11 +16,11 @@ void UTFT_Animnotify_Sound::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 			UTFT_GameInstance* GameInstance = Cast<UTFT_GameInstance>(Player->GetGameInstance());
 			if (GameInstance && GameInstance->GetSoundManager())
 			{
-				// »ç¿îµåÀÇ Àç»ý À§Ä¡¿Í È¸Àü ¼³Á¤
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				FVector SoundLocation = Player->GetActorLocation() + SoundLocationOffset;
 				FRotator SoundRotation = MeshComp->GetComponentRotation() + SoundRotationOffset;
 
-				// »ç¿îµå ¸Å´ÏÀú¸¦ ÅëÇØ »ç¿îµå Àç»ý
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 				GameInstance->GetSoundManager()->Play(TEXT("Sound"), SoundLocation, SoundRotation);
 			}
 			else

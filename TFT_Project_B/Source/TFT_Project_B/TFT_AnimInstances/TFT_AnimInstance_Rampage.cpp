@@ -18,6 +18,14 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
         _myAnimMontage = am.Object;
     }
 
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_JumpAttack_Montage.TFT_Rampage_JumpAttack_Montage'"));
+
+    if (sm.Succeeded())
+    {
+        _skillMontage = sm.Object;
+    }
+
 }
 
 void UTFT_AnimInstance_Rampage::NativeUpdateAnimation(float DeltaSeconds)
@@ -66,6 +74,24 @@ void UTFT_AnimInstance_Rampage::PlayAttackMontage()
 
 void UTFT_AnimInstance_Rampage::PlaySkillMontage()
 {
+    if (!Montage_IsPlaying(_skillMontage))
+    {
+        Montage_Play(_skillMontage);
+
+        ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+        if (myCharacter)
+        {
+            // 캐릭터를 위로 높게 띄우기 위해 LaunchCharacter 호출
+            FVector LaunchVelocity = FVector(0, 0, 3000); // 위쪽으로 1000의 힘을 가함 (필요에 맞게 조정)
+            myCharacter->LaunchCharacter(LaunchVelocity, true, true);
+
+            UE_LOG(LogTemp, Warning, TEXT("Skill Montage played with increased jump height!"));
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Pawn Owner Cast Failed"));
+        }
+    }
 }
 
 void UTFT_AnimInstance_Rampage::JumpToSection(int32 sectionIndex)

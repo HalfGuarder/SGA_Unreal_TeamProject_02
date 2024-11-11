@@ -22,7 +22,7 @@ void UTFT_AnimNotify_Effect::Notify(USkeletalMeshComponent* MeshComp, UAnimSeque
 				FRotator EffectRotation = MeshComp->GetComponentRotation();
 
 
-				GameInstance->GetEffectManager()->Play(TEXT("FirePunch"), 1, EffectLocation, EffectRotation);
+				EFFECTMANAGER->Play(TEXT("Explosion"), 0, EffectLocation, EffectRotation);
 			}
 			else
 			{

@@ -15,7 +15,7 @@ ATFT_EffectManager::ATFT_EffectManager()
 	_rootComponent = CreateDefaultSubobject<USceneComponent>("RootCom");
 	RootComponent = _rootComponent;
 
-	CreateParticleClass(TEXT("FirePunch"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/FirePunch.FirePunch_C'"));
+	CreateParticleClass(TEXT("Explosion"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Rampage_Explosion.TFT_Rampage_Explosion_C'"));
 
 	//Player
 	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TestEffect.TFT_Player_TestEffect_C'"));
