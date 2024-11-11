@@ -16,6 +16,9 @@ ATFT_EffectManager::ATFT_EffectManager()
 	RootComponent = _rootComponent;
 
 	CreateParticleClass(TEXT("FirePunch"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/FirePunch.FirePunch_C'"));
+
+	//Player
+	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TestEffect.TFT_Player_TestEffect_C'"));
 }
 
 

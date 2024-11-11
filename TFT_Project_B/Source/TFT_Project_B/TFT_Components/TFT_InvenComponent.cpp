@@ -30,8 +30,6 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 {
 	if (item->GetItemType() == "gold")
 	{
-		UE_LOG(LogTemp, Log, TEXT("%d gold Get~to da je~"), item->GetItemGold());
-
 		AddPlayerGold(item->GetItemGold());
 		item->Disable();
 
@@ -44,20 +42,16 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 			if (_items.IsValidIndex(i) && _items[i] == nullptr)
 			{
 				_items[i] = item;
-				UE_LOG(LogTemp, Log, TEXT("Added item to inventory at index: %d"), i);
 				_itemAddedEvent.Broadcast(item, i);
 				item->Disable();
 				return;
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Inventory is full, unable to add item."));
 	}
 }
 
 void UTFT_InvenComponent::DropItem(int32 index)
 {
-	UE_LOG(LogTemp, Log, TEXT("Item Drop"));
-
 	float randFloat = FMath::FRandRange(0, PI * 2.0f);
 
 	float X = cosf(randFloat) * 300.0f;
@@ -99,6 +93,8 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 	auto player = Cast<ATFT_Player>(GetOwner());
 
 	FName HR_WeaponSocket(TEXT("hand_r_socket"));
+
+	NewWeapon->Disable();
 
 	if (_currentWeapon != nullptr)
 	{

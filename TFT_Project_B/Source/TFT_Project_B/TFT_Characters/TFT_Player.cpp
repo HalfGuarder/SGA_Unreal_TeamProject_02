@@ -526,6 +526,7 @@ void ATFT_Player::StartDefense()
 
 	if (_animInstancePlayer)
 	{
+		EFFECTMANAGER->Play(TEXT("ShieldOn"), 0, GetActorLocation());
 		_animInstancePlayer->bIsDefensing = true;
 		_animInstancePlayer->PlayDefenseMontage();		
 	}
