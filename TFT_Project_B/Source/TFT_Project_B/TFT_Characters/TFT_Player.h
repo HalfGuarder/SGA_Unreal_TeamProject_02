@@ -62,6 +62,8 @@ protected:
 	void AttackHit();
 	UFUNCTION()
 	void Q_SkillHit();
+	UFUNCTION()
+	void E_SkillHit();
 
 public:
 	void AddItemPlayer(ATFT_Item* item);

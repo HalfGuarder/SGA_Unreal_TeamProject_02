@@ -107,7 +107,10 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
 		_animInstancePlayer->_shieldDashEndDelegate.AddUObject(this, &ATFT_Player::StopShieldDash);
-		// _animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
+		_animInstancePlayer->_attackHitDelegate.AddUObject(this, &ATFT_Player::AttackHit);
+		_animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
+		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
+
 	}
 }
 
@@ -316,8 +319,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	StopDefense();
 
 	_animInstancePlayer->PlayUpperSwingMontage();
-
-	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	/*if (_invenCom->_currentWeapon == nullptr) return;
 
@@ -589,7 +590,7 @@ void ATFT_Player::AttackHit()
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * attackRange,
 		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel9,
+		ECollisionChannel::ECC_GameTraceChannel7,
 		FCollisionShape::MakeSphere(attackRadius),
 		params
 	);
@@ -603,7 +604,7 @@ void ATFT_Player::AttackHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 
-		hitResult.GetActor()->TakeDamage(50.0f, damageEvent, GetController(), this);
+		hitResult.GetActor()->TakeDamage(100.0f, damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
 	}
 
@@ -624,7 +625,42 @@ void ATFT_Player::Q_SkillHit()
 		GetActorLocation(),
 		GetActorLocation() + GetActorForwardVector() * attackRange,
 		FQuat::Identity,
-		ECC_Visibility,
+		ECollisionChannel::ECC_GameTraceChannel7,
+		FCollisionShape::MakeSphere(attackRadius),
+		params
+	);
+
+	FVector vec = GetActorForwardVector() * attackRange;
+	FVector center = GetActorLocation() + vec * 0.5f;
+	FColor drawColor = FColor::Green;
+
+	if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	{
+		drawColor = FColor::Red;
+		FDamageEvent damageEvent;
+
+		hitResult.GetActor()->TakeDamage(300.0f, damageEvent, GetController(), this);
+		_hitPoint = hitResult.ImpactPoint;
+	}
+
+	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
+}
+
+void ATFT_Player::E_SkillHit()
+{
+	FHitResult hitResult;
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	float attackRange = 500.0f;
+	float attackRadius = 100.0f;
+
+	bool bResult = GetWorld()->SweepSingleByChannel
+	(
+		hitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * attackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel7,
 		FCollisionShape::MakeSphere(attackRadius),
 		params
 	);
@@ -713,5 +749,7 @@ void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 	if (enemy != nullptr)
 	{
 		Q_SkillHit();
+
+		_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }

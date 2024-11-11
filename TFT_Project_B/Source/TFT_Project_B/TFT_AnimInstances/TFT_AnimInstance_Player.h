@@ -10,6 +10,7 @@ DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
 DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
+DECLARE_MULTICAST_DELEGATE(ESkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
 DECLARE_MULTICAST_DELEGATE(ShieldDashEndDelegate);
 
@@ -35,9 +36,10 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();
-
 	UFUNCTION()
 	void AnimNotify_QSkillHit();
+	UFUNCTION()
+	void AnimNotify_ESkillHit();
 
 	void PlayRunningMontage();
 	void StopRunningMontage();
@@ -58,6 +60,7 @@ public:
 	AttackHitDelegate _attackHitDelegate;
 	DashEndDelegate _dashEndDelegate;
 	QSkillHitDelegate _qSkillHitDelegate;
+	ESkillHitDelegate _eSkillHitDelegate;
 	ShieldDashEndDelegate _shieldDashEndDelegate;
 
 private:
