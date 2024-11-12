@@ -27,6 +27,9 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
         HpBarWidgetClass = HpBar.Class;
     }
 
+ 
+
+
     armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
 
@@ -39,16 +42,14 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
     armcapsule_L->SetCapsuleRadius(10.f);
     armcapsule_L->SetCapsuleHalfHeight(30.f);
 
-    HpBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBarWidgetComponent"));
+    /*HpBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBarWidgetComponent"));
     HpBarWidgetComponent->SetupAttachment(RootComponent);
     HpBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);  
      
     if (HpBarWidgetClass)
     {
         HpBarWidgetComponent->SetWidgetClass(HpBarWidgetClass);  
-    }
-
-  
+    }*/
 }
 
 void ATFT_BossMonster_Rampage::BeginPlay()
@@ -72,7 +73,7 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
     }
 
-    if (HpBarWidgetComponent)
+   /* if (HpBarWidgetComponent)
     {
        
         HpBarWidgetComponent->SetRelativeLocation(FVector(0, 0, 250));
@@ -85,6 +86,25 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
             {
                 _statCom->_hpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
             }
+        }
+    }*/
+
+    if (HpBarWidgetClass)
+    {
+        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+        if (HpBarWidgetInstance)
+        {
+            HpBarWidgetInstance->AddToViewport();
+        }
+    }
+
+    if (HpBarWidgetInstance)
+    {
+
+        UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
+        if (HpBar)
+        {
+            _statCom->_hpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
         }
     }
 
@@ -216,7 +236,7 @@ void ATFT_BossMonster_Rampage::Attack_AI()
             _curAttackIndex++;
             _animInstance_Boss->JumpToSection(_curAttackIndex);
 
-            // 공격이 끝나면 이동 고정 해제
+            // ������ ������ �̵� ���� ����
             _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
         }
     }
@@ -244,7 +264,7 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 {
     _isAttacking = false;
 
-    // 델리게이트 해제
+    // ��������Ʈ ����
     _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
 }
 

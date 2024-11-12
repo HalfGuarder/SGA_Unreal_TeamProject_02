@@ -58,6 +58,7 @@ public:
 	int32 GetAttackDamage() { return _attackDamage; }
 	float HpRatio() { return _curHp / (float)_maxHp; }
 	float ExpRatio() { return _curExp / (float)_maxExp; }
+	float BossHPRatioo() { return (_curHp / (float)_maxHp) / 2; }
 
 	void SetLevelAndInit(int32 level);
 	void SetHp(int32 hp);
@@ -71,6 +72,7 @@ public:
 	void SetExp(int32 amount);
 
 	HpChanged _hpChangedDelegate;
+	HpChanged _BosshpChangedDelegate;
 	DeathDelegate _deathDelegate;
 	ExpChanged _expChangedDelegate;
 	LevelUp _levelUpDelegate;

@@ -63,6 +63,9 @@ void UTFT_StatComponent::SetHp(int32 hp)
 	float ratio = HpRatio();
 	_hpChangedDelegate.Broadcast(ratio);
 
+	float bossratio = 0.15 + BossHPRatioo();
+	_BosshpChangedDelegate.Broadcast(bossratio);
+
 	float HPRatio = static_cast<float>(_curHp) / _maxHp;
 	OnHPChanged.Broadcast(HPRatio);
 }
