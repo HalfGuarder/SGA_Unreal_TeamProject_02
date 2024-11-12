@@ -42,14 +42,6 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
     armcapsule_L->SetCapsuleRadius(10.f);
     armcapsule_L->SetCapsuleHalfHeight(30.f);
 
-    /*HpBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBarWidgetComponent"));
-    HpBarWidgetComponent->SetupAttachment(RootComponent);
-    HpBarWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);  
-     
-    if (HpBarWidgetClass)
-    {
-        HpBarWidgetComponent->SetWidgetClass(HpBarWidgetClass);  
-    }*/
 }
 
 void ATFT_BossMonster_Rampage::BeginPlay()
@@ -73,21 +65,6 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
     }
 
-   /* if (HpBarWidgetComponent)
-    {
-       
-        HpBarWidgetComponent->SetRelativeLocation(FVector(0, 0, 250));
-
-        
-        if (HpBarWidgetComponent->GetWidget())
-        {
-            UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetComponent->GetWidget());
-            if (HpBar)
-            {
-                _statCom->_hpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
-            }
-        }
-    }*/
 
     if (HpBarWidgetClass)
     {
@@ -182,7 +159,7 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
         _hitPoint = hitResult.ImpactPoint;
         drawColor = FColor::Red;
 
-        //EffectManager->Play("N_Monster_Boss_Attack_Hit", 1, _hitPoint);
+     
 
 
         ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
@@ -217,13 +194,14 @@ void ATFT_BossMonster_Rampage::Attack_AI()
         if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
             !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage))
         {
-            
             LockedLocation = GetActorLocation();
 
-            if (FMath::RandRange(0, 100) < 50)
+            
+            if (bCanUseSkill)
             {
                 _animInstance_Boss->PlaySkillMontage();
-               
+                bCanUseSkill = false;
+                GetWorld()->GetTimerManager().SetTimer(SkillCooldownTimerHandle, this, &ATFT_BossMonster_Rampage::ResetSkillCooldown, SkillCooldown, false);
             }
             else
             {
@@ -236,11 +214,15 @@ void ATFT_BossMonster_Rampage::Attack_AI()
             _curAttackIndex++;
             _animInstance_Boss->JumpToSection(_curAttackIndex);
 
-            // ������ ������ �̵� ���� ����
             _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
         }
     }
    
+}
+
+void ATFT_BossMonster_Rampage::ResetSkillCooldown()
+{
+    bCanUseSkill = true;
 }
 
 void ATFT_BossMonster_Rampage::AttackEnd()
@@ -264,7 +246,7 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 {
     _isAttacking = false;
 
-    // ��������Ʈ ����
+
     _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
 }
 

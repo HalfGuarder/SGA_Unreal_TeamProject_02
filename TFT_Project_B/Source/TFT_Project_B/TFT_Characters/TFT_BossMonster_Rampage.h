@@ -25,7 +25,7 @@ public:
 	void AttackHit_Boss();
 	
 	virtual void Attack_AI();
-
+	void ResetSkillCooldown();
 	
 	virtual void AttackEnd();
 
@@ -37,7 +37,7 @@ public:
 	virtual void DeathStart() override;
 
 	UFUNCTION()
-	void ResetMovementLock(UAnimMontage* Montage, bool bInterrupted); // 이동 고정 해제 함수
+	void ResetMovementLock(UAnimMontage* Montage, bool bInterrupted); 
 
 
 	UFUNCTION()
@@ -67,4 +67,8 @@ private:
 	APlayerController* PlayerController;
 
 	FVector LockedLocation; 
+
+	float SkillCooldown = 10.0f;
+	bool bCanUseSkill = true;
+	FTimerHandle SkillCooldownTimerHandle;
 };

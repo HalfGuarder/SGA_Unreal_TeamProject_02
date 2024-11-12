@@ -12,7 +12,7 @@ ATFT_SoundManager::ATFT_SoundManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CreateSoundCue("Sound", "/Script/Engine.SoundCue'/Game/ParagonRampage/Characters/Heroes/Rampage/Sounds/SoundCues/Rampage_Ability_Ultimate_Enemy.Rampage_Ability_Ultimate_Enemy'");
+	CreateSoundCue("Explosion", "/Script/Engine.SoundCue'/Game/Blueprints/SFX/Rampage_Sound/explosion.explosion'");
 }
 
 // Called when the game starts or when spawned
