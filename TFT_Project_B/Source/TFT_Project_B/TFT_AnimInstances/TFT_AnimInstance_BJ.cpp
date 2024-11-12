@@ -16,10 +16,16 @@ UTFT_AnimInstance_BJ::UTFT_AnimInstance_BJ()
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
 	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Skill.Boss_Skill'"));
-
 	if (sm.Succeeded())
 	{
 		_skillMontage = sm.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> em
+	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Slash.Boss_Slash'"));
+	if (em.Succeeded())
+	{
+		_slashMontage = em.Object;
 	}
 }
 
@@ -72,6 +78,22 @@ void UTFT_AnimInstance_BJ::PlaySkillMontage()
 			UE_LOG(LogTemp, Error, TEXT("Skill Cast Failed"));
 		}
 
+	}
+}
+
+void UTFT_AnimInstance_BJ::PlaySlashMontage()
+{
+	if (!Montage_IsPlaying(_slashMontage))
+	{
+		Montage_Play(_slashMontage);
+
+		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+		if (myCharacter)
+		{
+		}
+		else
+		{
+		}
 	}
 }
 

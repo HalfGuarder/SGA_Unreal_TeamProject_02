@@ -124,11 +124,18 @@ void ATFT_Boss_BJ::Attack_AI()
     if (!_isAttacking && _animInstance_BJ != nullptr)
     {
         if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_myAnimMontage) &&
-            !_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
+            !_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage) &&
+            !_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_slashMontage))
         {
-            if (FMath::RandRange(0, 100) < 15)
+            int32 randomValue = FMath::RandRange(0, 100);
+
+            if (randomValue < 15)
             {
                 _animInstance_BJ->PlaySkillMontage();
+            }
+            else if (randomValue < 30)
+            {
+                _animInstance_BJ->PlaySlashMontage();
             }
             else
             {
@@ -142,7 +149,7 @@ void ATFT_Boss_BJ::Attack_AI()
             _animInstance_BJ->JumpToSection(_curAttackIndex);
         }
     }
-}
+} 
 
 void ATFT_Boss_BJ::AttackEnd()
 {
