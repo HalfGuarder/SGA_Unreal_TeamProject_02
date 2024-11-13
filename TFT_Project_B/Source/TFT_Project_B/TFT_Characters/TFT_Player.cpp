@@ -5,6 +5,7 @@
 
 #include "TFT_Creature.h"
 #include "TFT_Monster.h"
+#include "TFT_Widgets/TFT_HPBarWidget.h"
 
 #include "TFT_AnimInstance_Player.h"
 
@@ -65,6 +66,21 @@ ATFT_Player::ATFT_Player()
 
 	_statCom->SetExp(0);
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/Player_HpBar_BP.Player_HpBar_BP_C'"));
+	if (HpBar.Succeeded())
+	{
+		HpBarWidgetClass = HpBar.Class;
+	}
+
+	if (HpBarWidgetClass)
+	{
+		HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+		if (HpBarWidgetInstance)
+		{
+			HpBarWidgetInstance->AddToViewport();
+		}
+	}
+
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> sm
 	(TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Blueprints/Characters/Player/FX/M_Steel_Armor_ShieldSphere_Impact_Inst.M_Steel_Armor_ShieldSphere_Impact_Inst'"));
 	if (sm.Succeeded())
@@ -86,6 +102,8 @@ ATFT_Player::ATFT_Player()
 void ATFT_Player::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_statCom->SetLevelAndInit(1);
 
 	if (_invenCom != nullptr)
 	{
@@ -122,6 +140,20 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 
+	}
+	
+
+	if (HpBarWidgetInstance)
+	{
+
+		UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
+		if (HpBar)
+		{
+			HpBar->SetProfileImage(ProfileType::PLAYER);
+			HpBar->SetHpText(_statCom->GetMaxHp());
+			_statCom->_PlayerhpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
+			_statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
+		}
 	}
 }
 
@@ -659,7 +691,7 @@ void ATFT_Player::AttackHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 
-		hitResult.GetActor()->TakeDamage(100.0f, damageEvent, GetController(), this);
+		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
 	}
 

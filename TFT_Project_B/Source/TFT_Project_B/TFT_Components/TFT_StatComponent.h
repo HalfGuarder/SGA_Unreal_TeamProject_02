@@ -12,7 +12,9 @@ DECLARE_MULTICAST_DELEGATE(DeathDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(HpChanged, float)
 DECLARE_MULTICAST_DELEGATE_OneParam(ExpChanged, float)
 DECLARE_MULTICAST_DELEGATE(LevelUp)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHPChangedDelegate, float);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHPChangedDelegate, float)
+DECLARE_MULTICAST_DELEGATE_OneParam(CurHpText, int32)
+
 
 USTRUCT()
 struct FTFT_StatData : public FTableRowBase
@@ -58,7 +60,7 @@ public:
 	int32 GetAttackDamage() { return _attackDamage; }
 	float HpRatio() { return _curHp / (float)_maxHp; }
 	float ExpRatio() { return _curExp / (float)_maxExp; }
-	float BossHPRatioo() { return (_curHp / (float)_maxHp) / 2; }
+	float BossHPRatio() { return (_curHp / (float)_maxHp) / 2; }
 
 	void SetLevelAndInit(int32 level);
 	void SetHp(int32 hp);
@@ -73,6 +75,8 @@ public:
 
 	HpChanged _hpChangedDelegate;
 	HpChanged _BosshpChangedDelegate;
+	HpChanged _PlayerhpChangedDelegate;
+	CurHpText _CurHpText;
 	DeathDelegate _deathDelegate;
 	ExpChanged _expChangedDelegate;
 	LevelUp _levelUpDelegate;

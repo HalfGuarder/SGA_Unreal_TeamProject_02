@@ -5,6 +5,7 @@
 #include "TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 #include "TFT_Characters/TFT_Player.h"
+#include "../TFT_Components/TFT_StatComponent.h"
 
 #include "Engine/DamageEvents.h"
 
@@ -27,8 +28,6 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
         HpBarWidgetClass = HpBar.Class;
     }
 
- 
-
 
     armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
@@ -48,6 +47,7 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 {
     Super::BeginPlay();
 
+    _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
 }
 
@@ -81,7 +81,10 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
         if (HpBar)
         {
-            _statCom->_hpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
+            HpBar->SetProfileImage(ProfileType::BOSS1);
+            HpBar->SetHpText(_statCom->GetMaxHp());
+            _statCom->_BosshpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
+            _statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
         }
     }
 
@@ -91,7 +94,7 @@ void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (PlayerController && HpBarWidgetComponent)
+    /*if (PlayerController && HpBarWidgetComponent)
     {
         
         APawn* PlayerPawn = PlayerController->GetPawn();
@@ -108,6 +111,25 @@ void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
             else
             {
                 HpBarWidgetComponent->SetVisibility(false);
+            }
+        }
+    }*/
+
+    AActor* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+    if (Player)
+    {
+        float Distance = FVector::Dist(Player->GetActorLocation(), GetActorLocation());
+
+        if (HpBarWidgetInstance)
+        {
+            if (Distance <= 1000.0f)
+            {
+                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Visible);
+            }
+            else
+            {
+                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
             }
         }
     }
@@ -148,7 +170,7 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
 
     if (bResult && hitResult.GetActor()->IsValidLowLevel())
     {
-        float hpRatio = _statCom->HpRatio();
+        float hpRatio = _statCom->BossHPRatio();
         float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
 
         float baseDamage = _statCom->GetAttackDamage();
@@ -160,7 +182,6 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
         drawColor = FColor::Red;
 
      
-
 
         ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
         if (target != nullptr)
@@ -235,7 +256,10 @@ void ATFT_BossMonster_Rampage::DropItem()
 
 float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	return 0.0f;
+    float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+
+    return ActualDamage;
 }
 
 void ATFT_BossMonster_Rampage::DeathStart()

@@ -3,6 +3,7 @@
 
 #include "TFT_Characters/TFT_Boss_BJ.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
+#include "TFT_Widgets/TFT_HPBarWidget.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -23,11 +24,21 @@ ATFT_Boss_BJ::ATFT_Boss_BJ()
     {
         GetMesh()->SetSkeletalMesh(SkeletalMeshAsset.Object);
     }
+
+    static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
+    if (HpBar.Succeeded())
+    {
+        HpBarWidgetClass = HpBar.Class;
+    }
+    
+
 }
 
 void ATFT_Boss_BJ::BeginPlay()
 {
     Super::BeginPlay();
+
+    _statCom->SetLevelAndInit(1);
 }
 
 void ATFT_Boss_BJ::PostInitializeComponents()
@@ -43,11 +54,53 @@ void ATFT_Boss_BJ::PostInitializeComponents()
         _animInstance_BJ->_bossDeathEndDelegate.AddUObject(this, &ATFT_Boss_BJ::Boss_DeathEnd);
         _animInstance_BJ->_deathEndDelegate.AddUObject(this, &ATFT_Boss_BJ::BossDisable);
     }
+
+    if (HpBarWidgetClass)
+    {
+        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+        if (HpBarWidgetInstance)
+        {
+            HpBarWidgetInstance->AddToViewport();
+        }
+    }
+
+    if (HpBarWidgetInstance)
+    {
+
+        UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
+        if (HpBar)
+        {
+            HpBar->SetProfileImage(ProfileType::BOSS2);
+            HpBar->SetHpText(_statCom->GetMaxHp());
+            _statCom->_BosshpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
+            _statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
+        }
+    }
 }
 
 void ATFT_Boss_BJ::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+    AActor* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+    if (Player)
+    {
+        float Distance = FVector::Dist(Player->GetActorLocation(), GetActorLocation());
+
+        if (HpBarWidgetInstance)
+        {
+            if (Distance <= 1000.0f)
+            {
+                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Visible);
+            }
+            else
+            {
+                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+            }
+        }
+    }
+
 }
 
 void ATFT_Boss_BJ::SetMesh(FString path)
@@ -80,7 +133,7 @@ void ATFT_Boss_BJ::AttackHit_Boss()
 
     if (bResult && hitResult.GetActor()->IsValidLowLevel())
     {
-        float hpRatio = _statCom->HpRatio();
+        float hpRatio = _statCom->BossHPRatio();
         float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
 
         float baseDamage = _statCom->GetAttackDamage();
@@ -161,7 +214,10 @@ void ATFT_Boss_BJ::DropItem()
 
 float ATFT_Boss_BJ::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-    return 0.0f;
+    float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+
+    return ActualDamage;
 }
 
 void ATFT_Boss_BJ::DeathStart()

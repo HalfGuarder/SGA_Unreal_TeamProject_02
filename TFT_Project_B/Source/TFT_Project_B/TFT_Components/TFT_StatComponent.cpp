@@ -45,7 +45,7 @@ void UTFT_StatComponent::SetLevelAndInit(int32 level)
 
 		if (AddsItem_Attack != 0) _attackDamage += AddsItem_Attack;
 
-		UE_LOG(LogTemp, Warning, TEXT("%s..., Level : %d, hp : %d, attackDamage : %d"), *GetOwner()->GetName(), _curLevel, _maxHp, _attackDamage);
+		UE_LOG(LogTemp,Error, TEXT("%s..., Level : %d, hp : %d, attackDamage : %d"), *GetOwner()->GetName(), _curLevel, _maxHp, _attackDamage);
 	}
 }
 
@@ -60,14 +60,18 @@ void UTFT_StatComponent::SetHp(int32 hp)
 	if (_curHp > _maxHp)
 		_curHp = _maxHp;
 
-	float ratio = HpRatio();
-	_hpChangedDelegate.Broadcast(ratio);
 
-	float bossratio = 0.15 + BossHPRatioo();
+	//float ratio = HpRatio();//
+	//_hpChangedDelegate.Broadcast(ratio);//
+
+	float bossratio = 0.15 + BossHPRatio();
 	_BosshpChangedDelegate.Broadcast(bossratio);
 
-	float HPRatio = static_cast<float>(_curHp) / _maxHp;
-	OnHPChanged.Broadcast(HPRatio);
+	float playerratio = 0.25 + (HpRatio() * (0.7 - 0.25));
+	_PlayerhpChangedDelegate.Broadcast(playerratio);
+
+	//float HPRatio = static_cast<float>(_curHp) / _maxHp;//
+	//OnHPChanged.Broadcast(HPRatio);//
 }
 
 int32 UTFT_StatComponent::AddCurHp(float amount)
@@ -75,6 +79,8 @@ int32 UTFT_StatComponent::AddCurHp(float amount)
 	int32 beforeHp = _curHp;
 
 	int32 afterHp = beforeHp + amount;
+
+	_CurHpText.Broadcast(afterHp);
 	SetHp(afterHp);
 
 	return afterHp - beforeHp;

@@ -66,6 +66,7 @@ float ATFT_Creature::TakeDamage(float Damage, FDamageEvent const& DamageEvent, A
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
 	float damaged = -(_statCom->AddCurHp(-Damage));
+	
 
 	return damaged;
 }

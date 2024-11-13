@@ -10,7 +10,7 @@
 UTFT_GameInstance::UTFT_GameInstance()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> dataTable
-	(TEXT(""));
+	(TEXT("/Script/Engine.DataTable'/Game/Data/TFT_StatDataTable.TFT_StatDataTable'"));
 
 	if (dataTable.Succeeded())
 	{
