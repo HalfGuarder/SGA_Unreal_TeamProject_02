@@ -96,6 +96,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement , Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _runningMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _rifleRunningMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Defense, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _defenseMontage;

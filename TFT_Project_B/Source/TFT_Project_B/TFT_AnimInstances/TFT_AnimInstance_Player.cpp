@@ -29,6 +29,13 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_runningMontage = rm.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> rrm
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Rifle_Running_AnimMontage.TFT_Player_Rifle_Running_AnimMontage'"));
+	if (rrm.Succeeded())
+	{
+		_rifleRunningMontage = rrm.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> dfs
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Defense_AnimMontage.TFT_Player_Defense_AnimMontage'"));
 	if (dfs.Succeeded())
@@ -122,17 +129,34 @@ void UTFT_AnimInstance_Player::AnimNotify_ESkillHit()
 
 void UTFT_AnimInstance_Player::PlayRunningMontage()
 {
-	if (!Montage_IsPlaying(_runningMontage))
+	if (bEquipSword)
 	{
-		Montage_Play(_runningMontage, 1.0f);
+		if (!Montage_IsPlaying(_runningMontage))
+		{
+			Montage_Play(_runningMontage, 1.0f);
+		}
+	}
+	else
+	{
+		if (!Montage_IsPlaying(_rifleRunningMontage))
+		{
+			Montage_Play(_rifleRunningMontage, 1.0f);
+		}
 	}
 }
 
 void UTFT_AnimInstance_Player::StopRunningMontage()
 {
-	if (Montage_IsPlaying(_runningMontage))
+	if (bEquipSword)
 	{
-		Montage_Stop(0.2f, _runningMontage);
+		//if (Montage_IsPlaying(_runningMontage))
+		//{
+			Montage_Stop(0.2f, _runningMontage);
+		//}
+	}
+	else
+	{
+		Montage_Stop(0.2f, _rifleRunningMontage);
 	}
 }
 

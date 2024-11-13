@@ -535,6 +535,8 @@ void ATFT_Player::StartRunning()
 {
 	if (!_canMove) return;
 
+	if (bIsDefense || bIsZoom) return;
+
 	bIsRunning = true;
 	GetCharacterMovement()->MaxWalkSpeed = runningSpeed;
 
