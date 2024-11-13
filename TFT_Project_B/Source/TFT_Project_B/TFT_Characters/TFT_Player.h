@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TFT_Creature.h"
+#include "Components/TimelineComponent.h"
 #include "TFT_Player.generated.h"
 
 class UInputComponent;
@@ -32,6 +33,8 @@ public:
 	virtual void SetMesh(FString path) override;
 
 protected:
+	void Temp_ChangeWeapon(const FInputActionValue& value);
+
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 	void JumpA(const FInputActionValue& value);
@@ -39,6 +42,8 @@ protected:
 	void InvenopenA(const FInputActionValue& value);
 	void EquipmentA(const FInputActionValue& value);
 	void Rolling();
+	UFUNCTION()
+	void CameraZoom(float alpha);
 
 	void E_Skill(const FInputActionValue& value);
 	void Q_Skill(const FInputActionValue& value);
@@ -80,6 +85,9 @@ public:
 	void ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* _tempAction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _lookAction;
 
@@ -141,6 +149,15 @@ public:
 	UAnimMontage* _myAnimMontage;
 
 protected:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UTimelineComponent* _cameraTLCom;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCurveFloat* _cameraZoomCurve;
+
+	FOnTimelineFloat _cameraZoomHandler;
+	float _defalutSpringArmLength = 500.0f;
+	float _zoomSpringArmLength = 200.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bCanDash = true;
 
@@ -184,4 +201,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	class USphereComponent* _shieldDashAttackSphere;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Zoom, meta = (AllowPrivateAccess = "true"))
+	bool bIsZoom = false;
+
 };

@@ -45,6 +45,14 @@ ATFT_Player::ATFT_Player()
 
 	SetMesh("/Script/Engine.SkeletalMesh'/Game/Blueprints/Characters/Player/Mesh/TFT_SK_SciFi_Soldier_Female_Skin1.TFT_SK_SciFi_Soldier_Female_Skin1'");
 
+	_cameraTLCom = CreateDefaultSubobject<UTimelineComponent>(TEXT("CameraTLComponent"));
+	static ConstructorHelpers::FObjectFinder<UCurveFloat> cf
+	(TEXT("/Script/Engine.CurveFloat'/Game/Blueprints/Characters/Player/Camera/TFT_Player_Camera_Zoom_Curve.TFT_Player_Camera_Zoom_Curve'"));
+	if(cf.Succeeded())
+	{
+		_cameraZoomCurve = cf.Object;
+	}
+
 	_springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	_springArm->SetupAttachment(GetCapsuleComponent());
 	_springArm->TargetArmLength = 500.0f;
@@ -95,6 +103,9 @@ void ATFT_Player::BeginPlay()
 	{
 		_shieldDashAttackSphere->OnComponentBeginOverlap.AddDynamic(this, &ATFT_Player::ShieldDash_OnOverlapBegin);
 	}
+
+	_cameraZoomHandler.BindUFunction(this, FName("CameraZoom"));
+	_cameraTLCom->AddInterpFloat(_cameraZoomCurve, _cameraZoomHandler);
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -159,12 +170,33 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::OnShield);
 		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::StopDefense);
 		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
+
+		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
 	}
 }
 
 void ATFT_Player::SetMesh(FString path)
 {
 	_meshCom->SetMesh(path);
+}
+
+void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
+{
+	if (bIsZoom) return;
+
+	bool isPressed = value.Get<bool>();
+
+	if (isPressed)
+	{
+		if (bEquipSword)
+		{
+			bEquipSword = false;
+		}
+		else
+		{
+			bEquipSword = true;
+		}
+	}
 }
 
 void ATFT_Player::Move(const FInputActionValue& value)
@@ -254,7 +286,7 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 		// _animInstancePlayer->StopRunningMontage();
 		_animInstancePlayer->PlayAttackMontage();
 		_isAttacking = true;
-		_canMove = false;
+		if(bEquipSword) _canMove = false;
 		_curAttackIndex %= 3;
 		_curAttackIndex++;
 		_animInstancePlayer->JumpToSection(_curAttackIndex);
@@ -306,6 +338,11 @@ void ATFT_Player::Rolling()
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(_rollingMontage);
+}
+
+void ATFT_Player::CameraZoom(float alpha)
+{
+	_springArm->TargetArmLength = FMath::Lerp(_defalutSpringArmLength, _zoomSpringArmLength, alpha);
 }
 
 void ATFT_Player::E_Skill(const FInputActionValue& value)
@@ -525,11 +562,19 @@ void ATFT_Player::StartDefense()
 	bIsDefense = true;
 	GetCharacterMovement()->MaxWalkSpeed = defenseWalkSpeed;
 
-	if (_animInstancePlayer)
+	if (bEquipSword)
 	{
-		EFFECTMANAGER->Play(TEXT("ShieldOn"), 0, GetActorLocation());
-		_animInstancePlayer->bIsDefensing = true;
-		_animInstancePlayer->PlayDefenseMontage();		
+		if (_animInstancePlayer)
+		{
+			EFFECTMANAGER->Play(TEXT("ShieldOn"), 0, GetActorLocation());
+			_animInstancePlayer->bIsDefensing = true;
+			_animInstancePlayer->PlayDefenseMontage();
+		}
+	}
+	else
+	{
+		_cameraTLCom->Play();
+		bIsZoom = true;
 	}
 }
 
@@ -538,10 +583,18 @@ void ATFT_Player::StopDefense()
 	bIsDefense = false;
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
-	if (_animInstancePlayer)
+	if (bEquipSword)
 	{
-		_animInstancePlayer->bIsDefensing = false;
-		_animInstancePlayer->StopDefenseMontage();		
+		if (_animInstancePlayer)
+		{
+			_animInstancePlayer->bIsDefensing = false;
+			_animInstancePlayer->StopDefenseMontage();
+		}
+	}
+	else
+	{
+		_cameraTLCom->Reverse();
+		bIsZoom = false;
 	}
 }
 

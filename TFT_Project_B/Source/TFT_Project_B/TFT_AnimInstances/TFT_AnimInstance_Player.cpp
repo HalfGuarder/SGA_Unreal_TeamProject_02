@@ -15,6 +15,13 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_attackMontage = am.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> fm
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Rifle_Attack_Montage.TFT_Player_Rifle_Attack_Montage'"));
+	if (fm.Succeeded())
+	{
+		_fireMontage = fm.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> rm
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Running_AnimMontage.TFT_Player_Running_AnimMontage'"));
 	if (rm.Succeeded())
@@ -49,6 +56,7 @@ void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
 	ATFT_Creature* player = Cast<ATFT_Creature>(TryGetPawnOwner());
 	if(player != nullptr)
 	{
+		bEquipSword = (player->bEquipSword);
 		_speed = player->GetVelocity().Size();
 		bIsFalling = player->GetMovementComponent()->IsFalling();
 		_vertical = _vertical + (player->_vertical - _vertical) * DeltaSeconds;
@@ -70,9 +78,19 @@ void UTFT_AnimInstance_Player::JumpToSection(int32 sectionIndex)
 
 void UTFT_AnimInstance_Player::PlayAttackMontage()
 {
-	if (!Montage_IsPlaying(_attackMontage))
+	if (bEquipSword)
 	{
-		Montage_Play(_attackMontage);
+		if (!Montage_IsPlaying(_attackMontage))
+		{
+			Montage_Play(_attackMontage);
+		}
+	}
+	else
+	{
+		if (!Montage_IsPlaying(_fireMontage))
+		{
+			Montage_Play(_fireMontage);
+		}
 	}
 }
 

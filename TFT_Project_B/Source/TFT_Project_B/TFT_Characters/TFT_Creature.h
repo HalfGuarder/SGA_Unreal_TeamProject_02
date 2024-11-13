@@ -127,4 +127,6 @@ public:
 	bool bLDashing = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Dash, Meta = (AllowPrivateAccess = true))
 	bool bRDashing = false;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Equip, Meta = (AllowPrivateAccess = true))
+	bool bEquipSword = false;
 };
