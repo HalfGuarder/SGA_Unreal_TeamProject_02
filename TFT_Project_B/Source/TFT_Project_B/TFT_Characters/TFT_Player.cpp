@@ -607,6 +607,7 @@ void ATFT_Player::StartDefense()
 	}
 	else
 	{
+		UIMANAGER->_WeaponZoomEvent.Broadcast();
 		_cameraTLCom->Play();
 		bIsZoom = true;
 	}
@@ -627,6 +628,7 @@ void ATFT_Player::StopDefense()
 	}
 	else
 	{
+		UIMANAGER->_WeaponZoomEvent.Broadcast();
 		_cameraTLCom->Reverse();
 		bIsZoom = false;
 	}

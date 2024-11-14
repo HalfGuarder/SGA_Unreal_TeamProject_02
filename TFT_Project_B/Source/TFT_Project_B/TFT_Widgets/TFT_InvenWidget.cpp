@@ -16,7 +16,7 @@
 bool UTFT_InvenWidget::Initialize()
 {
 	bool abc = Super::Initialize();
-
+	
 	auto array = Inven_UniformGrid->GetAllChildren();
 	int32 slotIndex = 0;
 
@@ -92,7 +92,7 @@ bool UTFT_InvenWidget::Initialize()
 	_UIsaveiteminfo.SetNum(9);
 
 	_emptySlot = LoadObject<UTexture2D>
-		(nullptr, TEXT(""));
+		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/ParagonRampage/Characters/Global/MaterialLayers/Metal/T_LightMetal02.T_LightMetal02'"));
 
 	Item_Information->SetText(_nullText);
 	Inven_ItemMiniInfo->SetText(_nullText);

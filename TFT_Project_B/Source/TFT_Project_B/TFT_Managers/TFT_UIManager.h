@@ -17,8 +17,8 @@ enum class UIType : int32
 {
 	CrossHair,
 	Inventory,
-	SkillUI,
 	EquipmentUI,
+	SkillUI,
 };
 
 
@@ -50,6 +50,9 @@ public:
 	UFUNCTION()
 	void CloseEquipmentUIA();
 
+	UFUNCTION()
+	void WeaponCrossHairUIA();
+
 	UTFT_InvenWidget* GetInvenUI() { return _invenWidget; }
 	UTFT_EquipmentWidget* GetEquipmentUI() { return _EquipmentWidget; }
 
@@ -62,17 +65,23 @@ public:
 	UIOpenEvent _invenOpenEvent;
 	UIOpenEvent _EquipmentOpenEvent;
 	UIOpenEvent _EquipmentCloseResetEvent;
+	UIOpenEvent _WeaponZoomEvent;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UUserWidget*> _widgets;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UUserWidget* _crossHair;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UTFT_InvenWidget* _invenWidget;
 
-	bool _UIInvenarea = false;
-	bool _UIEquipmentarea = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UTFT_EquipmentWidget* _EquipmentWidget;
+
+	bool _UIInvenarea = false;
+	bool _UIEquipmentarea = false;
+	bool _UICrossHair = false;
 };

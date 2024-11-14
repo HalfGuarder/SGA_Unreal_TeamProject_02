@@ -20,7 +20,7 @@
 
 bool UTFT_EquipmentWidget::Initialize()
 {
-	bool abc = Super::Initialize();
+	bool abc = Super::Initialize();	
 
 	auto array = TFT_Equipment->GetAllChildren();
 	int32 slotIndex = 0;
@@ -79,10 +79,10 @@ bool UTFT_EquipmentWidget::Initialize()
 
 
 	_emptySlot = LoadObject<UTexture2D>
-		(nullptr, TEXT(""));
+		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/invisible.invisible'"));
 
 	_choiceSlot = LoadObject<UTexture2D>
-		(nullptr, TEXT(""));
+		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/Choice.Choice'"));
 
 
 

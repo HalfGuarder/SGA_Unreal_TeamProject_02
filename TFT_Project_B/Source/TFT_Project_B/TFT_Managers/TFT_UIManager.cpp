@@ -11,20 +11,27 @@ ATFT_UIManager::ATFT_UIManager()
 {
  	PrimaryActorTick.bCanEverTick = false;
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> crossHair(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_CrossHair_BP.TFT_CrossHair_BP_C'"));
+	if (crossHair.Succeeded())
+	{
+		_crossHair = CreateWidget<UUserWidget>(GetWorld(), crossHair.Class);
+	}
+
 	static ConstructorHelpers::FClassFinder<UUserWidget> invenWidget
-	(TEXT(""));
+	(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_InvenWidget_BP.TFT_InvenWidget_BP_C'"));
 	if (invenWidget.Succeeded())
 	{
 		_invenWidget = CreateWidget<UTFT_InvenWidget>(GetWorld(), invenWidget.Class);
 	}
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> EquipmentWidget
-	(TEXT(""));
+	(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/UTFT_EquipmentWidget_BP.UTFT_EquipmentWidget_BP_C'"));
 	if (EquipmentWidget.Succeeded())
 	{
 		_EquipmentWidget = CreateWidget<UTFT_EquipmentWidget>(GetWorld(), EquipmentWidget.Class);
 	}
 
+	_widgets.Add(_crossHair);
 	_widgets.Add(_invenWidget);
 	_widgets.Add(_EquipmentWidget);
 }
@@ -33,10 +40,10 @@ void ATFT_UIManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	/*OpenWidget(UIType::Inventory);
+	OpenWidget(UIType::Inventory);
 	CloseWidget(UIType::Inventory);
 
-	OpenWidget(UIType::SkillUI);
+	//OpenWidget(UIType::SkillUI);
 
 	OpenWidget(UIType::EquipmentUI);
 	CloseWidget(UIType::EquipmentUI);
@@ -44,7 +51,8 @@ void ATFT_UIManager::BeginPlay()
 	_invenOpenEvent.AddUObject(this, &ATFT_UIManager::OpenInvenUIA);
 	_invenWidget->_CloseInvenBtn.AddUObject(this, &ATFT_UIManager::CloseInvenBtn);
 	_EquipmentOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffEquipmentUIA);
-	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);*/
+	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);
+	_WeaponZoomEvent.AddUObject(this, &ATFT_UIManager::WeaponCrossHairUIA);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -133,6 +141,20 @@ void ATFT_UIManager::CloseEquipmentUIA()
 	_EquipmentCloseResetEvent.Broadcast();
 	CloseWidget(UIType::EquipmentUI);
 	MouseLock(UIType::EquipmentUI);
+}
+
+void ATFT_UIManager::WeaponCrossHairUIA()
+{
+	if (_UICrossHair == false)
+	{
+		_UICrossHair = true;
+		OpenWidget(UIType::CrossHair);
+	}
+	else if (_UICrossHair == true)
+	{
+		_UICrossHair = false;
+		CloseWidget(UIType::CrossHair);
+	}
 }
 
 void ATFT_UIManager::MouseUnLock(UIType type)
