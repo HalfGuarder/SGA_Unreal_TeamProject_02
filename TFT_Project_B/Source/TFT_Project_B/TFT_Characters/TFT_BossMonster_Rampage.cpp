@@ -247,6 +247,14 @@ float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& Dam
 
 void ATFT_BossMonster_Rampage::DeathStart()
 {
+   
+    SetActorHiddenInGame(true);
+
+    
+    DetachFromControllerPendingDestroy();
+
+   
+    bIsDead = true;
 }
 
 void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
@@ -263,6 +271,9 @@ void ATFT_BossMonster_Rampage::Boss_DeathEnd()
     this->SetActorHiddenInGame(true);
 
     _animInstance_Boss->_bossDeathEndDelegate.RemoveAll(this);
+    _animInstance_Boss->_deathEndDelegate.RemoveAll(this);
+    _animInstance_Boss->_attackStartDelegate.RemoveAll(this);
+    _animInstance_Boss->_attackHitDelegate.RemoveAll(this);
 }
 
 void ATFT_BossMonster_Rampage::BossDisable()

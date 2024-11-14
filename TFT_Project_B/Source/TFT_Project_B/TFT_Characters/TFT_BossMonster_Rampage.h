@@ -65,6 +65,8 @@ private:
 	float HpBarVisibilityDistance = 500.0f; 
 
 	
+	bool bIsDead = false;
+	
 	APlayerController* PlayerController;
 
 	FVector LockedLocation; 
