@@ -50,8 +50,7 @@ void ATFT_BossMonster_Rampage::BeginPlay()
     _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
 
-    armcapsule_R->OnComponentBeginOverlap.AddDynamic(this, &ATFT_BossMonster_Rampage::OnArmCapsuleHit);
-    armcapsule_L->OnComponentBeginOverlap.AddDynamic(this, &ATFT_BossMonster_Rampage::OnArmCapsuleHit);
+
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
@@ -185,53 +184,10 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
         }
     }
 
-    armcapsule_R->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    armcapsule_L->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
 
     DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
-
-void ATFT_BossMonster_Rampage::OnArmCapsuleHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-    if (OtherActor && OtherActor != this && _isAttacking)
-    {
-        // 타겟이 공격 가능한 타입인지 확인
-        ATFT_Creature* Target = Cast<ATFT_Creature>(OtherActor);
-        if (Target)
-        {
-           
-            float hpRatio = _statCom->BossHPRatio();
-            float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
-            float baseDamage = _statCom->GetAttackDamage();
-            float damage = baseDamage * damageMultiplier;
-
-            FDamageEvent DamageEvent;
-            Target->TakeDamage(damage, DamageEvent, GetController(), this);
-
-           
-            switch (_curAttackIndex)
-            {
-            case 1:
-                Target->SetState(StateType::Airborne);
-                break;
-            case 2:
-                Target->SetState(StateType::Stun);
-                break;
-            case 3:
-                Target->SetState(StateType::Slow);
-                break;
-            default:
-                break;
-            }
-
-           
-            armcapsule_R->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            armcapsule_L->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-        }
-    }
-}
-
-
 
 void ATFT_BossMonster_Rampage::Attack_AI()
 {
@@ -296,9 +252,6 @@ void ATFT_BossMonster_Rampage::DeathStart()
 void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
 {
     _isAttacking = false;
-
-    armcapsule_R->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    armcapsule_L->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
 }
