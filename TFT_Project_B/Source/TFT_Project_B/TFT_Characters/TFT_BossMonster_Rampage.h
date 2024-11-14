@@ -23,7 +23,10 @@ public:
 
 	UFUNCTION()
 	void AttackHit_Boss();
-	
+
+	UFUNCTION()
+	void OnArmCapsuleHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	virtual void Attack_AI();
 	void ResetSkillCooldown();
 	
