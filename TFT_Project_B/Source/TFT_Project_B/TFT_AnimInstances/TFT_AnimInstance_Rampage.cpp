@@ -23,7 +23,15 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 
     if (sm.Succeeded())
     {
-        _skillMontage = sm.Object;
+       // _skillMontage = sm.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> sm2
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Fire.TFT_Rampage_Fire'"));
+
+    if (sm2.Succeeded())
+    {
+        _skillMontage2 = sm2.Object;
     }
 
 }
@@ -74,9 +82,9 @@ void UTFT_AnimInstance_Rampage::PlayAttackMontage()
 
 void UTFT_AnimInstance_Rampage::PlaySkillMontage()
 {
-    if (!Montage_IsPlaying(_skillMontage))
+    if (!Montage_IsPlaying(_skillMontage2))
     {
-        Montage_Play(_skillMontage);
+        Montage_Play(_skillMontage2);
 
         ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
         if (myCharacter)

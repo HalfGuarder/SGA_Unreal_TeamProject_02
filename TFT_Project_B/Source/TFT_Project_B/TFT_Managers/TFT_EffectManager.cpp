@@ -17,6 +17,8 @@ ATFT_EffectManager::ATFT_EffectManager()
 
 	CreateParticleClass(TEXT("Explosion"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Rampage_Explosion.TFT_Rampage_Explosion_C'"));
 
+	CreateParticleClass(TEXT("chainExplosion"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Rampage_ChainExplosion.TFT_Rampage_ChainExplosion_C'"));
+
 	//Player
 	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TestEffect.TFT_Player_TestEffect_C'"));
 }
