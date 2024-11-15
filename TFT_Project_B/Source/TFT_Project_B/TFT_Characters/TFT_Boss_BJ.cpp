@@ -188,6 +188,8 @@ void ATFT_Boss_BJ::Attack_AI()
             }
             else if (randomValue < 30)
             {
+                GetWorld()->GetTimerManager().SetTimer(MoveTimerHandle, this, &ATFT_Boss_BJ::MoveMessageForward, 1.0f, false);
+
                 _animInstance_BJ->PlaySlashMontage();
             }
             else
@@ -202,7 +204,15 @@ void ATFT_Boss_BJ::Attack_AI()
             _animInstance_BJ->JumpToSection(_curAttackIndex);
         }
     }
-} 
+}
+
+void ATFT_Boss_BJ::MoveMessageForward()
+{
+    FVector currentLocation = GetActorLocation();
+    FVector newLocation = currentLocation + GetActorForwardVector() * 500.0f;
+    SetActorLocation(newLocation);
+}
+
 
 void ATFT_Boss_BJ::AttackEnd()
 {

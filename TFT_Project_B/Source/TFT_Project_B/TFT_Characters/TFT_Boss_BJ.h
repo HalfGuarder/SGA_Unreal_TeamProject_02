@@ -28,6 +28,8 @@ public:
 
 	virtual void Attack_AI();
 
+	void MoveMessageForward();
+
 	virtual void AttackEnd();
 
 
@@ -44,6 +46,8 @@ public:
 	void BossDisable();
 
 private:
+	FTimerHandle MoveTimerHandle;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_BJ* _animInstance_BJ;
