@@ -38,6 +38,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/OverlapResult.h"
 
+#include "TFT_Projectile.h"
+
 ATFT_Player::ATFT_Player()
 {
 	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
@@ -97,6 +99,13 @@ ATFT_Player::ATFT_Player()
 	_shieldDashAttackSphere->SetupAttachment(GetCapsuleComponent());
 	_shieldDashAttackSphere->SetupAttachment(_shield);
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	static ConstructorHelpers::FClassFinder<ATFT_Projectile> pc
+	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/Weapons/TFT_Projectile_BP.TFT_Projectile_BP_C'"));
+	if(pc.Succeeded())
+	{
+		_projectileClass = pc.Class;
+	}
 }
 
 void ATFT_Player::BeginPlay()
@@ -141,7 +150,6 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 
 	}
-	
 
 	if (HpBarWidgetInstance)
 	{
@@ -313,44 +321,65 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 
 	bool isPressed = value.Get<bool>();
 
-	if (_isAttacking == false && isPressed && _animInstancePlayer != nullptr)
+	if (bEquipSword)
 	{
-		// _animInstancePlayer->StopRunningMontage();
+		if (_isAttacking == false && isPressed && _animInstancePlayer != nullptr)
+		{
+			// _animInstancePlayer->StopRunningMontage();
+			_animInstancePlayer->PlayAttackMontage();
+			_isAttacking = true;
+			_canMove = false;
+			_curAttackIndex %= 3;
+			_curAttackIndex++;
+			_animInstancePlayer->JumpToSection(_curAttackIndex);
+
+			//if (auto _animInstTM = Cast<UTFT_AnimInstance_Player>(_animInstancePlayer))
+			//{
+			//	if (_invenCom->_currentWeapon->_Itemid == 1)
+			//	{
+			//		_animInstTM->PlayAttackMontage();
+			//		_isAttacking = true;
+
+			//		_curAttackIndex %= 3;
+			//		_curAttackIndex++;
+
+			//		_animInstTM->JumpToSection(_curAttackIndex);
+			//	}
+			//	else if (_invenCom->_currentWeapon->_Itemid == 3)
+			//	{
+			//		_animInstTM->PlayAttackMontage2Hend();
+			//		_isAttacking = true;
+
+			//		_curAttackIndex %= 2;
+			//		_curAttackIndex++;
+
+			//		_animInstTM->JumpToSection(_curAttackIndex);
+			//	}
+			//	else
+			//	{
+			//		//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
+			//		_animInstTM->PlayAttackMontage();
+			//	}
+			//}
+		}
+	}
+	else
+	{
 		_animInstancePlayer->PlayAttackMontage();
 		_isAttacking = true;
-		if(bEquipSword) _canMove = false;
 		_curAttackIndex %= 3;
 		_curAttackIndex++;
 		_animInstancePlayer->JumpToSection(_curAttackIndex);
+
+		if (_projectileClass)
+		{
+			FVector forward = GetActorForwardVector();
+			FVector fireLocation = GetActorLocation() + forward * 150.0f;
+			FRotator fireRotation = GetActorRotation();
 		
-		//if (auto _animInstTM = Cast<UTFT_AnimInstance_Player>(_animInstancePlayer))
-		//{
-		//	if (_invenCom->_currentWeapon->_Itemid == 1)
-		//	{
-		//		_animInstTM->PlayAttackMontage();
-		//		_isAttacking = true;
-
-		//		_curAttackIndex %= 3;
-		//		_curAttackIndex++;
-
-		//		_animInstTM->JumpToSection(_curAttackIndex);
-		//	}
-		//	else if (_invenCom->_currentWeapon->_Itemid == 3)
-		//	{
-		//		_animInstTM->PlayAttackMontage2Hend();
-		//		_isAttacking = true;
-
-		//		_curAttackIndex %= 2;
-		//		_curAttackIndex++;
-
-		//		_animInstTM->JumpToSection(_curAttackIndex);
-		//	}
-		//	else
-		//	{
-		//		//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
-		//		_animInstTM->PlayAttackMontage();
-		//	}
-		//}
+			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
+			bullet->FireInDirection(forward);
+		}
 	}
 }
 

@@ -206,4 +206,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Zoom, meta = (AllowPrivateAccess = "true"))
 	bool bIsZoom = false;
 
+	// Projectile
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class ATFT_Projectile> _projectileClass;
+
 };
