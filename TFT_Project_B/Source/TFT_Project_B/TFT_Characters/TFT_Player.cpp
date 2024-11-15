@@ -108,6 +108,12 @@ ATFT_Player::ATFT_Player()
 	{
 		_projectileClass = pc.Class;
 	}
+	static ConstructorHelpers::FClassFinder<AActor> lc
+	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/Weapons/TFT_Laser_BP.TFT_Laser_BP_C'"));
+	if (lc.Succeeded())
+	{
+		_laserClass = lc.Class;
+	}
 }
 
 void ATFT_Player::BeginPlay()
@@ -378,13 +384,29 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 
 			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
 			FVector end = (GetControlRotation().Vector()) + start;
-			FVector direction = end - start;
+			_projectileDir = end - start;
 
 			FVector fireLocation = GetActorLocation() + start;
 			FRotator fireRotation = GetControlRotation();
 		
 			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
-			bullet->FireInDirection(direction);
+			bullet->FireInDirection(_projectileDir);
+		}
+		if (_laserClass)
+		{
+			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
+			FVector end = (GetControlRotation().Vector()) + start;
+
+			FVector fireLocation = GetActorLocation() + start;
+			FRotator fireRotation = GetControlRotation();
+
+			auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
+
+			// razer->SetActorEnableCollision(false);
+
+			FName HR_WeaponSocket(TEXT("hand_r_socket"));
+			raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
+			raser->SetOwner(this);
 		}
 	}
 }

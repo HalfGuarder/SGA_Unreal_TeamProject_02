@@ -209,5 +209,9 @@ public:
 	// Projectile
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class ATFT_Projectile> _projectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> _laserClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	FVector _projectileDir;
 };
