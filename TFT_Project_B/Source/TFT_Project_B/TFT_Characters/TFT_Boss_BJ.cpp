@@ -121,7 +121,7 @@ void ATFT_Boss_BJ::AttackHit_Boss()
         GetActorLocation(),
         GetActorLocation() + GetActorForwardVector() * attackRange,
         FQuat::Identity,
-        ECollisionChannel::ECC_GameTraceChannel10,
+        ECollisionChannel::ECC_GameTraceChannel6,
         FCollisionShape::MakeSphere(attackRadius),
         params
     );
