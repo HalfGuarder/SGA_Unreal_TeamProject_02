@@ -59,10 +59,12 @@ ATFT_Player::ATFT_Player()
 	_springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	_springArm->SetupAttachment(GetCapsuleComponent());
 	_springArm->TargetArmLength = 500.0f;
+	_springArm->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
 	_springArm->SetRelativeRotation(FRotator(-35.0f, 0.0f, 0.0f));
 
 	_camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	_camera->SetupAttachment(_springArm);
+	_camera->SetRelativeLocation(FVector(0.0f, 0.0f, 40.0f));
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
@@ -373,12 +375,16 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 
 		if (_projectileClass)
 		{
-			FVector forward = GetActorForwardVector();
-			FVector fireLocation = GetActorLocation() + forward * 150.0f;
-			FRotator fireRotation = GetActorRotation();
+
+			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
+			FVector end = (GetControlRotation().Vector()) + start;
+			FVector direction = end - start;
+
+			FVector fireLocation = GetActorLocation() + start;
+			FRotator fireRotation = GetControlRotation();
 		
 			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
-			bullet->FireInDirection(forward);
+			bullet->FireInDirection(direction);
 		}
 	}
 }
