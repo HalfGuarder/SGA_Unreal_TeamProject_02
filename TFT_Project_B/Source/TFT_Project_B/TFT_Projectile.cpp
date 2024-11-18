@@ -5,7 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "GameFramework\/ProjectileMovementComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine/DamageEvents.h"
 
 #include "TFT_Monster.h"
