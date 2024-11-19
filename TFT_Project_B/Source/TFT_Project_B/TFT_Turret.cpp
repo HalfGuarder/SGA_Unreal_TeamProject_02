@@ -90,7 +90,7 @@ void ATFT_Turret::FindTarget()
 
 					drawColor = FColor::Red;
 
-					DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);
+					//DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);
 
 					return;
 				}
@@ -112,7 +112,7 @@ void ATFT_Turret::FindTarget()
 		}		
 	}
 
-	DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);	
+	//DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);	
 }
 
 void ATFT_Turret::Aiming()

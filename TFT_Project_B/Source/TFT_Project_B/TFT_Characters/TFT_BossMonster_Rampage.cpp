@@ -49,8 +49,6 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 
     _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
-
-
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
@@ -196,12 +194,18 @@ void ATFT_BossMonster_Rampage::Attack_AI()
     if (!_isAttacking && _animInstance_Boss != nullptr)
     {
         if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
-            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage))
+            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage) &&
+            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_JumpskillMontage))
         {
             LockedLocation = GetActorLocation();
 
-            
-            if (bCanUseSkill)
+            if (bCanUseJumpSkill)
+            {
+                _animInstance_Boss->PlayJumpSkillMontage();
+                bCanUseJumpSkill = false;
+                GetWorld()->GetTimerManager().SetTimer(JumpSkillCooldownTimerHandle, this, &ATFT_BossMonster_Rampage::ResetJumpSkillCooldown, JumpSkillCooldown, false);
+            }
+            else if (bCanUseSkill)
             {
                 _animInstance_Boss->PlaySkillMontage();
                 bCanUseSkill = false;
@@ -227,6 +231,11 @@ void ATFT_BossMonster_Rampage::Attack_AI()
 void ATFT_BossMonster_Rampage::ResetSkillCooldown()
 {
     bCanUseSkill = true;
+}
+
+void ATFT_BossMonster_Rampage::ResetJumpSkillCooldown()
+{
+    bCanUseJumpSkill = true;
 }
 
 void ATFT_BossMonster_Rampage::AttackEnd()

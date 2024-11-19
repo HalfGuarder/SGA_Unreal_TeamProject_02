@@ -27,6 +27,7 @@ public:
 
 	virtual void Attack_AI();
 	void ResetSkillCooldown();
+	void ResetJumpSkillCooldown();
 	
 	virtual void AttackEnd();
 
@@ -74,4 +75,8 @@ private:
 	float SkillCooldown = 10.0f;
 	bool bCanUseSkill = true;
 	FTimerHandle SkillCooldownTimerHandle;
+
+	float JumpSkillCooldown = 20.0f;
+	bool bCanUseJumpSkill = true;
+	FTimerHandle JumpSkillCooldownTimerHandle;
 };

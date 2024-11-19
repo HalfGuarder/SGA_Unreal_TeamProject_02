@@ -24,6 +24,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	void PlayAttackMontage();
+	void PlayJumpSkillMontage();
 	void PlaySkillMontage();
 
 	void JumpToSection(int32 sectionIndex);
@@ -53,10 +54,10 @@ public:
 	class UAnimMontage* _myAnimMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _skillMontage;
+	class UAnimMontage* _JumpskillMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _skillMontage2;
+	class UAnimMontage* _skillMontage;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))

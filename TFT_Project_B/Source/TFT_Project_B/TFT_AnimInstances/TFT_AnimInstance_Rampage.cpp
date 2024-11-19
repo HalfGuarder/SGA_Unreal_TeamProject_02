@@ -18,20 +18,20 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
         _myAnimMontage = am.Object;
     }
 
-    static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> jm
     (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_JumpAttack_Montage.TFT_Rampage_JumpAttack_Montage'"));
+
+    if (jm.Succeeded())
+    {
+       _JumpskillMontage = jm.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Fire.TFT_Rampage_Fire'"));
 
     if (sm.Succeeded())
     {
-       // _skillMontage = sm.Object;
-    }
-
-    static ConstructorHelpers::FObjectFinder<UAnimMontage> sm2
-    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Fire.TFT_Rampage_Fire'"));
-
-    if (sm2.Succeeded())
-    {
-        _skillMontage2 = sm2.Object;
+        _skillMontage = sm.Object;
     }
 
 }
@@ -60,39 +60,53 @@ void UTFT_AnimInstance_Rampage::PlayAttackMontage()
         
         if (playResult > 0.0f)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Montage Play Successful"));
+           
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Failed to Play Montage"));
+          
         }
 
       
         ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
         if (myCharacter)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Pawn Owner Cast Successful"));
+            
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("Pawn Owner Cast Failed"));
+           
+        }
+    }
+}
+
+void UTFT_AnimInstance_Rampage::PlayJumpSkillMontage()
+{
+    if (!Montage_IsPlaying(_JumpskillMontage))
+    {
+        Montage_Play(_JumpskillMontage);
+
+        ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
+        if (myCharacter)
+        {
+           
+        }
+        else
+        {
+           
         }
     }
 }
 
 void UTFT_AnimInstance_Rampage::PlaySkillMontage()
 {
-    if (!Montage_IsPlaying(_skillMontage2))
+    if (!Montage_IsPlaying(_skillMontage))
     {
-        Montage_Play(_skillMontage2);
+        Montage_Play(_skillMontage);
 
         ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
         if (myCharacter)
         {
-            // 캐릭터를 위로 높게 띄우기 위해 LaunchCharacter 호출
-            FVector LaunchVelocity = FVector(0, 0, 3000); // 위쪽으로 1000의 힘을 가함 (필요에 맞게 조정)
-            myCharacter->LaunchCharacter(LaunchVelocity, true, true);
-
             UE_LOG(LogTemp, Warning, TEXT("Skill Montage played with increased jump height!"));
         }
         else
