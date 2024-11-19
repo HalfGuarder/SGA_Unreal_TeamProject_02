@@ -46,4 +46,7 @@ private:
 	TSubclassOf<class ATFT_Projectile> _projectileClass;
 
 	float timer = 0.0f;
+
+public:
+	bool bIsPreview = true;
 };

@@ -70,6 +70,8 @@ protected:
 	UFUNCTION()
 	void E_SkillHit();
 
+	void SpawnTurret();
+
 public:
 	void AddItemPlayer(ATFT_Item* item);
 	void AddItemHendle(ATFT_Item* item, int32 index);
@@ -214,4 +216,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	FVector _projectileDir;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Turret, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class ATFT_Turret> _turretClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Turret, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ATFT_Turret> _previewTurretClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Turret, meta = (AllowPrivateAccess = "true"))
+	class ATFT_Turret* _turret;
+
+	FTimerHandle _turretTimerHandle;
+
+	bool bTurretBuildMode = false;
+	bool bBuildTurret = false;
 };

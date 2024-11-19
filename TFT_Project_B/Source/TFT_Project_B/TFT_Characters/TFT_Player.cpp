@@ -39,6 +39,8 @@
 #include "Engine/OverlapResult.h"
 
 #include "TFT_Projectile.h"
+#include "TFT_Turret.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 ATFT_Player::ATFT_Player()
 {
@@ -113,6 +115,18 @@ ATFT_Player::ATFT_Player()
 	if (lc.Succeeded())
 	{
 		_laserClass = lc.Class;
+	}
+	static ConstructorHelpers::FClassFinder<ATFT_Turret> tc
+	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/Weapons/TFT_Turret_BP.TFT_Turret_BP_C'"));
+	if (tc.Succeeded())
+	{
+		_turretClass = tc.Class;
+	}
+	static ConstructorHelpers::FClassFinder<ATFT_Turret> tpc
+	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/Weapons/TFT_Turret_Preview_BP.TFT_Turret_Preview_BP_C'"));
+	if (tpc.Succeeded())
+	{
+		_previewTurretClass = tpc.Class;
 	}
 }
 
@@ -373,6 +387,13 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 	}
 	else
 	{
+		if (bTurretBuildMode && !bBuildTurret)
+		{
+			bBuildTurret = true;
+
+			return;
+		}
+
 		_animInstancePlayer->PlayAttackMontage();
 		_isAttacking = true;
 		_curAttackIndex %= 3;
@@ -391,22 +412,6 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 		
 			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
 			bullet->FireInDirection(_projectileDir);
-		}
-		if (_laserClass)
-		{
-			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
-			FVector end = (GetControlRotation().Vector()) + start;
-
-			FVector fireLocation = GetActorLocation() + start;
-			FRotator fireRotation = GetControlRotation();
-
-			auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
-
-			// razer->SetActorEnableCollision(false);
-
-			FName HR_WeaponSocket(TEXT("hand_r_socket"));
-			raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
-			raser->SetOwner(this);
 		}
 	}
 }
@@ -438,56 +443,91 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
-	if (!bIsDefense) return;
-
 	bool isPressed = value.Get<bool>();
-
-	StopDefense();
-
-	_animInstancePlayer->PlayUpperSwingMontage();
-
-	/*if (_invenCom->_currentWeapon == nullptr) return;
-
-	if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 3)
+	
+	if (bEquipSword)
 	{
-		if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+		if (!bIsDefense) return;
+
+		StopDefense();
+
+		_animInstancePlayer->PlayUpperSwingMontage();
+
+		/*if (_invenCom->_currentWeapon == nullptr) return;
+
+		if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 3)
 		{
-			_animInstTM->PlayE_SkillMontage();
+			if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+			{
+				_animInstTM->PlayE_SkillMontage();
 
 
-			UIMANAGER->GetSkillUI()->RunCDT(1);
+				UIMANAGER->GetSkillUI()->RunCDT(1);
+			}
+		}*/
+	}
+	else
+	{
+		if (GetWorldTimerManager().IsTimerPaused(_turretTimerHandle))
+		{
+			GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
 		}
-	}*/
+
+		GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
+	}
+	
 }
 
 void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
-	if (!bIsDefense) return;
-
 	bool isPressed = value.Get<bool>();
 
-	bIsShieldDashing = true;
-
-	StopDefense();
-
-	_animInstancePlayer->PlayShieldDashMontage();
-
-	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
-	/*if (_invenCom->_currentWeapon == nullptr) return;
-
-	if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 1)
+	if (bEquipSword)
 	{
-		if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+		if (!bIsDefense) return;
+
+		bIsShieldDashing = true;
+
+		StopDefense();
+
+		_animInstancePlayer->PlayShieldDashMontage();
+
+		_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+		/*if (_invenCom->_currentWeapon == nullptr) return;
+
+		if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 1)
 		{
-			_animInstTM->PlayQ_SkillMontage();
+			if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
+			{
+				_animInstTM->PlayQ_SkillMontage();
 
 
-			UIMANAGER->GetSkillUI()->RunCDT(0);
+				UIMANAGER->GetSkillUI()->RunCDT(0);
+			}
+		}*/
+	}
+	else
+	{
+		if (_laserClass)
+		{
+			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
+			FVector end = (GetControlRotation().Vector()) + start;
+
+			FVector fireLocation = GetActorLocation() + start;
+			FRotator fireRotation = GetControlRotation();
+
+			auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
+
+			// razer->SetActorEnableCollision(false);
+
+			FName HR_WeaponSocket(TEXT("hand_r_socket"));
+			raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
+			raser->SetOwner(this);
 		}
-	}*/
+	}
 }
 
 void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
@@ -825,6 +865,73 @@ void ATFT_Player::E_SkillHit()
 	}
 
 	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
+}
+
+void ATFT_Player::SpawnTurret()
+{
+	FHitResult hitResult;
+	FCollisionQueryParams params(NAME_None, false, this);
+
+	FVector start = GetActorForwardVector();
+	FVector end = (GetControlRotation().Vector()) + start;
+	FVector direction = end - start;
+
+	FVector lineStart = GetActorLocation() + start;
+	FVector lineEnd = GetActorLocation() + end * 500.0f;
+
+	bool bResult = GetWorld()->LineTraceSingleByChannel
+	(
+		hitResult,
+		lineStart,
+		lineEnd,
+		ECollisionChannel::ECC_GameTraceChannel10,
+		params
+	);
+
+	FColor drawColor = FColor::Green;
+
+	auto socket = GetMesh()->GetSocketByName("turret_socket");
+
+	if (bResult)
+	{
+		drawColor = FColor::Red;
+		// DrawDebugLine(GetWorld(), lineStart, lineEnd, drawColor, false, 1.0f);
+
+		if (!bTurretBuildMode)
+		{
+			auto previewTurret = GetWorld()->SpawnActor<ATFT_Turret>(_previewTurretClass, hitResult.ImpactPoint, FRotator::ZeroRotator);
+			_turret = previewTurret;
+			_turret->SetActorEnableCollision(false);
+			bTurretBuildMode = true;
+		}
+
+		if (_turret)
+		{
+			_turret->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, socket->SocketName);
+			_turret->SetOwner(this);
+			_turret->SetActorLocation(hitResult.ImpactPoint);
+		}
+	}
+
+	if (bBuildTurret)
+	{
+		_turret->SetActorEnableCollision(false);
+		_turret->SetActorHiddenInGame(true);
+
+		auto turret = GetWorld()->SpawnActor<ATFT_Turret>(_turretClass, _turret->GetActorLocation(), FRotator::ZeroRotator);
+		
+		turret->bIsPreview = false;
+
+		_turret->Destroy();
+		_turret = nullptr;
+
+		bBuildTurret = false;
+		bTurretBuildMode = false;
+
+		GetWorldTimerManager().PauseTimer(_turretTimerHandle);
+	}
+
+	// DrawDebugLine(GetWorld(), lineStart, lineEnd, drawColor, false, 1.0f);
 }
 
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)

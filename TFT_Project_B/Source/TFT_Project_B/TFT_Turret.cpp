@@ -42,14 +42,17 @@ void ATFT_Turret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FindTarget();
-	
-	timer += DeltaTime;
-
-	if (timer > 1.0f)
+	if (!bIsPreview)
 	{
-		Fire();
-		timer = 0;
+		timer += DeltaTime;
+
+		FindTarget();
+
+		if (timer > 1.0f)
+		{
+			Fire();
+			timer = 0;
+		}
 	}
 
 }
@@ -90,7 +93,7 @@ void ATFT_Turret::FindTarget()
 
 					drawColor = FColor::Red;
 
-					//DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);
+					// DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);
 
 					return;
 				}
@@ -107,12 +110,13 @@ void ATFT_Turret::FindTarget()
 
 				return;
 			}
-
-			_target = nullptr;
-		}		
+		}
+		_target = nullptr;
 	}
 
-	//DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);	
+	_target = nullptr;
+
+	// DrawDebugSphere(world, center, searchRadius, 20, drawColor, 1.0f);	
 }
 
 void ATFT_Turret::Aiming()
