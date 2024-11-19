@@ -27,4 +27,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect")
 	FRotator EffectRotationOffset;
 	
+
 };

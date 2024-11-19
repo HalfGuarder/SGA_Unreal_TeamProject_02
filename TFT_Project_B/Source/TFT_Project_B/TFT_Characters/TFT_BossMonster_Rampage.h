@@ -72,11 +72,11 @@ private:
 
 	FVector LockedLocation; 
 
-	float SkillCooldown = 10.0f;
+	float SkillCooldown = 15.0f;
 	bool bCanUseSkill = true;
 	FTimerHandle SkillCooldownTimerHandle;
 
-	float JumpSkillCooldown = 20.0f;
+	float JumpSkillCooldown = 10.0f;
 	bool bCanUseJumpSkill = true;
 	FTimerHandle JumpSkillCooldownTimerHandle;
 };

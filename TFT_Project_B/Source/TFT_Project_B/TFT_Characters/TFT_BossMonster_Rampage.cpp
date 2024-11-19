@@ -49,6 +49,8 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 
     _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
+
+
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
