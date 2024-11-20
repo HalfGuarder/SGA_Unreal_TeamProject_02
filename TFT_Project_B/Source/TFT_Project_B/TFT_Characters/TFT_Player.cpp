@@ -8,6 +8,7 @@
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 
 #include "TFT_AnimInstance_Player.h"
+#include "TFT_NPC.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
@@ -234,6 +235,7 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
 
 		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
+		EnhancedInputComponent->BindAction(SpaceAction, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
 	}
 }
 
@@ -993,6 +995,37 @@ void ATFT_Player::ChangeEquipment(ATFT_Item* item)
 void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
+}
+
+void ATFT_Player::CloseDialogueUI()
+{
+	if (bIsDialogueActive)
+	{
+		// 대화 UI 닫기
+		if (DialogueWidgetInstance)
+		{
+			DialogueWidgetInstance->RemoveFromViewport();
+			DialogueWidgetInstance = nullptr;
+		}
+
+		bIsDialogueActive = false;
+
+		// 플레이어 이동 활성화
+		GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(false);
+
+		// NPC에게 대화 종료 알림
+		TArray<AActor*> OverlappingActors;
+		GetOverlappingActors(OverlappingActors, ATFT_NPC::StaticClass());
+
+		for (AActor* Actor : OverlappingActors)
+		{
+			ATFT_NPC* NPC = Cast<ATFT_NPC>(Actor);
+			if (NPC)
+			{
+				NPC->OnDialogueClosed(); // NPC가 게이트 열도록 신호 전달
+			}
+		}
+	}
 }
 
 void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

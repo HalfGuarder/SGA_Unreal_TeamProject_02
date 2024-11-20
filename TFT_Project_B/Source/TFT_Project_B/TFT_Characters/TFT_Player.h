@@ -83,6 +83,9 @@ public:
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
 
+	void CloseDialogueUI();
+	void SetIsDialogueActive(bool bActive) { bIsDialogueActive = bActive; }
+
 	UFUNCTION()
 	void ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -134,6 +137,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _defenseAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SpaceAction;
 
 	class ITFT_InteractionInterface* _interface = nullptr;
 
@@ -149,6 +154,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* _myAnimMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> DialogueWidgetClass;
+
+	UUserWidget* DialogueWidgetInstance; 
+	bool bIsDialogueActive = false;      
 
 protected:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))

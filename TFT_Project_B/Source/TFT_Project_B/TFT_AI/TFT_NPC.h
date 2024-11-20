@@ -42,4 +42,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
     UPROPERTY(EditAnywhere, Category = "UI")
     TSubclassOf<UUserWidget> DialogueWidgetClass;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gate")
+    AActor* GateActor;
 };
