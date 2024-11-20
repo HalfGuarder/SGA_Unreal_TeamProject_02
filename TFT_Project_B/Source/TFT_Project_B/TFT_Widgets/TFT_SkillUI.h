@@ -20,9 +20,9 @@ public:
 
 	UTFT_Skill_piece* GetSkillSlot(int32 slotNum) { return _skillSlots[slotNum]; }
 
-	void SetSkillSlots(WEAPON_TYPE itemtype, int32 slotNum, float CoolDownTime);
-	void ResetSkillSlot();
-
+	void SetSkillSlot(WEAPON_TYPE itemtype, int32 slotNum, float CoolDownTime);
+	void HiddenSkillSlot();
+	void VisbleSkillSlot(WEAPON_TYPE itemtype);
 
 	void RunCDT(int32 slotNum);
 

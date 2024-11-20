@@ -26,17 +26,18 @@ public:
 	void SetSlotNumText(FString text);
 
 	void SetSlotImg(WEAPON_TYPE itemtype, int32 socket);
-	void ResetSlotImg();
+	void HeddenSlotImg();
 
 	void SetSlotPBPercent(float percent);
 
 	void SetCDT(float CDT);
-
+	void SetCountText(float count);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	bool bCoolDownOn = false;
 
+	bool changedText = false;
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SkillSlotNumText;
@@ -45,7 +46,9 @@ private:
 	class UProgressBar* SkillSlotPB;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* SkillSlotImg;
+	UTextBlock* SkillCountText;
+
+	FText _nullText = FText::FromString("");
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	float _coolDownTime;
@@ -53,8 +56,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	float _runTime = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	float _CountTime;
+
+
 private: // 선입력 정보
-// Object
+// Objec>bC
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	class UObject* _brushCloseQ_Resource;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))

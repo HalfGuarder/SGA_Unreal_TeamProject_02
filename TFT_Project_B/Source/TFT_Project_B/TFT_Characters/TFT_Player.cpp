@@ -42,6 +42,7 @@
 #include "TFT_Projectile.h"
 #include "TFT_Turret.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "TFT_SkillUI.h"
 
 ATFT_Player::ATFT_Player()
 {
@@ -156,6 +157,19 @@ void ATFT_Player::BeginPlay()
 
 	_cameraZoomHandler.BindUFunction(this, FName("CameraZoom"));
 	_cameraTLCom->AddInterpFloat(_cameraZoomCurve, _cameraZoomHandler);
+
+	if (UIMANAGER->GetSkillUI())
+	{
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::closeRange, 0, 2.0f); // Q 0
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::closeRange, 1, 6.0f); // E 1
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longLange, 2, 10.0f); // Q 2
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longLange, 3, 20.0f); // E 3
+
+		UIMANAGER->GetSkillUI()->HiddenSkillSlot();
+
+		if(bEquipSword == true) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
+		if(bEquipSword == false) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+	}
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -256,13 +270,16 @@ void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 
 	if (isPressed)
 	{
+		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // 일단 전부 투명화
 		if (bEquipSword)
 		{
 			bEquipSword = false;
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
 		}
 		else
 		{
 			bEquipSword = true;
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
 		}
 	}
 }
@@ -458,33 +475,33 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	
 	if (bEquipSword)
 	{
-		if (!bIsDefense) return;
-
-		StopRightClick();
-
-		_animInstancePlayer->PlayUpperSwingMontage();
-
-		/*if (_invenCom->_currentWeapon == nullptr) return;
-
-		if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 3)
+		if (UIMANAGER->GetSkillUI()->GetSkillSlot(1)->bCoolDownOn == false)
 		{
-			if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
-			{
-				_animInstTM->PlayE_SkillMontage();
+			if (!bIsDefense) return;
 
 
-				UIMANAGER->GetSkillUI()->RunCDT(1);
-			}
-		}*/
+			//StopDefense();
+			StopRightClick();
+
+			_animInstancePlayer->PlayUpperSwingMontage();
+
+			UIMANAGER->GetSkillUI()->RunCDT(1);
+		}
+
 	}
 	else
 	{
-		if (GetWorldTimerManager().IsTimerPaused(_turretTimerHandle))
+		if (UIMANAGER->GetSkillUI()->GetSkillSlot(3)->bCoolDownOn == false)
 		{
-			GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
-		}
+			if (GetWorldTimerManager().IsTimerPaused(_turretTimerHandle))
+			{
+				GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
+			}
 
-		GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
+			GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
+
+			UIMANAGER->GetSkillUI()->RunCDT(3);
+		}
 	}
 	
 }
@@ -497,46 +514,49 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 	if (bEquipSword)
 	{
-		if (!bIsDefense) return;
 
-		bIsShieldDashing = true;
-
-		StopRightClick();
-
-		_animInstancePlayer->PlayShieldDashMontage();
-
-		_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-
-		/*if (_invenCom->_currentWeapon == nullptr) return;
-
-		if (isPressed && _animInstanceTM != nullptr && _invenCom->_currentWeapon->_Itemid == 1)
+		if(UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
 		{
-			if (auto _animInstTM = Cast<UTFT_AnimInstance_TestMannequin>(_animInstanceTM))
-			{
-				_animInstTM->PlayQ_SkillMontage();
+			if (!bIsDefense) return;
+			bIsShieldDashing = true;
+
+			//StopDefense();
+			StopRightClick();
 
 
-				UIMANAGER->GetSkillUI()->RunCDT(0);
-			}
-		}*/
+
+			_animInstancePlayer->PlayShieldDashMontage();
+
+			_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+			UIMANAGER->GetSkillUI()->RunCDT(0);
+		}
+
 	}
 	else
 	{
-		if (_laserClass)
+		if (UIMANAGER->GetSkillUI()->GetSkillSlot(2)->bCoolDownOn == false)
 		{
-			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
-			FVector end = (GetControlRotation().Vector()) + start;
 
-			FVector fireLocation = GetActorLocation() + start;
-			FRotator fireRotation = GetControlRotation();
+			if (_laserClass)
+			{
+				FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
+				FVector end = (GetControlRotation().Vector()) + start;
 
-			auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
+				FVector fireLocation = GetActorLocation() + start;
+				FRotator fireRotation = GetControlRotation();
 
-			// razer->SetActorEnableCollision(false);
+				auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
 
-			FName HR_WeaponSocket(TEXT("hand_r_socket"));
-			raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
-			raser->SetOwner(this);
+				// razer->SetActorEnableCollision(false);
+
+				FName HR_WeaponSocket(TEXT("hand_r_socket"));
+				raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
+				raser->SetOwner(this);
+
+
+				UIMANAGER->GetSkillUI()->RunCDT(2);
+			}
 		}
 	}
 }

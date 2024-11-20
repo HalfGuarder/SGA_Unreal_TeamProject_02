@@ -26,15 +26,15 @@ bool UTFT_SkillUI::Initialize()
 
 	for (int32 i = 0; i < _skillSlots.Num(); i++)
 	{
-		if (i == 0) _skillSlots[i]->SetSlotNumText("Q");
-		if (i == 1) _skillSlots[i]->SetSlotNumText("E");
+		if (i % 2 == 0) _skillSlots[i]->SetSlotNumText("Q");
+		else _skillSlots[i]->SetSlotNumText("E");
 	}//
 
 
 	return result;
 }
 
-void UTFT_SkillUI::SetSkillSlots(WEAPON_TYPE itemtype, int32 slotNum, float CoolDownTime)
+void UTFT_SkillUI::SetSkillSlot(WEAPON_TYPE itemtype, int32 slotNum, float CoolDownTime)
 {
 	_skillSlots[slotNum]->SetCDT(CoolDownTime);
 	_skillSlots[slotNum]->SetSlotImg(itemtype, slotNum);
@@ -42,11 +42,36 @@ void UTFT_SkillUI::SetSkillSlots(WEAPON_TYPE itemtype, int32 slotNum, float Cool
 
 }
 
-void UTFT_SkillUI::ResetSkillSlot()
+void UTFT_SkillUI::HiddenSkillSlot()
 {
 	for (int32 i = 0; i < _skillSlots.Num(); i++)
 	{
-		_skillSlots[i]->ResetSlotImg();
+		_skillSlots[i]->HeddenSlotImg();
+	}
+}
+
+void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
+{
+	switch (itemtype)
+	{
+	case closeRange:
+	{
+		_skillSlots[0]->SetSlotImg(itemtype, 0);
+		_skillSlots[0]->changedText = false;
+		_skillSlots[1]->SetSlotImg(itemtype, 1);
+		_skillSlots[1]->changedText = false;
+	}
+		break;
+	case longLange:
+	{
+		_skillSlots[2]->SetSlotImg(itemtype, 2);
+		_skillSlots[2]->changedText = false;
+		_skillSlots[3]->SetSlotImg(itemtype, 3);
+		_skillSlots[3]->changedText = false;
+	}
+		break;
+	default:
+		break;
 	}
 }
 
