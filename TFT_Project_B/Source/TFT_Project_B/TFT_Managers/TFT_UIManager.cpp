@@ -5,6 +5,7 @@
 
 #include "TFT_InvenWidget.h"
 #include "TFT_EquipmentWidget.h"
+#include "TFT_SkillUI.h"
 #include "Kismet/GameplayStatics.h"
 
 ATFT_UIManager::ATFT_UIManager()
@@ -31,9 +32,16 @@ ATFT_UIManager::ATFT_UIManager()
 		_EquipmentWidget = CreateWidget<UTFT_EquipmentWidget>(GetWorld(), EquipmentWidget.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> skillUI(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_SkillUI_BP.TFT_SkillUI_BP_C'"));
+	if (skillUI.Succeeded())
+	{
+		_SkillWidget = CreateWidget<UTFT_SkillUI>(GetWorld(), skillUI.Class);
+	}
+
 	_widgets.Add(_crossHair);
 	_widgets.Add(_invenWidget);
 	_widgets.Add(_EquipmentWidget);
+	_widgets.Add(_SkillWidget);
 }
 
 void ATFT_UIManager::BeginPlay()
@@ -43,7 +51,7 @@ void ATFT_UIManager::BeginPlay()
 	OpenWidget(UIType::Inventory);
 	CloseWidget(UIType::Inventory);
 
-	//OpenWidget(UIType::SkillUI);
+	OpenWidget(UIType::SkillUI);
 
 	OpenWidget(UIType::EquipmentUI);
 	CloseWidget(UIType::EquipmentUI);

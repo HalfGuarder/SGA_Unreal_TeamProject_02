@@ -9,6 +9,7 @@
 class UUserWIdget;
 class UTFT_InvenWidget;
 class UTFT_EquipmentWidget;
+class UTFT_SkillUI;
 
 DECLARE_MULTICAST_DELEGATE(UIOpenEvent);
 
@@ -55,6 +56,7 @@ public:
 
 	UTFT_InvenWidget* GetInvenUI() { return _invenWidget; }
 	UTFT_EquipmentWidget* GetEquipmentUI() { return _EquipmentWidget; }
+	UTFT_SkillUI* GetSkillUI() { return _SkillWidget; }
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UUserWidget*> GetWidgets() { return _widgets; }
@@ -80,6 +82,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UTFT_EquipmentWidget* _EquipmentWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UTFT_SkillUI* _SkillWidget;
+
 
 	bool _UIInvenarea = false;
 	bool _UIEquipmentarea = false;

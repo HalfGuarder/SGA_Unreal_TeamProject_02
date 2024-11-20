@@ -10,7 +10,6 @@ enum WEAPON_TYPE
 	longLange
 };
 
-
 /**
  * 
  */
@@ -55,32 +54,50 @@ private:
 	float _runTime = 0.0f;
 
 private: // 선입력 정보
+// Object
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	class UObject* _brushCloseQ_Resource;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	UObject* _brushCloseQ_Black_Resource;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	UObject* _brushCloseE_Resource;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	UObject* _brushCloseE_Black_Resource;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	UObject* _brushLongQ_Resource;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	UObject* _brushLongQ_Black_Resource;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	UObject* _brushLongE_Resource;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	UObject* _brushLongE_Black_Resource;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	UObject* _nullBrush_Resource;
 
+// Brush
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	FSlateBrush _brushCloseQ;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	FSlateBrush _brushCloseQ_Black;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	FSlateBrush _brushCloseE;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	FSlateBrush _brushCloseE_Black;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	FSlateBrush _brushLongQ;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	FSlateBrush _brushLongQ_Black;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	FSlateBrush _brushLongE;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
+	FSlateBrush _brushLongE_Black;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SkillSlot, meta = (AllowPrivateAccess = "true"))
 	FSlateBrush _nullBrush;
