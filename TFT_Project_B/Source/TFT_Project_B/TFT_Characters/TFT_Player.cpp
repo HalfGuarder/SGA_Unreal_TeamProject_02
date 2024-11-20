@@ -229,10 +229,10 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Started, this, &ATFT_Player::StartRunning);
 		EnhancedInputComponent->BindAction(_runningAction, ETriggerEvent::Completed, this, &ATFT_Player::StopRunning);
 
-		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::StartDefense);
-		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::OnShield);
-		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::StopDefense);
-		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::StartRightClick);
+		// EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Started, this, &ATFT_Player::OnShield);
+		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::StopRightClick);
+		// EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
 
 		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
 		EnhancedInputComponent->BindAction(SpaceAction, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
@@ -247,6 +247,10 @@ void ATFT_Player::SetMesh(FString path)
 void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 {
 	if (bIsZoom) return;
+
+	if (bIsDefense) return;
+
+	if (bIsShieldDashing) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -404,16 +408,21 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 
 		if (_projectileClass)
 		{
+			if (_invenCom->_currentWeapon != nullptr && _invenCom->_currentWeapon->GetItemID() == 2)
+			{
+				FName hand_l_fire_socket(TEXT("hand_l_fire_socket"));
+				auto fireSocket = GetMesh()->GetSocketByName(hand_l_fire_socket);
+				
+				FVector start = fireSocket->GetSocketLocation(GetMesh()); // GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
+				FVector end = (GetControlRotation().Vector()) + start;
+				_projectileDir = end - start;
 
-			FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
-			FVector end = (GetControlRotation().Vector()) + start;
-			_projectileDir = end - start;
+				FVector fireLocation = GetActorLocation() + start;
+				FRotator fireRotation = GetControlRotation();
 
-			FVector fireLocation = GetActorLocation() + start;
-			FRotator fireRotation = GetControlRotation();
-		
-			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
-			bullet->FireInDirection(_projectileDir);
+				auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
+				bullet->FireInDirection(_projectileDir);
+			}
 		}
 	}
 }
@@ -451,7 +460,7 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	{
 		if (!bIsDefense) return;
 
-		StopDefense();
+		StopRightClick();
 
 		_animInstancePlayer->PlayUpperSwingMontage();
 
@@ -492,7 +501,7 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 		bIsShieldDashing = true;
 
-		StopDefense();
+		StopRightClick();
 
 		_animInstancePlayer->PlayShieldDashMontage();
 
@@ -688,7 +697,7 @@ void ATFT_Player::StopRunning()
 	}
 }
 
-void ATFT_Player::StartDefense()
+void ATFT_Player::StartRightClick()
 {
 	if (bIsShieldDashing) return;
 
@@ -703,6 +712,8 @@ void ATFT_Player::StartDefense()
 			_animInstancePlayer->bIsDefensing = true;
 			_animInstancePlayer->PlayDefenseMontage();
 		}
+
+		OnShield();
 	}
 	else
 	{
@@ -712,7 +723,7 @@ void ATFT_Player::StartDefense()
 	}
 }
 
-void ATFT_Player::StopDefense()
+void ATFT_Player::StopRightClick()
 {
 	bIsDefense = false;
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
@@ -724,6 +735,8 @@ void ATFT_Player::StopDefense()
 			_animInstancePlayer->bIsDefensing = false;
 			_animInstancePlayer->StopDefenseMontage();
 		}
+
+		OffShield();
 	}
 	else
 	{
@@ -1037,5 +1050,7 @@ void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 		Q_SkillHit();
 
 		_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		_animInstancePlayer->StopShiedlDashMontage();
 	}
 }

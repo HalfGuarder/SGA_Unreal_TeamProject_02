@@ -78,6 +78,9 @@ public:
 	int32 GetSellGold() { return _Sell; }
 	FString GetItemType() { return _ItemType; }
 	FString GetItemRegion() { return _ItemRegion; }
+	int32 GetItemID() { return _Itemid; }
+	UStaticMesh* GetItemMesh() { return ItemMesh; }
+
 public:
 	virtual void Tick(float DeltaTime) override;
 

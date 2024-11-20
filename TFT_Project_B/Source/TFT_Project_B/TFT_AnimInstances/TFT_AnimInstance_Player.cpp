@@ -50,6 +50,13 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 		_shieldDashMontage = sd.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> sde
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_ShieldDash_End_AnimMontage.TFT_Player_ShieldDash_End_AnimMontage'"));
+	if (sde.Succeeded())
+	{
+		_shieldDashEndMontage = sde.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> us
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_UpperSwing_AnimMontage.TFT_Player_UpperSwing_AnimMontage'"));
 	if (us.Succeeded())
@@ -170,7 +177,15 @@ void UTFT_AnimInstance_Player::PlayShieldDashMontage()
 
 void UTFT_AnimInstance_Player::StopShiedlDashMontage()
 {
+	if (Montage_IsPlaying(_shieldDashMontage))
+	{
+		Montage_Stop(0.2f, _shieldDashMontage);
 
+		Montage_Play(_shieldDashEndMontage);
+
+		bIsShieldDashing = false;
+		_shieldDashEndDelegate.Broadcast();
+	}
 }
 
 void UTFT_AnimInstance_Player::PlayUpperSwingMontage()

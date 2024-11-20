@@ -23,7 +23,7 @@ ATFT_Item::ATFT_Item()
 	_trigger->SetSphereRadius(60.0f);
 
 	ConstructorHelpers::FObjectFinder<UDataTable> DataTableObj
-	(TEXT(""));
+	(TEXT("/Script/Engine.DataTable'/Game/Data/TFT_ItemData_Table.TFT_ItemData_Table'"));
 
 	if (DataTableObj.Succeeded())
 	{

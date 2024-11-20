@@ -38,3 +38,8 @@ float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 	return damage;
 }
+
+void ATFT_Monster::TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+}

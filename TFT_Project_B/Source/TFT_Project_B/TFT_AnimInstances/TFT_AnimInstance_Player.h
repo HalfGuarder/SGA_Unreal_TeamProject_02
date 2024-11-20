@@ -107,6 +107,9 @@ private:
 	UAnimMontage* _shieldDashMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _shieldDashEndMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _upperSwingMontage;
 
 public:

@@ -56,8 +56,8 @@ protected:
 	void SetBlockInputOnDash_False() { bBlockInputOnDash = false; }
 	void StartRunning();
 	void StopRunning();
-	void StartDefense();
-	void StopDefense();
+	void StartRightClick();
+	void StopRightClick();
 	void StopShieldDash();
 	void OffShield();
 	void OnShield();
