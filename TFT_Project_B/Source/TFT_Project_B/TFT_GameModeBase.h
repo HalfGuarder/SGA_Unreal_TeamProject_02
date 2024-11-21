@@ -20,6 +20,14 @@ public:
 
 	virtual void BeginPlay() override;
 
-private:
+	UFUNCTION()
+	void GameStart();
 
+	void MouseUnLock();
+	void MouseLock();
+private:
+	UPROPERTY()
+	class UTFT_GameStartWidget* GameStartInstance;
+
+	TSubclassOf<APawn> _player;
 };
