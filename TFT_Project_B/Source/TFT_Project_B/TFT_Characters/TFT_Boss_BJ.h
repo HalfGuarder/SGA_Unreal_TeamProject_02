@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "TFT_Creature.h"
 #include "TFT_Characters/TFT_Monster.h"
+#include "NiagaraSystem.h"
 #include "TFT_Boss_BJ.generated.h"
 
 /**
@@ -51,4 +52,15 @@ private:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_BJ* _animInstance_BJ;
+
+protected:
+	FVector TargetLocation;
+	FTimerHandle SkillTimerHandle;
+	FTimerHandle NiagaraEffectTimerHandle;
+
+	void SpawnNiagaraEffectAtLocation(FVector Location);
+	void TriggerSkillEffect();
+
+public:
+	void ActivateSkill();
 };

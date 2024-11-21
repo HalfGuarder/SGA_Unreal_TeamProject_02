@@ -2,6 +2,7 @@
 
 
 #include "TFT_Characters/TFT_Boss_BJ.h"
+#include "TFT_Player.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 
@@ -11,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 
+#include "Niagara/Public/NiagaraFunctionLibrary.h"
+#include "TimerManager.h"
 #include "Engine/DamageEvents.h"
 #include "TFT_GameInstance.h"
 #include "TFT_EffectManager.h"
@@ -30,8 +33,6 @@ ATFT_Boss_BJ::ATFT_Boss_BJ()
     {
         HpBarWidgetClass = HpBar.Class;
     }
-    
-
 }
 
 void ATFT_Boss_BJ::BeginPlay()
@@ -184,20 +185,27 @@ void ATFT_Boss_BJ::Attack_AI()
 
             if (randomValue < 15)
             {
-                _animInstance_BJ->PlaySkillMontage();
+                if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
+                {
+                    _animInstance_BJ->PlaySkillMontage();
+                    _isAttacking = true;
+                }
             }
             else if (randomValue < 30)
             {
                 GetWorld()->GetTimerManager().SetTimer(MoveTimerHandle, this, &ATFT_Boss_BJ::MoveMessageForward, 1.0f, false);
-
                 _animInstance_BJ->PlaySlashMontage();
+                _isAttacking = true;
+            }
+            else if (randomValue < 45)
+            {
+                ActivateSkill();
             }
             else
             {
                 _animInstance_BJ->PlayAttackMontage();
+                _isAttacking = true;
             }
-
-            _isAttacking = true;
 
             _curAttackIndex %= 4;
             _curAttackIndex++;
@@ -243,4 +251,77 @@ void ATFT_Boss_BJ::Boss_DeathEnd()
 
 void ATFT_Boss_BJ::BossDisable()
 {
+}
+
+void ATFT_Boss_BJ::ActivateSkill()
+{
+    if (!_isAttacking && _animInstance_BJ != nullptr)
+    {
+        APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+        if (PlayerController)
+        {
+            APawn* PlayerPawn = PlayerController->GetPawn();
+            if (PlayerPawn)
+            {
+                ATFT_Player* Player = Cast<ATFT_Player>(PlayerPawn);
+                if (Player)
+                {
+                    TargetLocation = Player->GetActorLocation();
+                    SpawnNiagaraEffectAtLocation(TargetLocation);
+
+                    _animInstance_BJ->PlaySkillMontage();
+                    _isAttacking = true;
+
+                    GetWorld()->GetTimerManager().SetTimer(SkillTimerHandle, this, &ATFT_Boss_BJ::TriggerSkillEffect, 3.f, false);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to cast PlayerPawn to ATFT_Player."));
+                }
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("PlayerController is not controlling any Pawn."));
+            }
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Failed to get PlayerController."));
+        }
+    }
+}
+
+void ATFT_Boss_BJ::SpawnNiagaraEffectAtLocation(FVector Location)
+{
+    UNiagaraSystem* NiagaraEffect = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Script/Niagara.NiagaraSystem'/Game/BeamPack/Niagara/HitPoint/NS_Tornado_Thunder1.NS_Tornado_Thunder1'"));
+    if (NiagaraEffect)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraEffect, Location, FRotator::ZeroRotator, FVector(1.0f), true);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Failed to load Niagara System for ThunderEffect."));
+    }
+}
+
+void ATFT_Boss_BJ::TriggerSkillEffect()
+{
+    _isAttacking = false;
+
+    UNiagaraSystem* NiagaraEffect = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Script/Niagara.NiagaraSystem'/Game/Electric_VFX/Niagara/Electric/Boss_Elec.Boss_Elec'"));
+    if (NiagaraEffect)
+    {
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NiagaraEffect, TargetLocation);
+
+        TArray<AActor*> ActorsToDamage;
+        UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATFT_Player::StaticClass(), ActorsToDamage);
+
+        for (AActor* Actor : ActorsToDamage)
+        {
+            if (Actor && FVector::Dist(Actor->GetActorLocation(), TargetLocation) < 300.f)
+            {
+                UGameplayStatics::ApplyDamage(Actor, 20.f, GetController(), this, UDamageType::StaticClass());
+            }
+        }
+    }
 }
