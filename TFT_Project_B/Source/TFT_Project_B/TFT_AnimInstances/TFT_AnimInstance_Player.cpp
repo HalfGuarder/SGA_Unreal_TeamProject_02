@@ -81,6 +81,16 @@ void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
 		bBDashing = (player->bBDashing);
 		bLDashing = (player->bLDashing);
 		bRDashing = (player->bRDashing);
+
+		float pitch = player->GetBaseAimRotation().Pitch;
+		if (pitch > -180.0f)
+		{
+			_pitch = pitch;
+		}
+		else
+		{
+			_pitch = GetWorld()->GetFirstPlayerController()->GetControlRotation().Pitch - 360.0f;
+		}
 	}
 }
 
@@ -219,4 +229,9 @@ void UTFT_AnimInstance_Player::AnimNotify_ShieldDashEnd()
 {
 	bIsShieldDashing = false;
 	_shieldDashEndDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Player::AnimNotify_Fire()
+{
+	_fireDelegate.Broadcast();
 }

@@ -13,6 +13,7 @@ DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(ESkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
 DECLARE_MULTICAST_DELEGATE(ShieldDashEndDelegate);
+DECLARE_MULTICAST_DELEGATE(FireDelegate);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Player : public UAnimInstance
@@ -36,10 +37,18 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();
+
 	UFUNCTION()
 	void AnimNotify_QSkillHit();
+
 	UFUNCTION()
 	void AnimNotify_ESkillHit();
+
+	UFUNCTION()
+	void AnimNotify_ShieldDashEnd();
+
+	UFUNCTION()
+	void AnimNotify_Fire();
 
 	void PlayRunningMontage();
 	void StopRunningMontage();
@@ -53,8 +62,6 @@ public:
 	void PlayDefenseMontage();
 	void StopDefenseMontage();
 
-	UFUNCTION()
-	void AnimNotify_ShieldDashEnd();
 
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
@@ -62,6 +69,7 @@ public:
 	QSkillHitDelegate _qSkillHitDelegate;
 	ESkillHitDelegate _eSkillHitDelegate;
 	ShieldDashEndDelegate _shieldDashEndDelegate;
+	FireDelegate _fireDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -87,6 +95,9 @@ private:
 	float _vertical;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float _horizontal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	float _pitch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _attackMontage;

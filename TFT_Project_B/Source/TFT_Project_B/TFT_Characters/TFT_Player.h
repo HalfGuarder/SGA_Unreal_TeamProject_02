@@ -71,6 +71,7 @@ protected:
 	void E_SkillHit();
 
 	void SpawnTurret();
+	void Fire();
 
 public:
 	void AddItemPlayer(ATFT_Item* item);

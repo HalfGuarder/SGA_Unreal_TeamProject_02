@@ -45,6 +45,7 @@
 #include "TFT_Projectile.h"
 #include "TFT_Turret.h"
 #include "Engine/SkeletalMeshSocket.h"
+
 #include "TFT_SkillUI.h"
 
 ATFT_Player::ATFT_Player()
@@ -195,7 +196,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_attackHitDelegate.AddUObject(this, &ATFT_Player::AttackHit);
 		_animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
-
+		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
 	}
 
 	if (HpBarWidgetInstance)
@@ -426,31 +427,11 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 
 			return;
 		}
-
 		_animInstancePlayer->PlayAttackMontage();
 		_isAttacking = true;
 		_curAttackIndex %= 3;
 		_curAttackIndex++;
 		_animInstancePlayer->JumpToSection(_curAttackIndex);
-
-		if (_projectileClass)
-		{
-			if (_invenCom->_currentWeapon != nullptr && _invenCom->_currentWeapon->GetItemID() == 2)
-			{
-				FName hand_l_fire_socket(TEXT("hand_l_fire_socket"));
-				auto fireSocket = GetMesh()->GetSocketByName(hand_l_fire_socket);
-				
-				FVector start = fireSocket->GetSocketLocation(GetMesh()); // GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
-				FVector end = (GetControlRotation().Vector()) + start;
-				_projectileDir = end - start;
-
-				FVector fireLocation = GetActorLocation() + start;
-				FRotator fireRotation = GetControlRotation();
-
-				auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
-				bullet->FireInDirection(_projectileDir);
-			}
-		}
 	}
 }
 
@@ -977,6 +958,28 @@ void ATFT_Player::SpawnTurret()
 	}
 
 	// DrawDebugLine(GetWorld(), lineStart, lineEnd, drawColor, false, 1.0f);
+}
+
+void ATFT_Player::Fire()
+{
+	if (_projectileClass)
+	{
+		if (_invenCom->_currentWeapon != nullptr && _invenCom->_currentWeapon->GetItemID() == 2)
+		{
+			FName hand_l_fire_socket(TEXT("hand_l_fire_socket"));
+			auto fireSocket = GetMesh()->GetSocketByName(hand_l_fire_socket);
+
+			FVector start = fireSocket->GetSocketLocation(GetMesh());
+			FVector end = (GetControlRotation().Vector()) + start;
+			_projectileDir = end - start;
+
+			FVector fireLocation = GetActorLocation() + start;
+			FRotator fireRotation = GetControlRotation();
+
+			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
+			bullet->FireInDirection(_projectileDir);
+		}
+	}
 }
 
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)
