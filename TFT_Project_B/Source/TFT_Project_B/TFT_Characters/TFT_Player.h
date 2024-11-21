@@ -83,6 +83,7 @@ public:
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
 
+	void StartDialogueUI();
 	void CloseDialogueUI();
 	void SetIsDialogueActive(bool bActive) { bIsDialogueActive = bActive; }
 
@@ -137,8 +138,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _defenseAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	class UInputAction* SpaceAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* _CloseUI;
 
 	class ITFT_InteractionInterface* _interface = nullptr;
 

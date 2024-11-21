@@ -9,6 +9,9 @@
 
 #include "TFT_AnimInstance_Player.h"
 #include "TFT_NPC.h"
+#include "TFT_Door.h"
+
+#include "EngineUtils.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
@@ -130,6 +133,11 @@ ATFT_Player::ATFT_Player()
 	{
 		_previewTurretClass = tpc.Class;
 	}
+	static ConstructorHelpers::FClassFinder<UUserWidget> DialogueUI(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/UI/DialogueWidget.DialogueWidget_C'"));
+	if (DialogueUI.Succeeded())
+	{
+		DialogueWidgetClass = DialogueUI.Class;
+	}
 }
 
 void ATFT_Player::BeginPlay()
@@ -137,6 +145,8 @@ void ATFT_Player::BeginPlay()
 	Super::BeginPlay();
 
 	_statCom->SetLevelAndInit(1);
+
+	bIsDialogueActive = false;
 
 	if (_invenCom != nullptr)
 	{
@@ -249,7 +259,7 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		// EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
 
 		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
-		EnhancedInputComponent->BindAction(SpaceAction, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
+		EnhancedInputComponent->BindAction(_CloseUI, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
 	}
 }
 
@@ -270,7 +280,7 @@ void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 
 	if (isPressed)
 	{
-		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // ÀÏ´Ü ÀüºÎ Åõ¸íÈ­
+		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
 		if (bEquipSword)
 		{
 			bEquipSword = false;
@@ -1030,11 +1040,36 @@ void ATFT_Player::CloseResetEquipment()
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
 }
 
+
+
+void ATFT_Player::StartDialogueUI()
+{
+	if (bIsDialogueActive) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Dialogue UI is already active."));
+		return;
+	}
+
+
+	if (!DialogueWidgetInstance && DialogueWidgetClass)
+	{
+		DialogueWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), DialogueWidgetClass);
+		if (DialogueWidgetInstance)
+		{
+			DialogueWidgetInstance->AddToViewport();
+			bIsDialogueActive = true;
+			UE_LOG(LogTemp, Warning, TEXT("Dialogue UI opened."));
+
+			
+			GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(true);
+		}
+	}
+}
+
 void ATFT_Player::CloseDialogueUI()
 {
 	if (bIsDialogueActive)
 	{
-		// ´ëÈ­ UI ´Ý±â
 		if (DialogueWidgetInstance)
 		{
 			DialogueWidgetInstance->RemoveFromViewport();
@@ -1043,19 +1078,22 @@ void ATFT_Player::CloseDialogueUI()
 
 		bIsDialogueActive = false;
 
-		// ÇÃ·¹ÀÌ¾î ÀÌµ¿ È°¼ºÈ­
 		GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(false);
 
-		// NPC¿¡°Ô ´ëÈ­ Á¾·á ¾Ë¸²
-		TArray<AActor*> OverlappingActors;
-		GetOverlappingActors(OverlappingActors, ATFT_NPC::StaticClass());
-
-		for (AActor* Actor : OverlappingActors)
+		
+		for (TActorIterator<ATFT_Door> DoorItr(GetWorld()); DoorItr; ++DoorItr)
 		{
-			ATFT_NPC* NPC = Cast<ATFT_NPC>(Actor);
-			if (NPC)
+			ATFT_Door* Door = *DoorItr;
+			if (Door)
 			{
-				NPC->OnDialogueClosed(); // NPC°¡ °ÔÀÌÆ® ¿­µµ·Ï ½ÅÈ£ Àü´Þ
+				Door->OpenDoor();
+
+				
+				FTimerHandle TimerHandle;
+				GetWorldTimerManager().SetTimer(TimerHandle, [Door]()
+					{
+						Door->CloseDoor();
+					}, 3.0f, false);
 			}
 		}
 	}

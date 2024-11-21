@@ -55,32 +55,15 @@ void ATFT_NPC::BeginPlay()
 
 void ATFT_NPC::OnPlayerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Log, TEXT("OnPlayerOverlap triggered")); // 이벤트 호출 여부 확인
-
     ATFT_Player* Player = Cast<ATFT_Player>(OtherActor);
-    if (Player && DialogueWidgetClass)
+    if (Player)
     {
-        UUserWidget* DialogueWidget = CreateWidget<UUserWidget>(GetWorld(), DialogueWidgetClass);
-        if (DialogueWidget)
-        {
-            DialogueWidget->AddToViewport();
-            UE_LOG(LogTemp, Log, TEXT("DialogueWidget added to viewport."));
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Failed to create DialogueWidget."));
-        }
+        UE_LOG(LogTemp, Log, TEXT("NPC notifying player to open dialogue UI."));
+        Player->StartDialogueUI(); // 플레이어에게 UI 요청 전달
     }
     else
     {
-        if (!DialogueWidgetClass)
-        {
-            UE_LOG(LogTemp, Error, TEXT("DialogueWidgetClass is NULL."));
-        }
-        if (!Player)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("OtherActor is not a player."));
-        }
+        UE_LOG(LogTemp, Warning, TEXT("OtherActor is not a player."));
     }
 }
 
