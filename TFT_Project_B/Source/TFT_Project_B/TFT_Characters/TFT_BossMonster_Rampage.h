@@ -41,10 +41,6 @@ public:
 	UFUNCTION()
 	void ResetMovementLock(UAnimMontage* Montage, bool bInterrupted); 
 
-
-	UFUNCTION()
-	void Boss_DeathEnd();
-
 	UFUNCTION()
 	void BossDisable();
 
