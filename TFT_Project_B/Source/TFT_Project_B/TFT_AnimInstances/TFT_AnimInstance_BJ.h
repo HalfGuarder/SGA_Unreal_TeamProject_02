@@ -40,14 +40,11 @@ public:
 	UFUNCTION()
 	void AnimNotify_DeathEnd();
 
-	UFUNCTION()
-	void AnimNotify_Boss_DeathEnd();
 
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
 	DeathStartDelegate _deathStartDelegate;
 	DeathEndDelegate _deathEndDelegate;
-	BossDeathEndDelegate _bossDeathEndDelegate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _myAnimMontage;

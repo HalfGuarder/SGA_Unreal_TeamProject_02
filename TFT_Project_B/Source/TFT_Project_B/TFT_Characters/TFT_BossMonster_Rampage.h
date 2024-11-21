@@ -59,12 +59,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* armcapsule_L;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
-	UWidgetComponent* HpBarWidgetComponent; 
-
-	UPROPERTY(EditAnywhere, Category = "HP Bar")
-	float HpBarVisibilityDistance = 500.0f; 
-
 	
 	bool bIsDead = false;
 	

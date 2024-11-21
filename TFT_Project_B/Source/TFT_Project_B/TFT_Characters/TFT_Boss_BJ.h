@@ -40,8 +40,6 @@ public:
 
 	virtual void DeathStart() override;
 
-	UFUNCTION()
-	void Boss_DeathEnd();
 
 	UFUNCTION()
 	void BossDisable();

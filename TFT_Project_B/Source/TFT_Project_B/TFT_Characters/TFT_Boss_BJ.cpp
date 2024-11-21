@@ -52,7 +52,6 @@ void ATFT_Boss_BJ::PostInitializeComponents()
         _animInstance_BJ->_attackStartDelegate.AddUObject(this, &ATFT_Boss_BJ::AttackStart);
         _animInstance_BJ->_attackHitDelegate.AddUObject(this, &ATFT_Boss_BJ::AttackHit_Boss);
         _animInstance_BJ->_deathStartDelegate.AddUObject(this, &ATFT_Boss_BJ::DeathStart);
-        _animInstance_BJ->_bossDeathEndDelegate.AddUObject(this, &ATFT_Boss_BJ::Boss_DeathEnd);
         _animInstance_BJ->_deathEndDelegate.AddUObject(this, &ATFT_Boss_BJ::BossDisable);
     }
 
@@ -240,17 +239,29 @@ float ATFT_Boss_BJ::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 void ATFT_Boss_BJ::DeathStart()
 {
-    this->SetActorHiddenInGame(true);
+    Super::DeathStart();
 
-    _animInstance_BJ->_bossDeathEndDelegate.RemoveAll(this);
+    _animInstance_BJ->_deathStartDelegate.RemoveAll(this);
 }
 
-void ATFT_Boss_BJ::Boss_DeathEnd()
-{
-}
 
 void ATFT_Boss_BJ::BossDisable()
 {
+    this->SetActorHiddenInGame(true);
+
+    _animInstance_BJ->_deathEndDelegate.RemoveAll(this);
+    //_animInstance_BJ->_attackStartDelegate.RemoveAll(this);
+    //_animInstance_BJ->_attackHitDelegate.RemoveAll(this);
+
+    PrimaryActorTick.bCanEverTick = false;
+    auto controller = GetController();
+    if (controller != nullptr) GetController()->UnPossess();
+
+    if (HpBarWidgetInstance)
+    {
+        HpBarWidgetInstance->RemoveFromParent();
+        HpBarWidgetInstance = nullptr;
+    }
 }
 
 void ATFT_Boss_BJ::ActivateSkill()

@@ -63,7 +63,6 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         _animInstance_Boss->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
         _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
         _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
-        _animInstance_Boss->_bossDeathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::Boss_DeathEnd);
         _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
     }
 
@@ -258,14 +257,17 @@ float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& Dam
 
 void ATFT_BossMonster_Rampage::DeathStart()
 {
-   
-    SetActorHiddenInGame(true);
+    Super::DeathStart();
 
-    
+   /* SetActorHiddenInGame(true);
+
     DetachFromControllerPendingDestroy();
 
-   
-    bIsDead = true;
+    bIsDead = true;*/ 
+
+    // TODO : 사운드나 위젯 삭제부분
+
+    _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
 }
 
 void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
@@ -277,18 +279,23 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 
 
 
-void ATFT_BossMonster_Rampage::Boss_DeathEnd()
+void ATFT_BossMonster_Rampage::BossDisable()
 {
     this->SetActorHiddenInGame(true);
 
-    _animInstance_Boss->_bossDeathEndDelegate.RemoveAll(this);
     _animInstance_Boss->_deathEndDelegate.RemoveAll(this);
-    _animInstance_Boss->_attackStartDelegate.RemoveAll(this);
-    _animInstance_Boss->_attackHitDelegate.RemoveAll(this);
-}
+    //_animInstance_Boss->_attackStartDelegate.RemoveAll(this);
+    //_animInstance_Boss->_attackHitDelegate.RemoveAll(this);
 
-void ATFT_BossMonster_Rampage::BossDisable()
-{
+    PrimaryActorTick.bCanEverTick = false;
+    auto controller = GetController();
+    if (controller != nullptr) GetController()->UnPossess();
+
+    if (HpBarWidgetInstance)
+    {
+        HpBarWidgetInstance->RemoveFromParent();
+        HpBarWidgetInstance = nullptr;
+    }
 }
 
 void ATFT_BossMonster_Rampage::UpdateBlackboardTarget()

@@ -141,8 +141,3 @@ void UTFT_AnimInstance_Rampage::AnimNotify_DeathEnd()
 {
 	_deathEndDelegate.Broadcast();
 }
-
-void UTFT_AnimInstance_Rampage::AnimNotify_Boss_DeathEnd()
-{
-	_bossDeathEndDelegate.Broadcast();
-}

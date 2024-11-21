@@ -123,7 +123,3 @@ void UTFT_AnimInstance_BJ::AnimNotify_DeathEnd()
 	_deathEndDelegate.Broadcast();
 }
 
-void UTFT_AnimInstance_BJ::AnimNotify_Boss_DeathEnd()
-{
-	_bossDeathEndDelegate.Broadcast();
-}
