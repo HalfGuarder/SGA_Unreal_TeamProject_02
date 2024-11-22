@@ -216,6 +216,11 @@ void ATFT_Player::PostInitializeComponents()
 void ATFT_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (_canMove)
+	{
+		RotatePlayer(DeltaTime);
+	}
 }
 
 void ATFT_Player::Init()
@@ -980,6 +985,15 @@ void ATFT_Player::Fire()
 			bullet->FireInDirection(_projectileDir);
 		}
 	}
+}
+
+void ATFT_Player::RotatePlayer(float DeltaTime)
+{
+	FRotator pRot = GetActorRotation();
+	FRotator cRot = GetControlRotation();
+	
+	FRotator nRot = FMath::RInterpConstantTo(FRotator(0.0f, pRot.Yaw, 0.0f), FRotator(0.0f, cRot.Yaw, 0.0f), DeltaTime, 450.0f);
+	SetActorRotation(FRotator(0.0f, nRot.Yaw, 0.0f));
 }
 
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)

@@ -55,7 +55,7 @@ void ATFT_Creature::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ATFT_Creature::OnAttackEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	bUseControllerRotationYaw = true;
+	// bUseControllerRotationYaw = true;
 	_isAttacking = false;
 	_canMove = true;
 	_attackEndedDelegate.Broadcast();
@@ -65,8 +65,9 @@ float ATFT_Creature::TakeDamage(float Damage, FDamageEvent const& DamageEvent, A
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	if (bIsDefense) return 0.0f;
+
 	float damaged = -(_statCom->AddCurHp(-Damage));
-	
 
 	return damaged;
 }
