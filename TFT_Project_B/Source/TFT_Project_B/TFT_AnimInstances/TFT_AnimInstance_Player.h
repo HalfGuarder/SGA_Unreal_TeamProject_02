@@ -39,9 +39,6 @@ public:
 	void AnimNotify_AttackHit();
 
 	UFUNCTION()
-	void AnimNotify_AttackEnd();
-
-	UFUNCTION()
 	void AnimNotify_QSkillHit();
 
 	UFUNCTION()
@@ -68,7 +65,6 @@ public:
 
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
-	AttackEndDelegate _attackEndDelegate;
 	DashEndDelegate _dashEndDelegate;
 	QSkillHitDelegate _qSkillHitDelegate;
 	ESkillHitDelegate _eSkillHitDelegate;

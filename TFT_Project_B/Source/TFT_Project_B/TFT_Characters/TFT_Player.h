@@ -73,8 +73,6 @@ protected:
 	void SpawnTurret();
 	void Fire();
 
-	void RotatePlayer(float DeltaTime);
-
 public:
 	void AddItemPlayer(ATFT_Item* item);
 	void AddItemHendle(ATFT_Item* item, int32 index);
@@ -209,7 +207,8 @@ protected:
 	class UStaticMeshComponent* _shield;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
 	class UMaterialInterface* _shieldMaterial;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
+	bool bIsDefense = false;
 
 	// Shield Dash
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))

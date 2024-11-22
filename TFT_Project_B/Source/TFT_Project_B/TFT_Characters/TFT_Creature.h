@@ -109,9 +109,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stat, meta = (AllowPrivateAccess = true))
 	class UUserWidget* HpBarWidgetInstance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
-	bool bIsDefense = false;
-
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Store, meta = (AllowPrivateAccess = true))
 	// class UTFT_StoreComponent* _storeCom;
 
