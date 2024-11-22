@@ -194,6 +194,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
 		_animInstancePlayer->_shieldDashEndDelegate.AddUObject(this, &ATFT_Player::StopShieldDash);
 		_animInstancePlayer->_attackHitDelegate.AddUObject(this, &ATFT_Player::AttackHit);
+		// _animInstancePlayer->_attackEndDelegate.AddUObject(this, &ATFT_Player::RotatePlayer);
 		_animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
@@ -216,6 +217,11 @@ void ATFT_Player::PostInitializeComponents()
 void ATFT_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (_canMove)
+	{
+		RotatePlayer(DeltaTime);
+	}
 }
 
 void ATFT_Player::Init()
@@ -982,6 +988,22 @@ void ATFT_Player::Fire()
 	}
 }
 
+void ATFT_Player::RotatePlayer(float DeltaTime)
+{
+	FRotator pRot = GetActorRotation();
+	FRotator cRot = GetControlRotation();
+	// FMath::RInterpTo(pRot, cRot, 1.0f, 0.5f);
+
+	// SetActorRotation(FRotator(0.0f, FMath::Lerp(pRot, cRot, 0.5f).Yaw, 0.0f));
+
+	// SetActorRotation(FMath::RInterpTo(pRot, cRot, GetWorld()->GetDeltaSeconds(), 0.5f));
+
+	float _deltaTime = 0;
+	FRotator nRot = FMath::RInterpConstantTo(FRotator(0.0f, pRot.Yaw, 0.0f), FRotator(0.0f, cRot.Yaw, 0.0f), DeltaTime, 450.0f);
+
+	SetActorRotation(FRotator(0.0f, nRot.Yaw, 0.0f));
+}
+
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)
 {
 	if (_invenCom != nullptr) _invenCom->AddItem(item);
@@ -1042,8 +1064,6 @@ void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
 }
-
-
 
 void ATFT_Player::StartDialogueUI()
 {

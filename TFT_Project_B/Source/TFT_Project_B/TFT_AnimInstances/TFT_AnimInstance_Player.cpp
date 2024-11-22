@@ -133,6 +133,11 @@ void UTFT_AnimInstance_Player::AnimNotify_AttackHit()
 	_attackHitDelegate.Broadcast();
 }
 
+void UTFT_AnimInstance_Player::AnimNotify_AttackEnd()
+{
+	_attackEndDelegate.Broadcast();
+}
+
 void UTFT_AnimInstance_Player::AnimNotify_QSkillHit()
 {
 	// bIsShieldDashing = true;
