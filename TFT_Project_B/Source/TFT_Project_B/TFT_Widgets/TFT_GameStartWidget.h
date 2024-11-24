@@ -4,7 +4,7 @@
 #include "Blueprint/UserWidget.h"
 #include "TFT_GameStartWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartPageEvent);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_GameStartWidget : public UUserWidget
@@ -12,8 +12,7 @@ class TFT_PROJECT_B_API UTFT_GameStartWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-
-	virtual void NativeConstruct() override;
+	virtual bool Initialize() override;
 
 	UFUNCTION()
 	void StartEvent();
@@ -22,7 +21,7 @@ public:
 
 
 	UPROPERTY(BlueprintAssignable, Category = "Event")
-	FStartEvent _StartEvent;
+	FStartPageEvent _StartEvent;
 
 private:
 

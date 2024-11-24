@@ -47,6 +47,7 @@
 #include "Engine/SkeletalMeshSocket.h"
 
 #include "TFT_SkillUI.h"
+#include "TFT_Menu.h"
 
 ATFT_Player::ATFT_Player()
 {
@@ -266,6 +267,9 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
 		EnhancedInputComponent->BindAction(_CloseUI, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
+	
+		EnhancedInputComponent->BindAction(_PlayMenuAction, ETriggerEvent::Started, this, &ATFT_Player::PlayMenuOpenA);
+
 	}
 }
 
@@ -298,6 +302,11 @@ void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
 		}
 	}
+}
+
+void ATFT_Player::PlayMenuOpenA(const FInputActionValue& value)
+{
+	UIMANAGER->_MenuOpenEvent.Broadcast();
 }
 
 void ATFT_Player::Move(const FInputActionValue& value)

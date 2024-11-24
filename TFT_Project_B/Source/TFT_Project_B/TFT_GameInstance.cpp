@@ -35,6 +35,11 @@ void UTFT_GameInstance::Init()
 
 }
 
+void UTFT_GameInstance::ResetManager()
+{
+
+}
+
 FTFT_StatData* UTFT_GameInstance::GetStatDataByLevel(int32 level)
 {
 	auto statData = _statTable->FindRow<FTFT_StatData>(*FString::FromInt(level), TEXT(""));

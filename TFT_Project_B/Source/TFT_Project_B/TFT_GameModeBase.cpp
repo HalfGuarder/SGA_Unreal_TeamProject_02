@@ -9,6 +9,11 @@
 
 ATFT_GameModeBase::ATFT_GameModeBase()
 {
+	Init();
+}
+
+void ATFT_GameModeBase::Init()
+{
 	static ConstructorHelpers::FClassFinder<ATFT_Player> player
 	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/TFT_Player_BP.TFT_Player_BP_C'"));
 
@@ -25,6 +30,7 @@ ATFT_GameModeBase::ATFT_GameModeBase()
             GameStartInstance->AddToViewport(9999);
         }
     }
+
 }
 
 void ATFT_GameModeBase::PostInitializeComponents()

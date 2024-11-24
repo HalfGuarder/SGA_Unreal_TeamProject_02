@@ -28,6 +28,8 @@ public:
 
 	virtual void Init() override;
 
+	void ResetManager();
+public:
 	FTFT_StatData* GetStatDataByLevel(int32 level);
 
 	UFUNCTION(BlueprintCallable)

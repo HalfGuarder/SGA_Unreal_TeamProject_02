@@ -6,9 +6,9 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/Button.h"
 
-void UTFT_GameStartWidget::NativeConstruct()
+bool UTFT_GameStartWidget::Initialize()
 {
-	Super::NativeConstruct();
+	bool abc = Super::Initialize();
 
 	if (UButton* StartButton = Cast<UButton>(GetWidgetFromName(TEXT("GameStart_Button"))))
 	{
@@ -20,6 +20,9 @@ void UTFT_GameStartWidget::NativeConstruct()
 		ExitButton->OnClicked.AddDynamic(this, &UTFT_GameStartWidget::ExitEvent);
 	}
 
+
+
+	return abc;
 }
 
 void UTFT_GameStartWidget::StartEvent()
@@ -34,7 +37,7 @@ void UTFT_GameStartWidget::ExitEvent()
 	UWorld* World = GetWorld();
 	APlayerController* PlayerController = World->GetFirstPlayerController();
 
-	UE_LOG(LogTemp, Error, TEXT("Game End")); // Test용 로그
+	UE_LOG(LogTemp, Error, TEXT("StartPage Game End")); // Test용 로그
 
 	// QuitGame 함수 호출
 	UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);

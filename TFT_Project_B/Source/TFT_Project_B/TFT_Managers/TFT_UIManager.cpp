@@ -6,6 +6,7 @@
 #include "TFT_InvenWidget.h"
 #include "TFT_EquipmentWidget.h"
 #include "TFT_SkillUI.h"
+#include "TFT_Menu.h"
 #include "Kismet/GameplayStatics.h"
 
 ATFT_UIManager::ATFT_UIManager()
@@ -38,29 +39,41 @@ ATFT_UIManager::ATFT_UIManager()
 		_SkillWidget = CreateWidget<UTFT_SkillUI>(GetWorld(), skillUI.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> MenuWidget(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_Menu_BP.TFT_Menu_BP_C'"));
+	if (skillUI.Succeeded())
+	{
+		_MenuWidget = CreateWidget<UTFT_Menu>(GetWorld(), MenuWidget.Class);
+	}
+
 	_widgets.Add(_crossHair);
 	_widgets.Add(_invenWidget);
 	_widgets.Add(_EquipmentWidget);
 	_widgets.Add(_SkillWidget);
+	_widgets.Add(_MenuWidget);
 }
 
 void ATFT_UIManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	OpenWidget(UIType::Inventory);
-	CloseWidget(UIType::Inventory);
+	//OpenWidget(UIType::Inventory);
+	//CloseWidget(UIType::Inventory);
+	//OpenWidget(UIType::EquipmentUI);
+	//CloseWidget(UIType::EquipmentUI);
+
+	OnoffWidget(UIType::Menu);
 
 	OpenWidget(UIType::SkillUI);
 
-	OpenWidget(UIType::EquipmentUI);
-	CloseWidget(UIType::EquipmentUI);
 
 	_invenOpenEvent.AddUObject(this, &ATFT_UIManager::OpenInvenUIA);
 	_invenWidget->_CloseInvenBtn.AddUObject(this, &ATFT_UIManager::CloseInvenBtn);
 	_EquipmentOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffEquipmentUIA);
 	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);
 	_WeaponZoomEvent.AddUObject(this, &ATFT_UIManager::WeaponCrossHairUIA);
+
+	_MenuOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
+	_MenuWidget->_MenuContinueEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -86,6 +99,13 @@ void ATFT_UIManager::CloseWidget(UIType type)
 
 	_widgets[typeNum]->SetVisibility(ESlateVisibility::Hidden);
 	_widgets[typeNum]->RemoveFromViewport();
+}
+
+void ATFT_UIManager::OnoffWidget(UIType type)
+{
+	OpenWidget(type);
+
+	CloseWidget(type);
 }
 
 void ATFT_UIManager::CloseAll()
@@ -162,6 +182,28 @@ void ATFT_UIManager::WeaponCrossHairUIA()
 	{
 		_UICrossHair = false;
 		CloseWidget(UIType::CrossHair);
+	}
+}
+
+void ATFT_UIManager::OnOffPlayMenu()
+{
+	if (_UIPlayMenu == false)
+	{
+		// 시간 정지
+		GetWorld()->GetWorldSettings()->SetTimeDilation(0.0f);
+		_UIPlayMenu = true;
+
+		OpenWidget(UIType::Menu);
+		MouseUnLock(UIType::Menu);
+	}
+	else if (_UIPlayMenu == true)
+	{
+		// 시간 재개
+		GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
+		_UIPlayMenu = false;
+
+		CloseWidget(UIType::Menu);
+		MouseLock(UIType::Menu);
 	}
 }
 

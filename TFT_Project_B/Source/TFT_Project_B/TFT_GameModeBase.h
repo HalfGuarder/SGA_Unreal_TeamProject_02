@@ -16,6 +16,8 @@ class TFT_PROJECT_B_API ATFT_GameModeBase : public AGameModeBase
 public:
 	ATFT_GameModeBase();
 
+	void Init();
+
 	virtual void PostInitializeComponents() override;
 
 	virtual void BeginPlay() override;

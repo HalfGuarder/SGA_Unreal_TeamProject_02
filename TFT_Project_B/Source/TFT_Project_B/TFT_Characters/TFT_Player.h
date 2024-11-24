@@ -34,6 +34,7 @@ public:
 
 protected:
 	void Temp_ChangeWeapon(const FInputActionValue& value);
+	void PlayMenuOpenA(const FInputActionValue& value);
 
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -144,6 +145,9 @@ public:
 	UInputAction* _defenseAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _CloseUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* _PlayMenuAction;
 
 	class ITFT_InteractionInterface* _interface = nullptr;
 
