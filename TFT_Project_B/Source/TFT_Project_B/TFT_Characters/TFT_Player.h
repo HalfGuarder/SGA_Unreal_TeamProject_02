@@ -247,4 +247,7 @@ public:
 
 	bool bTurretBuildMode = false;
 	bool bBuildTurret = false;
+
+
+	UUserWidget* DialogueWidget2Instance; 
 };

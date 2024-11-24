@@ -1103,10 +1103,9 @@ void ATFT_Player::CloseDialogueUI()
 		}
 
 		bIsDialogueActive = false;
-
 		GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(false);
 
-		
+		// 문 열기 작업 먼저 실행
 		for (TActorIterator<ATFT_Door> DoorItr(GetWorld()); DoorItr; ++DoorItr)
 		{
 			ATFT_Door* Door = *DoorItr;
@@ -1114,7 +1113,7 @@ void ATFT_Player::CloseDialogueUI()
 			{
 				Door->OpenDoor();
 
-				
+				// 3초 후 문 닫기
 				FTimerHandle TimerHandle;
 				GetWorldTimerManager().SetTimer(TimerHandle, [Door]()
 					{
@@ -1122,8 +1121,21 @@ void ATFT_Player::CloseDialogueUI()
 					}, 3.0f, false);
 			}
 		}
+
+		// 대화 중인 NPC 숨기기
+		for (TActorIterator<ATFT_NPC> NPCItr(GetWorld()); NPCItr; ++NPCItr)
+		{
+			ATFT_NPC* NPC = *NPCItr;
+			if (NPC && NPC->InteractionBox->IsOverlappingActor(this)) // 플레이어와 겹친 NPC 찾기
+			{
+				NPC->HideNPC(); // NPC 숨기기
+				break;
+			}
+		}
 	}
 }
+
+
 
 void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
