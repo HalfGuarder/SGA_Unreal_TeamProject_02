@@ -194,7 +194,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
 		_animInstancePlayer->_shieldDashEndDelegate.AddUObject(this, &ATFT_Player::StopShieldDash);
 		_animInstancePlayer->_attackHitDelegate.AddUObject(this, &ATFT_Player::AttackHit);
-		_animInstancePlayer->_qSkillHitDelegate.AddUObject(this, &ATFT_Player::Q_SkillHit);
+		_animInstancePlayer->_ShieldDashCollisionOnDelegate.AddUObject(this, &ATFT_Player::ShieldDashCollisionOn);
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
 	}
@@ -475,7 +475,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 		{
 			if (!bIsDefense) return;
 
-
 			//StopDefense();
 			StopRightClick();
 
@@ -510,7 +509,6 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 	if (bEquipSword)
 	{
-
 		if(UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
 		{
 			if (!bIsDefense) return;
@@ -519,15 +517,10 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 			//StopDefense();
 			StopRightClick();
 
-
-
 			_animInstancePlayer->PlayShieldDashMontage();
-
-			_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 			UIMANAGER->GetSkillUI()->RunCDT(0);
 		}
-
 	}
 	else
 	{
@@ -774,11 +767,18 @@ void ATFT_Player::OffShield()
 	if (bIsShieldDashing) return;
 
 	_shield->SetVisibility(false);
+
+	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATFT_Player::OnShield()
 {
 	_shield->SetVisibility(true);
+}
+
+void ATFT_Player::ShieldDashCollisionOn()
+{
+	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ATFT_Player::AttackStart()

@@ -149,6 +149,11 @@ void UTFT_AnimInstance_Player::AnimNotify_ESkillHit()
 	_eSkillHitDelegate.Broadcast();
 }
 
+void UTFT_AnimInstance_Player::AnimNotify_ShieldDashCollisionOn()
+{
+	_ShieldDashCollisionOnDelegate.Broadcast();
+}
+
 void UTFT_AnimInstance_Player::PlayRunningMontage()
 {
 	if (bEquipSword)

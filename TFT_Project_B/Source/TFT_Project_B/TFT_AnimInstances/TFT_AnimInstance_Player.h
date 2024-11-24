@@ -11,6 +11,7 @@ DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
 DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
 DECLARE_MULTICAST_DELEGATE(ESkillHitDelegate);
+DECLARE_MULTICAST_DELEGATE(ShieldDashCollisionOnDelegate);
 DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
 DECLARE_MULTICAST_DELEGATE(ShieldDashEndDelegate);
 DECLARE_MULTICAST_DELEGATE(FireDelegate);
@@ -48,6 +49,9 @@ public:
 	void AnimNotify_ESkillHit();
 
 	UFUNCTION()
+	void AnimNotify_ShieldDashCollisionOn();
+
+	UFUNCTION()
 	void AnimNotify_ShieldDashEnd();
 
 	UFUNCTION()
@@ -69,6 +73,7 @@ public:
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
 	AttackEndDelegate _attackEndDelegate;
+	ShieldDashCollisionOnDelegate _ShieldDashCollisionOnDelegate;
 	DashEndDelegate _dashEndDelegate;
 	QSkillHitDelegate _qSkillHitDelegate;
 	ESkillHitDelegate _eSkillHitDelegate;

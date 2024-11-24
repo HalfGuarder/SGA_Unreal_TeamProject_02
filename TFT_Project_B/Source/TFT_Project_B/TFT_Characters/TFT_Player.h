@@ -61,6 +61,7 @@ protected:
 	void StopShieldDash();
 	void OffShield();
 	void OnShield();
+	void ShieldDashCollisionOn();
 
 	virtual void AttackStart() override;
 	UFUNCTION()
