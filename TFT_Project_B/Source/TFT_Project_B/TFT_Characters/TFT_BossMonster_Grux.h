@@ -39,4 +39,7 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_Grux* _animInstance_Grux;
+
+	FVector LockedLocation;
+	FRotator LockedRotation;
 };

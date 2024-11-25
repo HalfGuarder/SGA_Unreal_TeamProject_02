@@ -8,6 +8,7 @@
 
 DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
 DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
+DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
 DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
 DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
 
@@ -34,6 +35,9 @@ public:
 	void AnimNotify_AttackHit();
 
 	UFUNCTION()
+	void AnimNotify_AttackEnd();
+
+	UFUNCTION()
 	void AnimNotify_DeathStart();
 
 	UFUNCTION()
@@ -41,6 +45,7 @@ public:
 	
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
+	AttackEndDelegate _attackEndDelegate;
 	DeathStartDelegate _deathStartDelegate;
 	DeathEndDelegate _deathEndDelegate;
 
@@ -57,8 +62,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float _horizontal;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _attackMontage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _skillMontage;
 };

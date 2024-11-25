@@ -105,6 +105,7 @@ ATFT_Player::ATFT_Player()
 	_shield->SetMaterial(0, _shieldMaterial);
 	_shield->SetRelativeScale3D(FVector(3.0f, 3.0f, 3.0f));
 	_shield->SetVisibility(false);
+	
 
 	_shieldDashAttackSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ShieldDashAttackSphere"));
 	_shieldDashAttackSphere->SetupAttachment(GetCapsuleComponent());
@@ -182,6 +183,8 @@ void ATFT_Player::BeginPlay()
 		if(bEquipSword == true) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
 		if(bEquipSword == false) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
 	}
+
+	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -776,6 +779,7 @@ void ATFT_Player::OffShield()
 	if (bIsShieldDashing) return;
 
 	_shield->SetVisibility(false);
+	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -783,6 +787,7 @@ void ATFT_Player::OffShield()
 void ATFT_Player::OnShield()
 {
 	_shield->SetVisibility(true);
+	_shield->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
 void ATFT_Player::ShieldDashCollisionOn()
@@ -807,7 +812,7 @@ void ATFT_Player::AttackHit()
 	FHitResult hitResult;
 	FCollisionQueryParams params(NAME_None, false, this);
 
-	float attackRange = 500.0f;
+	float attackRange = 100.0f;
 	float attackRadius = 100.0f;
 
 	bool bResult = GetWorld()->SweepSingleByChannel
@@ -822,7 +827,7 @@ void ATFT_Player::AttackHit()
 	);
 
 	FVector vec = GetActorForwardVector() * attackRange;
-	FVector center = GetActorLocation() + vec * 0.5f;
+	FVector center = GetActorLocation() + vec;// *0.5f;
 	FColor drawColor = FColor::Green;
 
 	if (bResult && hitResult.GetActor()->IsValidLowLevel())

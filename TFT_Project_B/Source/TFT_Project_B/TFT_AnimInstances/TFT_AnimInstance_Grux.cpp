@@ -6,11 +6,12 @@
 #include "TFT_Creature.h"
 
 #include "GameFramework/PawnMovementComponent.h"
+#include "Animation/AnimMontage.h"
 
 UTFT_AnimInstance_Grux::UTFT_AnimInstance_Grux()
 {
     static ConstructorHelpers::FObjectFinder<UAnimMontage> am
-    (TEXT(""));
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Attack_AnimMontage.TFT_Grux_Attack_AnimMontage'"));
 
     if (am.Succeeded())
     {
@@ -42,6 +43,10 @@ void UTFT_AnimInstance_Grux::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_Grux::PlayAttackMontage()
 {
+    if (!Montage_IsPlaying(_attackMontage))
+    {
+        Montage_Play(_attackMontage);
+    }
 }
 
 void UTFT_AnimInstance_Grux::PlaySkillMontage()
@@ -62,6 +67,11 @@ void UTFT_AnimInstance_Grux::AnimNotify_AttackStart()
 void UTFT_AnimInstance_Grux::AnimNotify_AttackHit()
 {
     _attackHitDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Grux::AnimNotify_AttackEnd()
+{
+    _attackEndDelegate.Broadcast();
 }
 
 void UTFT_AnimInstance_Grux::AnimNotify_DeathStart()

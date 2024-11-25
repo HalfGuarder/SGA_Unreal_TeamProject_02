@@ -28,11 +28,14 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
+
     if (_animInstance_Grux->IsValidLowLevel())
     {
         _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
         _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
         _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
+        _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
         _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
         _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
     }
@@ -86,6 +89,12 @@ void ATFT_BossMonster_Grux::Tick(float DeltaTime)
             }
         }
     }
+
+    if (_isAttacking)
+    {
+        SetActorLocation(LockedLocation);
+        SetActorRotation(LockedRotation);
+    }
 }
 
 void ATFT_BossMonster_Grux::SetMesh(FString path)
@@ -98,7 +107,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
     FHitResult hitResult;
     FCollisionQueryParams params(NAME_None, false, this);
 
-    float attackRange = 500.0f;
+    float attackRange = 150.0f;
     float attackRadius = 100.0f;
 
     bool bResult = GetWorld()->SweepSingleByChannel(
@@ -112,8 +121,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
     );
 
     FVector vec = GetActorForwardVector() * attackRange;
-    FVector center = GetActorLocation() + vec * 0.5f;
-
+    FVector center = GetActorLocation() + vec;// *0.5f;
     FColor drawColor = FColor::Green;
 
     if (bResult && hitResult.GetActor()->IsValidLowLevel())
@@ -154,10 +162,31 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
 
 void ATFT_BossMonster_Grux::Attack_AI()
 {
+    Super::Attack_AI();
+
+    if (!_isAttacking && _animInstance_Grux != nullptr)
+    {
+        if (!_animInstance_Grux->Montage_IsPlaying(_animInstance_Grux->_attackMontage))
+        {
+            LockedLocation = GetActorLocation();
+            LockedRotation = GetActorRotation();
+
+            _animInstance_Grux->PlayAttackMontage();
+
+            _isAttacking = true;
+
+            _curAttackIndex %= 2;
+            _curAttackIndex++;
+            _animInstance_Grux->JumpToSection(_curAttackIndex);
+
+            // _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Grux::ResetMovementLock);
+        }
+    }
 }
 
 void ATFT_BossMonster_Grux::AttackEnd()
 {
+
 }
 
 float ATFT_BossMonster_Grux::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
