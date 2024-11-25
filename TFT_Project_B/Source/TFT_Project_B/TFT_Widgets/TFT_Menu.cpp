@@ -16,9 +16,9 @@ bool UTFT_Menu::Initialize()
 	{
 		CountinueButton->OnClicked.AddDynamic(this, &UTFT_Menu::ContinueEvent);
 	}
-	if (UButton* OpsionButton = Cast<UButton>(GetWidgetFromName(TEXT("Opsion_Button"))))
+	if (UButton* OptionButton = Cast<UButton>(GetWidgetFromName(TEXT("Option_Button"))))
 	{
-		OpsionButton->OnClicked.AddDynamic(this, &UTFT_Menu::OpsionEvent);
+		OptionButton->OnClicked.AddDynamic(this, &UTFT_Menu::OptionEvent);
 	}
 	if (UButton* StartPageButton = Cast<UButton>(GetWidgetFromName(TEXT("StartPage_Button"))))
 	{
@@ -38,9 +38,11 @@ void UTFT_Menu::ContinueEvent()
 	_MenuContinueEvent.Broadcast();
 }
 
-void UTFT_Menu::OpsionEvent()
+void UTFT_Menu::OptionEvent()
 {
 	UE_LOG(LogTemp, Log, TEXT("Test Opsion"));
+
+	
 }
 
 void UTFT_Menu::StartPageEvent()

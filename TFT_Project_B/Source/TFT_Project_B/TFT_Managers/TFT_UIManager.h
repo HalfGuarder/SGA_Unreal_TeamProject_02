@@ -71,6 +71,7 @@ public:
 
 	void MouseUnLock(UIType type);
 	void MouseLock(UIType type);
+	void RsetLevel();
 
 	UIOpenEvent _invenOpenEvent;
 	UIOpenEvent _EquipmentOpenEvent;

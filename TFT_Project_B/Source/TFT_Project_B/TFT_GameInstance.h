@@ -27,16 +27,15 @@ public:
 	UTFT_GameInstance();
 
 	virtual void Init() override;
-
-	void ResetManager();
 public:
 	FTFT_StatData* GetStatDataByLevel(int32 level);
 
 	UFUNCTION(BlueprintCallable)
-	ATFT_UIManager* GetUIManager() { return _uiManager; }
-	ATFT_EffectManager* GetEffectManager() { return _effectManager; }
-	ATFT_SoundManager* GetSoundManager() { return _soundManager; }
+	ATFT_UIManager* GetUIManager();
+	ATFT_EffectManager* GetEffectManager();
+	ATFT_SoundManager* GetSoundManager(); 
 
+	void SpawnManager();
 public:
 	UPROPERTY()
 	class UDataTable* _statTable;
@@ -49,4 +48,5 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ATFT_SoundManager* _soundManager;
+
 };

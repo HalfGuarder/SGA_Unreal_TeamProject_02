@@ -74,6 +74,7 @@ void ATFT_UIManager::BeginPlay()
 
 	_MenuOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
 	_MenuWidget->_MenuContinueEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
+	_MenuWidget->_MenuStartPageEvent.AddUObject(this, &ATFT_UIManager::RsetLevel);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -234,6 +235,17 @@ void ATFT_UIManager::MouseLock(UIType type)
 		FInputModeGameOnly InputMode;
 		PC->SetInputMode(InputMode);
 		PC->bShowMouseCursor = false;
+	}
+}
+
+void ATFT_UIManager::RsetLevel()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FString CurrentLevelName = World->GetMapName();
+		CurrentLevelName.RemoveFromStart(World->StreamingLevelsPrefix); // 레벨 이름에서 Prefix 제거
+		UGameplayStatics::OpenLevel(World, FName(*CurrentLevelName));
 	}
 }
 

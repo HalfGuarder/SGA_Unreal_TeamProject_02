@@ -23,7 +23,7 @@ public:
 	UFUNCTION()
 	void ContinueEvent();
 	UFUNCTION()
-	void OpsionEvent();
+	void OptionEvent();
 	UFUNCTION()
 	void StartPageEvent();
 	UFUNCTION()
