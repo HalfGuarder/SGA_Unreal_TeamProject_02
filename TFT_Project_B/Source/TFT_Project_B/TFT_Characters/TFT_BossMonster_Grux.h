@@ -40,6 +40,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_Grux* _animInstance_Grux;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float _dashSpeed = 800.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float _walkSpeed = 600.0f;
+
 	FVector LockedLocation;
 	FRotator LockedRotation;
+	bool bIsDashing = false;
 };

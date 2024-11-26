@@ -67,4 +67,7 @@ public:
 	class UAnimMontage* _attackMontage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _skillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	bool bIsDashing = false;
 };

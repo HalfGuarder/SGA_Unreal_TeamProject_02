@@ -45,11 +45,18 @@ ATFT_UIManager::ATFT_UIManager()
 		_MenuWidget = CreateWidget<UTFT_Menu>(GetWorld(), MenuWidget.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> tutorial(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_Tutorial_KeyInfo_BP.TFT_Tutorial_KeyInfo_BP_C'"));
+	if (tutorial.Succeeded())
+	{
+		_tutorial = CreateWidget<UUserWidget>(GetWorld(), tutorial.Class);
+	}
+
 	_widgets.Add(_crossHair);
 	_widgets.Add(_invenWidget);
 	_widgets.Add(_EquipmentWidget);
 	_widgets.Add(_SkillWidget);
 	_widgets.Add(_MenuWidget);
+	_widgets.Add(_tutorial);
 }
 
 void ATFT_UIManager::BeginPlay()

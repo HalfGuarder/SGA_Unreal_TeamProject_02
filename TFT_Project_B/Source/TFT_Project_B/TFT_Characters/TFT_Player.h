@@ -253,6 +253,8 @@ public:
 	bool bTurretBuildMode = false;
 	bool bBuildTurret = false;
 
-
 	UUserWidget* DialogueWidget2Instance; 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Tutorial, meta = (AllowPrivateAccess = "true"))
+	bool bClearTutorial = false;
 };

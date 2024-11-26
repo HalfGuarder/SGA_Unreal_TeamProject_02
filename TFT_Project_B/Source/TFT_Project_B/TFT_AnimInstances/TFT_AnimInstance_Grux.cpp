@@ -19,7 +19,7 @@ UTFT_AnimInstance_Grux::UTFT_AnimInstance_Grux()
     }
 
     static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
-    (TEXT(""));
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Skill_AnimMontage.TFT_Grux_Skill_AnimMontage'"));
 
     if (sm.Succeeded())
     {
@@ -51,6 +51,10 @@ void UTFT_AnimInstance_Grux::PlayAttackMontage()
 
 void UTFT_AnimInstance_Grux::PlaySkillMontage()
 {
+    if (!Montage_IsPlaying(_skillMontage))
+    {
+        Montage_Play(_skillMontage);
+    }
 }
 
 void UTFT_AnimInstance_Grux::JumpToSection(int32 sectionIndex)

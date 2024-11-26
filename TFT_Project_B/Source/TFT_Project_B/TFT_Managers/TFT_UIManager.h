@@ -22,6 +22,7 @@ enum class UIType : int32
 	EquipmentUI,
 	SkillUI,
 	Menu,
+	Tutorial,
 };
 
 
@@ -78,6 +79,7 @@ public:
 	UIOpenEvent _EquipmentCloseResetEvent;
 	UIOpenEvent _WeaponZoomEvent;
 	UIOpenEvent _MenuOpenEvent;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UUserWidget*> _widgets;
@@ -97,6 +99,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UTFT_Menu* _MenuWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UUserWidget* _tutorial;
 
 	bool _UIInvenarea = false;
 	bool _UIEquipmentarea = false;

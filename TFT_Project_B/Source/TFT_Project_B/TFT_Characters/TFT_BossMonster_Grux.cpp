@@ -4,12 +4,18 @@
 #include "TFT_Characters/TFT_BossMonster_Grux.h"
 
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
 
 #include "TFT_AnimInstance_Grux.h"
 #include "TFT_HPBarWidget.h"
+
+#include "TFT_GameInstance.h"
+#include "TFT_UIManager.h"
+
+#include "TFT_Player.h"
 
 ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
@@ -67,6 +73,8 @@ void ATFT_BossMonster_Grux::BeginPlay()
     Super::BeginPlay();
 
     _statCom->SetLevelAndInit(1);
+
+    UIMANAGER->OpenWidget(UIType::Tutorial);
 }
 
 void ATFT_BossMonster_Grux::Tick(float DeltaTime)
@@ -90,7 +98,7 @@ void ATFT_BossMonster_Grux::Tick(float DeltaTime)
         }
     }
 
-    if (_isAttacking)
+    if (_isAttacking && !bIsDashing)
     {
         SetActorLocation(LockedLocation);
         SetActorRotation(LockedRotation);
@@ -166,18 +174,36 @@ void ATFT_BossMonster_Grux::Attack_AI()
 
     if (!_isAttacking && _animInstance_Grux != nullptr)
     {
-        if (!_animInstance_Grux->Montage_IsPlaying(_animInstance_Grux->_attackMontage))
+        if (!_animInstance_Grux->Montage_IsPlaying(_animInstance_Grux->_attackMontage) &&
+            !_animInstance_Grux->Montage_IsPlaying(_animInstance_Grux->_skillMontage))
         {
-            LockedLocation = GetActorLocation();
-            LockedRotation = GetActorRotation();
+            int32 randValue = FMath::RandRange(0, 10);
 
-            _animInstance_Grux->PlayAttackMontage();
+            if (randValue > 1)
+            {
+                _animInstance_Grux->bIsDashing = false;
 
-            _isAttacking = true;
+                LockedLocation = GetActorLocation();
+                LockedRotation = GetActorRotation();
 
-            _curAttackIndex %= 2;
-            _curAttackIndex++;
-            _animInstance_Grux->JumpToSection(_curAttackIndex);
+                _animInstance_Grux->PlayAttackMontage();
+
+                _isAttacking = true;
+
+                _curAttackIndex %= 2;
+                _curAttackIndex++;
+                _animInstance_Grux->JumpToSection(_curAttackIndex);
+            }
+            else
+            {
+                _animInstance_Grux->bIsDashing = true;
+                bIsDashing = true;
+
+                _animInstance_Grux->PlaySkillMontage();
+
+                GetCharacterMovement()->MaxWalkSpeed = _dashSpeed;
+                GetCharacterMovement()->RotationRate = FRotator(0.0f, 900.0f, 0.0f);
+            }
 
             // _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Grux::ResetMovementLock);
         }
@@ -186,7 +212,10 @@ void ATFT_BossMonster_Grux::Attack_AI()
 
 void ATFT_BossMonster_Grux::AttackEnd()
 {
-
+    bIsDashing = false;
+    _animInstance_Grux->bIsDashing = false;
+    GetCharacterMovement()->MaxWalkSpeed = _walkSpeed;
+    GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f);
 }
 
 float ATFT_BossMonster_Grux::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -200,7 +229,10 @@ void ATFT_BossMonster_Grux::DeathStart()
 {
     Super::DeathStart();
 
+    _animInstance_Grux->StopAllMontages(0.2f);
     _animInstance_Grux->_deathStartDelegate.RemoveAll(this);
+
+    UIMANAGER->CloseWidget(UIType::Tutorial);
 }
 
 void ATFT_BossMonster_Grux::BossDisable()
@@ -218,4 +250,8 @@ void ATFT_BossMonster_Grux::BossDisable()
         HpBarWidgetInstance->RemoveFromParent();
         HpBarWidgetInstance = nullptr;
     }
+
+    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+    
+    player->bClearTutorial = true;
 }
