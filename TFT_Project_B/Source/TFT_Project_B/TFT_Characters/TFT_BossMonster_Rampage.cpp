@@ -12,6 +12,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
+#include "EngineUtils.h" 
+#include "TFT_NPC2.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
@@ -49,8 +51,6 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 
     _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
-
-
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
@@ -258,14 +258,23 @@ float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& Dam
 void ATFT_BossMonster_Rampage::DeathStart()
 {
     Super::DeathStart();
-
-   /* SetActorHiddenInGame(true);
-
-    DetachFromControllerPendingDestroy();
-
-    bIsDead = true;*/ 
-
-    // TODO : ���峪 ���� �����κ�
+    if (GetWorld())
+    {
+        for (TActorIterator<ATFT_NPC2> NPC2Itr(GetWorld()); NPC2Itr; ++NPC2Itr)
+        {
+            ATFT_NPC2* NPC2 = *NPC2Itr;
+            if (NPC2) 
+            {
+                NPC2->ShowNPC();
+                UE_LOG(LogTemp, Log, TEXT("Boss died. NPC2 is now visible."));
+                break; 
+            }
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("GetWorld() returned nullptr! Cannot find NPC2."));
+    }
 
     _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
 }

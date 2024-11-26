@@ -6,6 +6,8 @@
 #include "TFT_Characters/TFT_Monster.h"
 #include "TFT_BossMonster_Rampage.generated.h"
 
+
+
 /**
  * 
  */
@@ -45,6 +47,8 @@ public:
 	void BossDisable();
 
 	void UpdateBlackboardTarget();
+
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_Rampage* _animInstance_Boss;
@@ -69,4 +73,5 @@ private:
 	float JumpSkillCooldown = 10.0f;
 	bool bCanUseJumpSkill = true;
 	FTimerHandle JumpSkillCooldownTimerHandle;
+
 };
