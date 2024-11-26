@@ -10,6 +10,7 @@
 #include "TFT_AnimInstance_Player.h"
 #include "TFT_NPC.h"
 #include "TFT_Door.h"
+#include "TFT_NPC2.h"
 
 #include "EngineUtils.h"
 
@@ -140,6 +141,11 @@ ATFT_Player::ATFT_Player()
 	if (DialogueUI.Succeeded())
 	{
 		DialogueWidgetClass = DialogueUI.Class;
+	}
+	static ConstructorHelpers::FClassFinder<UUserWidget> DialogueUI2(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/UI/DialogueWidget2.DialogueWidget2_C'"));
+	if (DialogueUI2.Succeeded())
+	{
+		DialogueWidget2Class = DialogueUI2.Class; // 위젯 클래스를 DialogueWidget2Class에 저장
 	}
 }
 
@@ -1101,6 +1107,7 @@ void ATFT_Player::CloseDialogueUI()
 {
 	if (bIsDialogueActive)
 	{
+		// NPC의 UI 창 닫기
 		if (DialogueWidgetInstance)
 		{
 			DialogueWidgetInstance->RemoveFromViewport();
@@ -1110,32 +1117,78 @@ void ATFT_Player::CloseDialogueUI()
 		bIsDialogueActive = false;
 		GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(false);
 
-		// 문 열기 작업 먼저 실행
-		for (TActorIterator<ATFT_Door> DoorItr(GetWorld()); DoorItr; ++DoorItr)
-		{
-			ATFT_Door* Door = *DoorItr;
-			if (Door)
-			{
-				Door->OpenDoor();
-
-				// 3초 후 문 닫기
-				FTimerHandle TimerHandle;
-				GetWorldTimerManager().SetTimer(TimerHandle, [Door]()
-					{
-						Door->CloseDoor();
-					}, 3.0f, false);
-			}
-		}
-
-		// 대화 중인 NPC 숨기기
+		// 태그로 문 열기
 		for (TActorIterator<ATFT_NPC> NPCItr(GetWorld()); NPCItr; ++NPCItr)
 		{
 			ATFT_NPC* NPC = *NPCItr;
 			if (NPC && NPC->InteractionBox->IsOverlappingActor(this)) // 플레이어와 겹친 NPC 찾기
 			{
 				NPC->HideNPC(); // NPC 숨기기
+				OpenTaggedDoor(TEXT("Door1")); // 태그로 첫 번째 문 열기
 				break;
 			}
+		}
+
+		// NPC2의 UI 창 닫기
+		if (DialogueWidget2Instance)
+		{
+			DialogueWidget2Instance->RemoveFromViewport();
+			DialogueWidget2Instance = nullptr;
+		}
+
+		// NPC2 숨기기 및 태그로 두 번째 문 열기
+		for (TActorIterator<ATFT_NPC2> NPC2Itr(GetWorld()); NPC2Itr; ++NPC2Itr)
+		{
+			ATFT_NPC2* NPC2 = *NPC2Itr;
+			if (NPC2 && NPC2->InteractionBox->IsOverlappingActor(this)) // 플레이어와 겹친 NPC2 찾기
+			{
+				NPC2->HideNPC(); // NPC2 숨기기
+				OpenTaggedDoor(TEXT("Door2")); // 태그로 두 번째 문 열기
+				break;
+			}
+		}
+	}
+}
+
+void ATFT_Player::StartDialogueUI2()
+{
+	if (bIsDialogueActive)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Dialogue UI2 is already active."));
+		return;
+	}
+
+	if (!DialogueWidget2Instance && DialogueWidget2Class)
+	{
+		DialogueWidget2Instance = CreateWidget<UUserWidget>(GetWorld(), DialogueWidget2Class);
+		if (DialogueWidget2Instance)
+		{
+			DialogueWidget2Instance->AddToViewport();
+			bIsDialogueActive = true;
+			UE_LOG(LogTemp, Warning, TEXT("Dialogue UI2 opened."));
+
+			GetWorld()->GetFirstPlayerController()->SetIgnoreMoveInput(true);
+		}
+	}
+}
+
+void ATFT_Player::OpenTaggedDoor(FName DoorTag)
+{
+	for (TActorIterator<ATFT_Door> DoorItr(GetWorld()); DoorItr; ++DoorItr)
+	{
+		ATFT_Door* Door = *DoorItr;
+		if (Door && Door->ActorHasTag(DoorTag)) // 태그가 일치하는 문 찾기
+		{
+			Door->OpenDoor(); // 문 열기
+
+			// 3초 후 문 닫기
+			FTimerHandle TimerHandle;
+			GetWorldTimerManager().SetTimer(TimerHandle, [Door]()
+				{
+					Door->CloseDoor();
+				}, 3.0f, false);
+
+			break; // 첫 번째 일치하는 문만 처리
 		}
 	}
 }

@@ -91,6 +91,8 @@ public:
 	void StartDialogueUI();
 	void CloseDialogueUI();
 	void SetIsDialogueActive(bool bActive) { bIsDialogueActive = bActive; }
+	void StartDialogueUI2();
+	void OpenTaggedDoor(FName DoorTag);
 
 	UFUNCTION()
 	void ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -166,6 +168,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> DialogueWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> DialogueWidget2Class;
 
 	UUserWidget* DialogueWidgetInstance; 
 	bool bIsDialogueActive = false;      

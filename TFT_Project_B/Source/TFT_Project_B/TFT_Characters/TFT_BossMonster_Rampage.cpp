@@ -265,7 +265,7 @@ void ATFT_BossMonster_Rampage::DeathStart()
 
     bIsDead = true;*/ 
 
-    // TODO : »ç¿îµå³ª À§Á¬ »èÁ¦ºÎºÐ
+    // TODO : ï¿½ï¿½ï¿½å³ª ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½
 
     _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
 }
