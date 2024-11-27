@@ -63,6 +63,20 @@ UTFT_AnimInstance_Player::UTFT_AnimInstance_Player()
 	{
 		_upperSwingMontage = us.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> abrn
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Airborne_AnimMontage.TFT_Player_Airborne_AnimMontage'"));
+	if (abrn.Succeeded())
+	{
+		_airborneMontage = abrn.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> stn
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Characters/Player/Animations/TFT_Player_Stun_AnimMontage.TFT_Player_Stun_AnimMontage'"));
+	if (stn.Succeeded())
+	{
+		_stunMontage = stn.Object;
+	}
 }
 
 void UTFT_AnimInstance_Player::NativeUpdateAnimation(float DeltaSeconds)
@@ -235,6 +249,30 @@ void UTFT_AnimInstance_Player::StopDefenseMontage()
 	Montage_Stop(0.2f, _defenseMontage);
 }
 
+void UTFT_AnimInstance_Player::PlayAirborneMontage()
+{
+	if (!Montage_IsPlaying(_airborneMontage))
+	{
+		Montage_Play(_airborneMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopAirborneMontage()
+{
+}
+
+void UTFT_AnimInstance_Player::PlayStunMontage()
+{
+	if (!Montage_IsPlaying(_stunMontage))
+	{
+		Montage_Play(_stunMontage);
+	}
+}
+
+void UTFT_AnimInstance_Player::StopStunMontage()
+{
+}
+
 void UTFT_AnimInstance_Player::AnimNotify_ShieldDashEnd()
 {
 	bIsShieldDashing = false;
@@ -249,4 +287,14 @@ void UTFT_AnimInstance_Player::AnimNotify_Fire()
 void UTFT_AnimInstance_Player::AnimNotify_DeathStart()
 {
 	_DeathDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Player::AnimNotify_AirborneEnd()
+{
+	_stateMontageEndDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Player::AnimNotify_StunEnd()
+{
+	_stateMontageEndDelegate.Broadcast();
 }

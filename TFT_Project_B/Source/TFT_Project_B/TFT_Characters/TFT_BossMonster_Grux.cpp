@@ -254,4 +254,5 @@ void ATFT_BossMonster_Grux::BossDisable()
     auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
     
     player->bClearTutorial = true;
+    GAMEINSTANCE->_reStartTrg = true;
 }

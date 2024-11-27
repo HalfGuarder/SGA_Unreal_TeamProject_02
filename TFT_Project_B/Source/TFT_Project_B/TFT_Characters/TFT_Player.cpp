@@ -222,6 +222,11 @@ void ATFT_Player::PostInitializeComponents()
 			_statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
 		}
 	}
+
+	if (_stateCom->IsValidLowLevel())
+	{
+		_stateCom->_stateChangeDelegate.AddUObject(this, &ATFT_Player::StateCheck);
+	}
 }
 
 void ATFT_Player::Tick(float DeltaTime)
@@ -800,6 +805,35 @@ void ATFT_Player::OnShield()
 void ATFT_Player::ShieldDashCollisionOn()
 {
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+}
+
+void ATFT_Player::StateCheck()
+{
+	if (_statCom->IsDead()) return;
+
+	auto curStates = _stateCom->GetCurStates();
+
+	if (curStates.IsEmpty()) return;
+
+	for (auto state : curStates)
+	{
+		switch (state)
+		{
+		case StateType::Airborne:
+
+			_animInstancePlayer->PlayAirborneMontage();
+			_stateCom->InitState();
+			return;
+
+		case StateType::Stun:
+			_animInstancePlayer->PlayStunMontage();
+			_stateCom->InitState();
+			return;
+
+		default:
+			break;
+		}
+	}
 }
 
 void ATFT_Player::AttackStart()

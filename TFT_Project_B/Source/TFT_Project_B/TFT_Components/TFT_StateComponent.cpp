@@ -47,6 +47,8 @@ void UTFT_StateComponent::SetState(StateType type)
 	default:
 		break;
 	}
+
+	_stateChangeDelegate.Broadcast();
 }
 
 bool UTFT_StateComponent::CheckState(StateType type)
@@ -77,4 +79,6 @@ void UTFT_StateComponent::InitState()
 	bIsAirborne = false;
 	bIsStun = false;
 	bIsSlow = false;
+
+	_curStates.Empty();
 }

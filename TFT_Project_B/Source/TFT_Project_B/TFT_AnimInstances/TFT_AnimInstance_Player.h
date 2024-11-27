@@ -52,6 +52,12 @@ public:
 	UFUNCTION()
 	void AnimNotify_DeathStart();
 
+	UFUNCTION()
+	void AnimNotify_AirborneEnd();
+
+	UFUNCTION()
+	void AnimNotify_StunEnd();
+
 	void PlayRunningMontage();
 	void StopRunningMontage();
 
@@ -64,6 +70,11 @@ public:
 	void PlayDefenseMontage();
 	void StopDefenseMontage();
 
+	void PlayAirborneMontage();
+	void StopAirborneMontage();
+
+	void PlayStunMontage();
+	void StopStunMontage();
 
 	PlayerAnimEvent _attackStartDelegate;
 	PlayerAnimEvent _attackHitDelegate;
@@ -75,6 +86,7 @@ public:
 	PlayerAnimEvent _shieldDashEndDelegate;
 	PlayerAnimEvent _fireDelegate;
 	PlayerAnimEvent _DeathDelegate;
+	PlayerAnimEvent _stateMontageEndDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -127,6 +139,12 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Skill, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _upperSwingMontage;
+
+	// States
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _airborneMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _stunMontage;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, Meta = (AllowPrivateAccess = true))

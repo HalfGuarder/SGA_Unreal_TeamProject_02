@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "TFT_StateComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(StateChangeEvent);
+
 UENUM()
 enum class StateType : int32
 {
@@ -40,7 +42,9 @@ public:
 	UFUNCTION()
 	void InitState();
 
-private:
+	StateChangeEvent _stateChangeDelegate;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State, meta = (AllowPrivateAccess = "true"))
 	bool bIsAirborne = false;
 
