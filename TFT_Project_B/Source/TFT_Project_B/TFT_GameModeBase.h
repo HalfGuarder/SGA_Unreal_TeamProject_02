@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TFT_GameModeBase.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(GameModeEvent);
 /**
  * 
  */
@@ -16,8 +17,6 @@ class TFT_PROJECT_B_API ATFT_GameModeBase : public AGameModeBase
 public:
 	ATFT_GameModeBase();
 
-	void Init();
-
 	virtual void PostInitializeComponents() override;
 
 	virtual void BeginPlay() override;
@@ -25,11 +24,17 @@ public:
 	UFUNCTION()
 	void GameStart();
 
+	void ReStart();
+
 	void MouseUnLock();
 	void MouseLock();
+
+	GameModeEvent _reEvent;
 private:
 	UPROPERTY()
 	class UTFT_GameStartWidget* GameStartInstance;
 
 	TSubclassOf<APawn> _player;
+
+	bool _restart = false;
 };

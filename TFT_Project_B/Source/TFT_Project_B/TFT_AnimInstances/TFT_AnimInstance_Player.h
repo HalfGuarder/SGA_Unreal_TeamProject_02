@@ -6,15 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "TFT_AnimInstance_Player.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
-DECLARE_MULTICAST_DELEGATE(QSkillHitDelegate);
-DECLARE_MULTICAST_DELEGATE(ESkillHitDelegate);
-DECLARE_MULTICAST_DELEGATE(ShieldDashCollisionOnDelegate);
-DECLARE_MULTICAST_DELEGATE(DashEndDelegate);
-DECLARE_MULTICAST_DELEGATE(ShieldDashEndDelegate);
-DECLARE_MULTICAST_DELEGATE(FireDelegate);
+DECLARE_MULTICAST_DELEGATE(PlayerAnimEvent);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Player : public UAnimInstance
@@ -57,6 +49,9 @@ public:
 	UFUNCTION()
 	void AnimNotify_Fire();
 
+	UFUNCTION()
+	void AnimNotify_DeathStart();
+
 	void PlayRunningMontage();
 	void StopRunningMontage();
 
@@ -70,15 +65,16 @@ public:
 	void StopDefenseMontage();
 
 
-	AttackStartDelegate _attackStartDelegate;
-	AttackHitDelegate _attackHitDelegate;
-	AttackEndDelegate _attackEndDelegate;
-	ShieldDashCollisionOnDelegate _ShieldDashCollisionOnDelegate;
-	DashEndDelegate _dashEndDelegate;
-	QSkillHitDelegate _qSkillHitDelegate;
-	ESkillHitDelegate _eSkillHitDelegate;
-	ShieldDashEndDelegate _shieldDashEndDelegate;
-	FireDelegate _fireDelegate;
+	PlayerAnimEvent _attackStartDelegate;
+	PlayerAnimEvent _attackHitDelegate;
+	PlayerAnimEvent _attackEndDelegate;
+	PlayerAnimEvent _ShieldDashCollisionOnDelegate;
+	PlayerAnimEvent _dashEndDelegate;
+	PlayerAnimEvent _qSkillHitDelegate;
+	PlayerAnimEvent _eSkillHitDelegate;
+	PlayerAnimEvent _shieldDashEndDelegate;
+	PlayerAnimEvent _fireDelegate;
+	PlayerAnimEvent _DeathDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))

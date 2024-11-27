@@ -74,6 +74,7 @@ protected:
 
 	void SpawnTurret();
 	void Fire();
+	void DeathPlayer();
 
 	void RotatePlayer(float DeltaTime);
 

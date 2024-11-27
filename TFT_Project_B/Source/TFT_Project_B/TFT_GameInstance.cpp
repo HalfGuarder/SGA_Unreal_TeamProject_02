@@ -24,6 +24,7 @@ void UTFT_GameInstance::Init()
 	Super::Init();
 
 	SpawnManager();
+
 }
 
 FTFT_StatData* UTFT_GameInstance::GetStatDataByLevel(int32 level)
@@ -81,4 +82,10 @@ void UTFT_GameInstance::SpawnManager()
 		Params.Name = TEXT("SoundManager");
 		_soundManager = World->SpawnActor<ATFT_SoundManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
 	}
+}
+
+void UTFT_GameInstance::ReStart()
+{
+	_reStartTrg = true;
+	_reStartDelegate.Broadcast();
 }

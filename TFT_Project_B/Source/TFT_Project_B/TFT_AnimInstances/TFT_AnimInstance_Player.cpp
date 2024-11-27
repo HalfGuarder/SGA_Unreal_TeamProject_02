@@ -245,3 +245,8 @@ void UTFT_AnimInstance_Player::AnimNotify_Fire()
 {
 	_fireDelegate.Broadcast();
 }
+
+void UTFT_AnimInstance_Player::AnimNotify_DeathStart()
+{
+	_DeathDelegate.Broadcast();
+}

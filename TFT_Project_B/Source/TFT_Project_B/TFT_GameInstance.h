@@ -16,7 +16,9 @@ class ATFT_SoundManager;
 #define UIMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetUIManager()
 #define EFFECTMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetEffectManager()
 #define SOUNDMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetSoundManager()
+#define GAMEINSTANCE Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())
 
+DECLARE_MULTICAST_DELEGATE(InstanceEvent);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_GameInstance : public UGameInstance
@@ -36,6 +38,9 @@ public:
 	ATFT_SoundManager* GetSoundManager(); 
 
 	void SpawnManager();
+
+	InstanceEvent _reStartDelegate;
+	void ReStart();
 public:
 	UPROPERTY()
 	class UDataTable* _statTable;
@@ -49,4 +54,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ATFT_SoundManager* _soundManager;
 
+
+	bool _reStartTrg = false;
 };

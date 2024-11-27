@@ -7,7 +7,10 @@
 #include "TFT_EquipmentWidget.h"
 #include "TFT_SkillUI.h"
 #include "TFT_Menu.h"
+#include "TFT_DeathWidget.h"
 #include "Kismet/GameplayStatics.h"
+
+#include "TFT_GameInstance.h"
 
 ATFT_UIManager::ATFT_UIManager()
 {
@@ -45,6 +48,13 @@ ATFT_UIManager::ATFT_UIManager()
 		_MenuWidget = CreateWidget<UTFT_Menu>(GetWorld(), MenuWidget.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> DeathWidget(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_DeathWidget_BP.TFT_DeathWidget_BP_C'"));
+	if (skillUI.Succeeded())
+	{
+		_DeathWidget = CreateWidget<UTFT_DeathWidget>(GetWorld(), DeathWidget.Class);
+	}
+
+
 	static ConstructorHelpers::FClassFinder<UUserWidget> tutorial(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_Tutorial_KeyInfo_BP.TFT_Tutorial_KeyInfo_BP_C'"));
 	if (tutorial.Succeeded())
 	{
@@ -56,17 +66,13 @@ ATFT_UIManager::ATFT_UIManager()
 	_widgets.Add(_EquipmentWidget);
 	_widgets.Add(_SkillWidget);
 	_widgets.Add(_MenuWidget);
+	_widgets.Add(_DeathWidget);
 	_widgets.Add(_tutorial);
 }
 
 void ATFT_UIManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//OpenWidget(UIType::Inventory);
-	//CloseWidget(UIType::Inventory);
-	//OpenWidget(UIType::EquipmentUI);
-	//CloseWidget(UIType::EquipmentUI);
 
 	OnoffWidget(UIType::Menu);
 
@@ -81,7 +87,10 @@ void ATFT_UIManager::BeginPlay()
 
 	_MenuOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
 	_MenuWidget->_MenuContinueEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
-	_MenuWidget->_MenuStartPageEvent.AddUObject(this, &ATFT_UIManager::RsetLevel);
+	_MenuWidget->_MenuStartPageEvent.AddUObject(this, &ATFT_UIManager::ResetLevel);
+
+	_DeathWidget->_StartPageDelegate.AddUObject(this, &ATFT_UIManager::DeathResetLevel);
+	_DeathWidget->_ReStartDelegate.AddUObject(this, &ATFT_UIManager::ReStart);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -215,6 +224,26 @@ void ATFT_UIManager::OnOffPlayMenu()
 	}
 }
 
+void ATFT_UIManager::DeathUIA()
+{
+	if (_UIDeath == false)
+	{
+		GetWorld()->GetWorldSettings()->SetTimeDilation(0.3f);
+		_UIDeath = true;
+
+		OpenWidget(UIType::DeathUI);
+		MouseUnLock(UIType::DeathUI);
+	}
+	else if (_UIDeath == true)
+	{
+		GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
+		_UIDeath = false;
+
+		CloseWidget(UIType::DeathUI);
+		MouseLock(UIType::DeathUI);
+	}
+}
+
 void ATFT_UIManager::MouseUnLock(UIType type)
 {
 	int32 typeNum = (int32)type;
@@ -245,7 +274,7 @@ void ATFT_UIManager::MouseLock(UIType type)
 	}
 }
 
-void ATFT_UIManager::RsetLevel()
+void ATFT_UIManager::ResetLevel()
 {
 	UWorld* World = GetWorld();
 	if (World)
@@ -254,5 +283,19 @@ void ATFT_UIManager::RsetLevel()
 		CurrentLevelName.RemoveFromStart(World->StreamingLevelsPrefix); // 레벨 이름에서 Prefix 제거
 		UGameplayStatics::OpenLevel(World, FName(*CurrentLevelName));
 	}
+}
+
+void ATFT_UIManager::DeathResetLevel()
+{
+	DeathUIA();
+
+	ResetLevel();
+}
+
+void ATFT_UIManager::ReStart()
+{
+	DeathUIA();
+
+	GAMEINSTANCE->ReStart();
 }
 

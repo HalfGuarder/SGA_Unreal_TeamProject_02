@@ -207,6 +207,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_ShieldDashCollisionOnDelegate.AddUObject(this, &ATFT_Player::ShieldDashCollisionOn);
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
+		_animInstancePlayer->_DeathDelegate.AddUObject(this, &ATFT_Player::DeathPlayer);
 	}
 
 	if (HpBarWidgetInstance)
@@ -1005,6 +1006,11 @@ void ATFT_Player::Fire()
 			bullet->FireInDirection(_projectileDir);
 		}
 	}
+}
+
+void ATFT_Player::DeathPlayer()
+{
+	UIMANAGER->DeathUIA();
 }
 
 void ATFT_Player::RotatePlayer(float DeltaTime)

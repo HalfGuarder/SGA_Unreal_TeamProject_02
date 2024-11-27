@@ -11,6 +11,7 @@ class UTFT_InvenWidget;
 class UTFT_EquipmentWidget;
 class UTFT_SkillUI;
 class UTFT_Menu;
+class UTFT_DeathWidget;
 
 DECLARE_MULTICAST_DELEGATE(UIOpenEvent);
 
@@ -22,6 +23,7 @@ enum class UIType : int32
 	EquipmentUI,
 	SkillUI,
 	Menu,
+	DeathUI,
 	Tutorial,
 };
 
@@ -61,25 +63,33 @@ public:
 	UFUNCTION()
 	void OnOffPlayMenu();
 
+	UFUNCTION()
+	void DeathUIA();
 
 	UTFT_InvenWidget* GetInvenUI() { return _invenWidget; }
 	UTFT_EquipmentWidget* GetEquipmentUI() { return _EquipmentWidget; }
 	UTFT_SkillUI* GetSkillUI() { return _SkillWidget; }
 	UTFT_Menu* GetMenuUI() { return _MenuWidget; }
+	UTFT_DeathWidget* GetDeathUI() { return _DeathWidget; }
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UUserWidget*> GetWidgets() { return _widgets; }
 
 	void MouseUnLock(UIType type);
 	void MouseLock(UIType type);
-	void RsetLevel();
+
+	UFUNCTION()
+	void ResetLevel();
+	UFUNCTION()
+	void DeathResetLevel();
+	UFUNCTION()
+	void ReStart();
 
 	UIOpenEvent _invenOpenEvent;
 	UIOpenEvent _EquipmentOpenEvent;
 	UIOpenEvent _EquipmentCloseResetEvent;
 	UIOpenEvent _WeaponZoomEvent;
 	UIOpenEvent _MenuOpenEvent;
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UUserWidget*> _widgets;
@@ -101,10 +111,14 @@ public:
 	UTFT_Menu* _MenuWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UTFT_DeathWidget* _DeathWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UUserWidget* _tutorial;
 
 	bool _UIInvenarea = false;
 	bool _UIEquipmentarea = false;
 	bool _UICrossHair = false;
 	bool _UIPlayMenu = false;
+	bool _UIDeath = false;
 };

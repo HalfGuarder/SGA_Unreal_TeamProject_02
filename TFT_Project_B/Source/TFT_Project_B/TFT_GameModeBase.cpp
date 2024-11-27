@@ -2,17 +2,13 @@
 
 
 #include "TFT_GameModeBase.h"
+#include "TFT_GameInstance.h"
 #include "TFT_Widgets/TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "TFT_Player.h"
 
 ATFT_GameModeBase::ATFT_GameModeBase()
-{
-	Init();
-}
-
-void ATFT_GameModeBase::Init()
 {
 	static ConstructorHelpers::FClassFinder<ATFT_Player> player
 	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/TFT_Player_BP.TFT_Player_BP_C'"));
@@ -22,35 +18,43 @@ void ATFT_GameModeBase::Init()
 		_player = player.Class;
 	}
 
-    if (UClass* StartWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'")))
-    {
-        GameStartInstance = CreateWidget<UTFT_GameStartWidget>(GetWorld(), StartWidgetClass);
-        if (GameStartInstance)
-        {
-            GameStartInstance->AddToViewport(9999);
-        }
-    }
-
+	if (UClass* StartWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'")))
+	{
+		GameStartInstance = CreateWidget<UTFT_GameStartWidget>(GetWorld(), StartWidgetClass);
+	}
 }
+
+
 
 void ATFT_GameModeBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+
 	if (GameStartInstance->IsValidLowLevel())
 	{
 		GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
 	}
-
+	GAMEINSTANCE->_reStartDelegate.AddUObject(this, &ATFT_GameModeBase::ReStart);
 }
 
 void ATFT_GameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (GAMEINSTANCE->_reStartTrg == false)
+	{
+		if (GameStartInstance)
+		{
+			GameStartInstance->AddToViewport(9999);
+		}
+		MouseUnLock();
+	}
+	else
+	{
+		GameStart();
+	}
 
-
-	MouseUnLock();
 }
 
 void ATFT_GameModeBase::GameStart()
@@ -68,7 +72,28 @@ void ATFT_GameModeBase::GameStart()
 	GetWorld()->GetFirstPlayerController()->Possess(player);
 	if (oldpawn) oldpawn->Destroy();
 
+	GAMEINSTANCE->_reStartTrg = false;
+
 	MouseLock();
+}
+
+
+
+void ATFT_GameModeBase::ReStart()
+{
+	if (GameStartInstance)
+	{
+		GameStartInstance->RemoveFromViewport();
+	}
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FString CurrentLevelName = World->GetMapName();
+		CurrentLevelName.RemoveFromStart(World->StreamingLevelsPrefix); // 레벨 이름에서 Prefix 제거
+		UGameplayStatics::OpenLevel(World, FName(*CurrentLevelName));  // 현재 레벨을 새로 시작
+	}
+
 }
 
 void ATFT_GameModeBase::MouseUnLock()
