@@ -94,7 +94,14 @@ public:
 	void SetIsDialogueActive(bool bActive) { bIsDialogueActive = bActive; }
 	void StartDialogueUI2();
 	void OpenTaggedDoor(FName DoorTag);
+	void InteractWithButton();
+	// 버튼 근처로 들어왔을 때 호출되는 함수
+	UFUNCTION()
+	void BeginOverlapWithButton();
 
+	// 버튼 범위를 벗어났을 때 호출되는 함수
+	UFUNCTION()
+	void EndOverlapWithButton();
 	UFUNCTION()
 	void ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -148,6 +155,9 @@ public:
 	UInputAction* _defenseAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _CloseUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* _Interact;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _PlayMenuAction;
@@ -258,4 +268,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Tutorial, meta = (AllowPrivateAccess = "true"))
 	bool bClearTutorial = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool bCanInteract;
+
 };

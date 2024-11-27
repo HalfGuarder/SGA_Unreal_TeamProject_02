@@ -112,7 +112,7 @@ void ATFT_GameModeBase::MouseLock()
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		FInputModeGameOnly InputMode;
-		PC->SetInputMode(InputMode);  // ÀÔ·Â ¸ðµå¸¦ °ÔÀÓÀ¸·Î ÀüÈ¯
-		PC->bShowMouseCursor = false;  // ¸¶¿ì½º Ä¿¼­¸¦ ¼û±è
+		PC->SetInputMode(InputMode);  // ï¿½Ô·ï¿½ ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+		PC->bShowMouseCursor = false;  // ï¿½ï¿½ï¿½ì½º Ä¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 }
