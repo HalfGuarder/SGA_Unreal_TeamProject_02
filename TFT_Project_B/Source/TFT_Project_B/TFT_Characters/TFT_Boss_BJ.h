@@ -60,5 +60,6 @@ protected:
 	void TriggerSkillEffect();
 
 public:
+	void ActivateSkillRandom();
 	void ActivateSkill();
 };

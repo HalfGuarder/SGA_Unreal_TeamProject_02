@@ -8,7 +8,7 @@ public class TFT_Project_B : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "NavigationSystem", "UMG", "Niagara" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "LevelSequence", "NavigationSystem", "UMG", "Niagara", "MovieScene"  });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 

@@ -182,23 +182,27 @@ void ATFT_Boss_BJ::Attack_AI()
         {
             int32 randomValue = FMath::RandRange(0, 100);
 
-            if (randomValue < 15)
+            if (randomValue < 10)
             {
-                if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
+                if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage) &&
+                    !_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_slashMontage))
                 {
                     _animInstance_BJ->PlaySkillMontage();
                     _isAttacking = true;
                 }
             }
-            else if (randomValue < 30)
+            else if (randomValue < 20)
             {
                 GetWorld()->GetTimerManager().SetTimer(MoveTimerHandle, this, &ATFT_Boss_BJ::MoveMessageForward, 1.0f, false);
                 _animInstance_BJ->PlaySlashMontage();
                 _isAttacking = true;
             }
-            else if (randomValue < 45)
+            else if (randomValue < 35)
             {
-                ActivateSkill();
+                if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
+                {
+                    ActivateSkill();
+                }
             }
             else
             {
@@ -264,6 +268,26 @@ void ATFT_Boss_BJ::BossDisable()
     }
 }
 
+void ATFT_Boss_BJ::ActivateSkillRandom()
+{
+    if (!_isAttacking && _animInstance_BJ != nullptr)
+    {
+        FVector Origin = GetActorLocation();
+        FVector RandomOffset = FVector(FMath::RandRange(-500.f, 500.f), FMath::RandRange(-500.f, 500.f), 0.f);
+        TargetLocation = Origin + RandomOffset;
+
+        if (FVector::Dist(TargetLocation, Origin) < 500.f)
+        {
+            SpawnNiagaraEffectAtLocation(TargetLocation);
+
+            _animInstance_BJ->PlaySkillMontage();
+            _isAttacking = true;
+
+            GetWorld()->GetTimerManager().SetTimer(SkillTimerHandle, this, &ATFT_Boss_BJ::TriggerSkillEffect, 2.f, false);
+        }
+    }
+}
+
 void ATFT_Boss_BJ::ActivateSkill()
 {
     if (!_isAttacking && _animInstance_BJ != nullptr)
@@ -283,21 +307,9 @@ void ATFT_Boss_BJ::ActivateSkill()
                     _animInstance_BJ->PlaySkillMontage();
                     _isAttacking = true;
 
-                    GetWorld()->GetTimerManager().SetTimer(SkillTimerHandle, this, &ATFT_Boss_BJ::TriggerSkillEffect, 3.f, false);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("Failed to cast PlayerPawn to ATFT_Player."));
+                    GetWorld()->GetTimerManager().SetTimer(SkillTimerHandle, this, &ATFT_Boss_BJ::TriggerSkillEffect, 2.f, false);
                 }
             }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("PlayerController is not controlling any Pawn."));
-            }
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Failed to get PlayerController."));
         }
     }
 }
