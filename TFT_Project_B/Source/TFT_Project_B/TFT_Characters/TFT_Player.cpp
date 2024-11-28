@@ -201,6 +201,7 @@ void ATFT_Player::PostInitializeComponents()
 	if (_animInstancePlayer->IsValidLowLevel())
 	{
 		_animInstancePlayer->_dashEndDelegate.AddUObject(this, &ATFT_Player::DashEnd);
+		_animInstancePlayer->_attackEndDelegate.AddUObject(this, &ATFT_Player::AttackEnd);
 		_animInstancePlayer->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
 		_animInstancePlayer->_shieldDashEndDelegate.AddUObject(this, &ATFT_Player::StopShieldDash);
 		_animInstancePlayer->_attackHitDelegate.AddUObject(this, &ATFT_Player::AttackHit);
@@ -208,6 +209,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_eSkillHitDelegate.AddUObject(this, &ATFT_Player::E_SkillHit);
 		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
 		_animInstancePlayer->_DeathDelegate.AddUObject(this, &ATFT_Player::DeathPlayer);
+		_animInstancePlayer->_stateMontageEndDelegate.AddUObject(this, &ATFT_Player::EndState);
 	}
 
 	if (HpBarWidgetInstance)
@@ -403,6 +405,7 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 	// if (_invenCom->_currentWeapon == nullptr) return;
+	if (bIsOnState) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -487,9 +490,17 @@ void ATFT_Player::CameraZoom(float alpha)
 	_springArm->TargetArmLength = FMath::Lerp(_defalutSpringArmLength, _zoomSpringArmLength, alpha);
 }
 
+void ATFT_Player::AttackEnd()
+{
+	_canMove = true;
+	_isAttacking = false;
+}
+
 void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
+
+	if (bIsOnState) return;
 
 	bool isPressed = value.Get<bool>();
 	
@@ -528,6 +539,8 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
+
+	if (bIsOnState) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -733,6 +746,8 @@ void ATFT_Player::StopRunning()
 void ATFT_Player::StartRightClick()
 {
 	if (bIsShieldDashing) return;
+	if (!_canMove) return;
+	if (bIsOnState) return;
 
 	bIsDefense = true;
 	GetCharacterMovement()->MaxWalkSpeed = defenseWalkSpeed;
@@ -815,18 +830,24 @@ void ATFT_Player::StateCheck()
 
 	if (curStates.IsEmpty()) return;
 
+	StopRunning();
+
 	for (auto state : curStates)
 	{
 		switch (state)
 		{
 		case StateType::Airborne:
 
+			bIsOnState = true;
 			_animInstancePlayer->PlayAirborneMontage();
+			_canMove = false;
 			_stateCom->InitState();
 			return;
 
 		case StateType::Stun:
+			bIsOnState = true;
 			_animInstancePlayer->PlayStunMontage();
+			_canMove = false;
 			_stateCom->InitState();
 			return;
 
@@ -834,6 +855,12 @@ void ATFT_Player::StateCheck()
 			break;
 		}
 	}
+}
+
+void ATFT_Player::EndState()
+{
+	_canMove = true;
+	bIsOnState = false;
 }
 
 void ATFT_Player::AttackStart()
@@ -1279,8 +1306,6 @@ void ATFT_Player::BeginOverlapWithButton()
 	bCanInteract = true; // 버튼 범위 안에 들어오면 상호작용 활성화
 	UE_LOG(LogTemp, Log, TEXT("Player entered button interaction range"));
 }
-
-
 
 void ATFT_Player::EndOverlapWithButton()
 {

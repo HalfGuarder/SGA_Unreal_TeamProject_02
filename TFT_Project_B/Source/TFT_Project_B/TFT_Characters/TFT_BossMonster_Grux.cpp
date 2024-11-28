@@ -141,26 +141,29 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
         float damage = baseDamage * damageMultiplier;
 
         FDamageEvent damageEvent;
-        hitResult.GetActor()->TakeDamage(damage, damageEvent, GetController(), this);
+        float actualDamage = hitResult.GetActor()->TakeDamage(damage, damageEvent, GetController(), this);
         _hitPoint = hitResult.ImpactPoint;
         drawColor = FColor::Red;
 
-        ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
-        if (target != nullptr)
+        if (actualDamage > 0)
         {
-            switch (_curAttackIndex)
+            ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+            if (target != nullptr)
             {
-            case 1:
-                target->SetState(StateType::Airborne);
-                break;
-            case 2:
-                target->SetState(StateType::Stun);
-                break;
-            case 3:
-                target->SetState(StateType::Slow);
-                break;
-            default:
-                break;
+                switch (_curAttackIndex)
+                {
+                case 1:
+                    target->SetState(StateType::Airborne);
+                    break;
+                case 2:
+                    target->SetState(StateType::Stun);
+                    break;
+                case 3:
+                    target->SetState(StateType::Slow);
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }

@@ -46,6 +46,9 @@ protected:
 	UFUNCTION()
 	void CameraZoom(float alpha);
 
+	UFUNCTION()
+	void AttackEnd();
+
 	void E_Skill(const FInputActionValue& value);
 	void Q_Skill(const FInputActionValue& value);
 
@@ -65,6 +68,8 @@ protected:
 	void ShieldDashCollisionOn();
 
 	void StateCheck();
+	UFUNCTION()
+	void EndState();
 
 	virtual void AttackStart() override;
 	UFUNCTION()
@@ -227,6 +232,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float defenseWalkSpeed = 300.0f;
+
 	// Shield
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Shield, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* _shield;
@@ -240,6 +246,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	class USphereComponent* _shieldDashAttackSphere;
 
+	// State
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
+	bool bIsOnState = false;
+	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Zoom, meta = (AllowPrivateAccess = "true"))
 	bool bIsZoom = false;
