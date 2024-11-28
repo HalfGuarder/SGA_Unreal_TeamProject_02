@@ -98,8 +98,9 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 
 	if (_currentWeapon != nullptr)
 	{
-		_currentWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		_currentWeapon->SetOwner(nullptr);
+		// _currentWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		// _currentWeapon->SetOwner(nullptr);
+		DisarmWeapon(_currentWeapon);
 	}
 
 	_currentWeapon = NewWeapon;
@@ -107,15 +108,44 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 	_currentWeapon->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
 	_currentWeapon->SetOwner(player);
 
+	_pairWeaponUIDelegate.Broadcast();
+
 	if (_currentWeapon->_Itemid == 1)
 	{
 		//UIMANAGER->GetSkillUI()->SetSkillSlot(0, 5.0f, _currentWeapon->_Itemid);
 		//UIMANAGER->GetSkillUI()->ResetSkillSlot(1);
 	}
-	else if (_currentWeapon->_Itemid == 3)
+	else if (_currentWeapon->_Itemid == 2)
 	{
 		//UIMANAGER->GetSkillUI()->SetSkillSlot(1, 8.0f, _currentWeapon->_Itemid);
 		//UIMANAGER->GetSkillUI()->ResetSkillSlot(0);
 	}
+}
+
+void UTFT_InvenComponent::DisarmWeapon(ATFT_Item* curWeapon)
+{
+	if (curWeapon == nullptr) return;
+
+	_spareWeapon = curWeapon;
+
+	auto player = Cast<ATFT_Player>(GetOwner());
+
+	FName S1_SwordSocket(TEXT("spine_01_sword_socket")); // 1
+	FName TL_RifleSocket(TEXT("thigh_l_rifle_socket")); // 2
+
+	if (curWeapon->GetItemID() == 1)
+	{
+		curWeapon->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, S1_SwordSocket);
+	}
+	if (curWeapon->GetItemID() == 2)
+	{
+		curWeapon->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TL_RifleSocket);
+	}
+}
+
+void UTFT_InvenComponent::ChangeWeapon()
+{
+	SetWeapon(_spareWeapon);
+
 }
 

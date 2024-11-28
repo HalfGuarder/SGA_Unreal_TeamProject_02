@@ -27,6 +27,8 @@ private:
 
 	void Fire();
 
+	void DeleteSelf();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Component, meta = (AllowPrivateAccess = true))
 	class UStaticMeshComponent* _btmMesh;
@@ -45,6 +47,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class ATFT_Projectile> _projectileClass;
 
+	FTimerHandle _destroyTimerHandle;
 	float timer = 0.0f;
 
 public:

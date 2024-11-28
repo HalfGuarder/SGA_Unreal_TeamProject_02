@@ -33,7 +33,7 @@ public:
 	virtual void SetMesh(FString path) override;
 
 protected:
-	void Temp_ChangeWeapon(const FInputActionValue& value);
+	void ChangeWeapon(const FInputActionValue& value);
 	void PlayMenuOpenA(const FInputActionValue& value);
 
 	void Move(const FInputActionValue& value);
@@ -96,6 +96,9 @@ public:
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
 
+	UFUNCTION()
+	void PairWeaponUI();
+
 	void StartDialogueUI();
 	void CloseDialogueUI();
 	void SetIsDialogueActive(bool bActive) { bIsDialogueActive = bActive; }
@@ -111,7 +114,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* _tempAction;
+	UInputAction* _changeWeaponAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _lookAction;
@@ -267,6 +270,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Turret, meta = (AllowPrivateAccess = "true"))
 	class ATFT_Turret* _turret;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Turret, meta = (AllowPrivateAccess = "true"))
+	ATFT_Turret* _previewTurret;
 
 	FTimerHandle _turretTimerHandle;
 

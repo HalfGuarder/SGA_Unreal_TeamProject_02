@@ -6,16 +6,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 
-// Sets default values
 ATFT_SoundManager::ATFT_SoundManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CreateSoundCue("Explosion", "/Script/Engine.SoundCue'/Game/Blueprints/SFX/Rampage_Sound/explosion.explosion'");
+
+	// Player
+	CreateSoundCue("P_Fire", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/SoundCue/TFT_Player_Rifle_Fire_SQ.TFT_Player_Rifle_Fire_SQ'");
 }
 
-// Called when the game starts or when spawned
 void ATFT_SoundManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -32,7 +32,6 @@ void ATFT_SoundManager::CreateSoundCue(FString keyName, FString path)
 	}
 }
 
-// Called every frame
 void ATFT_SoundManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

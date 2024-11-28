@@ -230,6 +230,11 @@ void ATFT_Player::PostInitializeComponents()
 	{
 		_stateCom->_stateChangeDelegate.AddUObject(this, &ATFT_Player::StateCheck);
 	}
+
+	if (_invenCom->IsValidLowLevel())
+	{
+		_invenCom->_pairWeaponUIDelegate.AddUObject(this, &ATFT_Player::PairWeaponUI);
+	}
 }
 
 void ATFT_Player::Tick(float DeltaTime)
@@ -283,7 +288,7 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::StopRightClick);
 		// EnhancedInputComponent->BindAction(_defenseAction, ETriggerEvent::Completed, this, &ATFT_Player::OffShield);
 
-		EnhancedInputComponent->BindAction(_tempAction, ETriggerEvent::Started, this, &ATFT_Player::Temp_ChangeWeapon);
+		EnhancedInputComponent->BindAction(_changeWeaponAction, ETriggerEvent::Started, this, &ATFT_Player::ChangeWeapon);
 		EnhancedInputComponent->BindAction(_CloseUI, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
 	
 		EnhancedInputComponent->BindAction(_PlayMenuAction, ETriggerEvent::Started, this, &ATFT_Player::PlayMenuOpenA);
@@ -296,7 +301,7 @@ void ATFT_Player::SetMesh(FString path)
 	_meshCom->SetMesh(path);
 }
 
-void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
+void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 {
 	if (bIsZoom) return;
 
@@ -309,7 +314,12 @@ void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 	if (isPressed)
 	{
 		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // �ϴ� ���� ����ȭ
-		if (bEquipSword)
+
+		_invenCom->ChangeWeapon();
+
+		PairWeaponUI();
+
+		/*if (bEquipSword)
 		{
 			bEquipSword = false;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
@@ -318,7 +328,7 @@ void ATFT_Player::Temp_ChangeWeapon(const FInputActionValue& value)
 		{
 			bEquipSword = true;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
-		}
+		}*/
 	}
 }
 
@@ -518,7 +528,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 
 			UIMANAGER->GetSkillUI()->RunCDT(1);
 		}
-
 	}
 	else
 	{
@@ -564,7 +573,6 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(2)->bCoolDownOn == false)
 		{
-
 			if (_laserClass)
 			{
 				FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
@@ -573,14 +581,11 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 				FVector fireLocation = GetActorLocation() + start;
 				FRotator fireRotation = GetControlRotation();
 
-				auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, fireLocation, fireRotation);
+				auto raser = GetWorld()->SpawnActor<AActor>(_laserClass, FVector::ZeroVector, fireRotation);
 
-				// razer->SetActorEnableCollision(false);
-
-				FName HR_WeaponSocket(TEXT("hand_r_socket"));
-				raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HR_WeaponSocket);
+				FName HL_Fire_Socket(TEXT("hand_l_fire_socket"));
+				raser->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, HL_Fire_Socket);
 				raser->SetOwner(this);
-
 
 				UIMANAGER->GetSkillUI()->RunCDT(2);
 			}
@@ -1027,7 +1032,7 @@ void ATFT_Player::SpawnTurret()
 		}
 	}
 
-	if (bBuildTurret)
+	if (bBuildTurret && _turret)
 	{
 		_turret->SetActorEnableCollision(false);
 		_turret->SetActorHiddenInGame(true);
@@ -1066,6 +1071,8 @@ void ATFT_Player::Fire()
 
 			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
 			bullet->FireInDirection(_projectileDir);
+
+			SOUNDMANAGER->Play(TEXT("P_Fire"), start, fireRotation);
 		}
 	}
 }
@@ -1143,6 +1150,23 @@ void ATFT_Player::ChangeEquipment(ATFT_Item* item)
 void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
+}
+
+void ATFT_Player::PairWeaponUI()
+{
+	if (_invenCom->_currentWeapon != nullptr)
+	{
+		if (_invenCom->_currentWeapon->GetItemID() == 1)
+		{
+			bEquipSword = true;
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
+		}
+		else
+		{
+			bEquipSword = false;
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+		}
+	}
 }
 
 

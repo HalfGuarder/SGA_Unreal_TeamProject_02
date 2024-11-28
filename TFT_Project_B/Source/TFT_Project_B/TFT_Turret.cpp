@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/OverlapResult.h"
+#include "TimerManager.h"
 
 #include "TFT_Monster.h"
 #include "TFT_Projectile.h"
@@ -36,6 +37,7 @@ void ATFT_Turret::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetWorldTimerManager().SetTimer(_destroyTimerHandle, this, &ATFT_Turret::DeleteSelf, 8.0f, false);
 }
 
 void ATFT_Turret::Tick(float DeltaTime)
@@ -145,5 +147,10 @@ void ATFT_Turret::Fire()
 		auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
 		bullet->FireInDirection(direction);
 	}
+}
+
+void ATFT_Turret::DeleteSelf()
+{
+	this->Destroy();
 }
 

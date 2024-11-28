@@ -12,6 +12,7 @@ class UTFT_InvenWidget;
 DECLARE_MULTICAST_DELEGATE_TwoParams(ItemAdded, ATFT_Item*, int itemIndex)
 DECLARE_MULTICAST_DELEGATE_OneParam(InvenGold, int gold)
 DECLARE_MULTICAST_DELEGATE(InvenUIOpen);
+DECLARE_MULTICAST_DELEGATE(PairWeaponUIEvent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TFT_PROJECT_B_API UTFT_InvenComponent : public UActorComponent
@@ -44,6 +45,11 @@ public:
 	void AddPlayerGold(int32 gold);
 
 	void SetWeapon(class ATFT_Item* NewWeapon);
+	void DisarmWeapon(ATFT_Item* curWeapon);
+
+	void ChangeWeapon();
+
+	PairWeaponUIEvent _pairWeaponUIDelegate;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
@@ -63,5 +69,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	ATFT_Item* _currentWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	ATFT_Item* _spareWeapon;
 		
 };
