@@ -21,6 +21,7 @@ ATFT_EffectManager::ATFT_EffectManager()
 
 	//Player
 	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TestEffect.TFT_Player_TestEffect_C'"));
+	CreateParticleClass(TEXT("Energy"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/energy.energy_C'"));
 }
 
 

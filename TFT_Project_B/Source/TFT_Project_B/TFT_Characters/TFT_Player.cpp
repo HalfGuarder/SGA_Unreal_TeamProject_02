@@ -11,6 +11,7 @@
 #include "TFT_NPC.h"
 #include "TFT_Door.h"
 #include "TFT_NPC2.h"
+#include "TFT_Button.h"
 
 #include "EngineUtils.h"
 
@@ -286,7 +287,7 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_CloseUI, ETriggerEvent::Started, this, &ATFT_Player::CloseDialogueUI);
 	
 		EnhancedInputComponent->BindAction(_PlayMenuAction, ETriggerEvent::Started, this, &ATFT_Player::PlayMenuOpenA);
-		EnhancedInputComponent->BindAction(_Interact, ETriggerEvent::Started, this, &ATFT_Player::InteractWithButton);
+		EnhancedInputComponent->BindAction(_Interact, ETriggerEvent::Started, this, &ATFT_Player::Interact);
 	}
 }
 
@@ -1259,59 +1260,23 @@ void ATFT_Player::OpenTaggedDoor(FName DoorTag)
 		}
 	}
 }
-
-void ATFT_Player::InteractWithButton()
+void ATFT_Player::Interact()
 {
-	UE_LOG(LogTemp, Log, TEXT("InteractWithButton called")); // 함수 호출 로그
-
-	if (!bCanInteract)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Interaction not allowed")); // 상호작용 불가능 로그
-		return;
-	}
-
-	// 플레이어 주변의 액터 탐색
 	TArray<AActor*> OverlappingActors;
-	GetOverlappingActors(OverlappingActors);
-
-	UE_LOG(LogTemp, Log, TEXT("OverlappingActors count: %d"), OverlappingActors.Num()); // 탐지된 액터 개수 로그
+	GetOverlappingActors(OverlappingActors, ATFT_Button::StaticClass());
 
 	for (AActor* Actor : OverlappingActors)
 	{
-		// 버튼 블루프린트를 찾음
-		if (Actor->ActorHasTag("BUTTON")) // "BUTTON" 태그를 가진 액터를 찾음
+		ATFT_Button* Button = Cast<ATFT_Button>(Actor);
+		if (Button && Button->bPlayerIsNearby) // 버튼 근처에 있을 때만 토글
 		{
-			UE_LOG(LogTemp, Log, TEXT("Found BUTTON tagged actor: %s"), *Actor->GetName()); // 버튼 액터 발견 로그
-
-			// 버튼의 상태를 토글하는 함수 호출
-			if (Actor->FindFunction(FName("ToggleButton")))
-			{
-				Actor->CallFunctionByNameWithArguments(TEXT("ToggleButton"), *GLog, nullptr, true);
-				UE_LOG(LogTemp, Log, TEXT("ToggleButton function called on %s"), *Actor->GetName()); // 함수 호출 성공 로그
-			}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("ToggleButton function not found on %s"), *Actor->GetName()); // 함수가 없을 때의 로그
-			}
-
-			return;
+			Button->ToggleButton();
+			break;
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("No BUTTON tagged actor found")); // 버튼 태그를 가진 액터가 없을 경우 로그
 }
 
-void ATFT_Player::BeginOverlapWithButton()
-{
-	bCanInteract = true; // 버튼 범위 안에 들어오면 상호작용 활성화
-	UE_LOG(LogTemp, Log, TEXT("Player entered button interaction range"));
-}
 
-void ATFT_Player::EndOverlapWithButton()
-{
-	bCanInteract = false; // 버튼 범위를 벗어나면 상호작용 비활성화
-	UE_LOG(LogTemp, Log, TEXT("Player left button interaction range"));
-}
 
 void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

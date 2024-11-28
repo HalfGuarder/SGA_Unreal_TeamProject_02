@@ -90,8 +90,8 @@ void ATFT_GameModeBase::ReStart()
 	if (World)
 	{
 		FString CurrentLevelName = World->GetMapName();
-		CurrentLevelName.RemoveFromStart(World->StreamingLevelsPrefix); // ·¹º§ ÀÌ¸§¿¡¼­ Prefix Á¦°Å
-		UGameplayStatics::OpenLevel(World, FName(*CurrentLevelName));  // ÇöÀç ·¹º§À» »õ·Î ½ÃÀÛ
+		CurrentLevelName.RemoveFromStart(World->StreamingLevelsPrefix); // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ Prefix ï¿½ï¿½ï¿½ï¿½
+		UGameplayStatics::OpenLevel(World, FName(*CurrentLevelName));  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 
 }
