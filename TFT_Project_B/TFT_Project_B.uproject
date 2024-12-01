@@ -31,6 +31,10 @@
 		{
 			"Name": "NiagaraSimCaching",
 			"Enabled": false
+		},
+		{
+			"Name": "WaveformEditor",
+			"Enabled": true
 		}
 	]
 }

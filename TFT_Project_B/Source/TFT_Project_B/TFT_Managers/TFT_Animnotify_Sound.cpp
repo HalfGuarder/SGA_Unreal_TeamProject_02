@@ -21,7 +21,7 @@ void UTFT_Animnotify_Sound::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
 				FRotator SoundRotation = MeshComp->GetComponentRotation() + SoundRotationOffset;
 
 				
-				GameInstance->GetSoundManager()->Play(TEXT("Explosion"), SoundLocation, SoundRotation);
+				GameInstance->GetSoundManager()->PlaySound(TEXT("Explosion"), SoundLocation, SoundRotation);
 			}
 			else
 			{

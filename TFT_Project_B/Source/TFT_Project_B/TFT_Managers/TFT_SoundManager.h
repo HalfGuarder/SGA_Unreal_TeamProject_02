@@ -25,8 +25,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Play(FString keyName, FVector playLocation, FRotator playRotator = FRotator::ZeroRotator);
+	UFUNCTION(BlueprintCallable)
+	void PlaySound(FString keyName, FVector playLocation, FRotator playRotator = FRotator::ZeroRotator);
+
+	UFUNCTION(BlueprintCallable)
+	void FadeOutSound(FString keyName, float intensity);
+
 private:
 	int32 _poolCount = 5;
 	TMap<FString, class USoundCue*> _table;
+
 };

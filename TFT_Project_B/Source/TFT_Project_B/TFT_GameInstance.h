@@ -34,7 +34,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	ATFT_UIManager* GetUIManager();
+	UFUNCTION(BlueprintCallable)
 	ATFT_EffectManager* GetEffectManager();
+	UFUNCTION(BlueprintCallable)
 	ATFT_SoundManager* GetSoundManager(); 
 
 	void SpawnManager();
@@ -52,8 +54,7 @@ public:
 	ATFT_EffectManager* _effectManager;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
-	ATFT_SoundManager* _soundManager;
-
+	ATFT_SoundManager* _soundManager = nullptr;
 
 	bool _reStartTrg = false;
 };

@@ -56,7 +56,6 @@ void ATFT_Turret::Tick(float DeltaTime)
 			timer = 0;
 		}
 	}
-
 }
 
 void ATFT_Turret::FindTarget()

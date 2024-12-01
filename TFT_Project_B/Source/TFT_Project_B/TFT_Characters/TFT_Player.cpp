@@ -315,9 +315,22 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 	{
 		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // �ϴ� ���� ����ȭ
 
+		if (_invenCom->_spareWeapon != nullptr)
+		{
+			if (_invenCom->_spareWeapon->GetItemID() == 2)
+			{
+				SOUNDMANAGER->PlaySound(TEXT("P_ChangeWeapon_Rifle"), GetActorLocation());
+			}
+			else
+			{
+				SOUNDMANAGER->PlaySound(TEXT("P_ChangeWeapon_Sword"), GetActorLocation());
+			}
+		}
+
 		_invenCom->ChangeWeapon();
 
 		PairWeaponUI();
+
 
 		/*if (bEquipSword)
 		{
@@ -431,6 +444,8 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 			_curAttackIndex %= 3;
 			_curAttackIndex++;
 			_animInstancePlayer->JumpToSection(_curAttackIndex);
+
+			SOUNDMANAGER->PlaySound("P_Sword_Swing", GetActorLocation());
 
 			//if (auto _animInstTM = Cast<UTFT_AnimInstance_Player>(_animInstancePlayer))
 			//{
@@ -755,11 +770,12 @@ void ATFT_Player::StartRightClick()
 	if (!_canMove) return;
 	if (bIsOnState) return;
 
-	bIsDefense = true;
 	GetCharacterMovement()->MaxWalkSpeed = defenseWalkSpeed;
 
 	if (bEquipSword)
 	{
+		bIsDefense = true;
+
 		if (_animInstancePlayer)
 		{
 			EFFECTMANAGER->Play(TEXT("ShieldOn"), 0, GetActorLocation());
@@ -815,12 +831,16 @@ void ATFT_Player::OffShield()
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	SOUNDMANAGER->PlaySound(TEXT("P_Shield_Off"), GetActorLocation());
 }
 
 void ATFT_Player::OnShield()
 {
 	_shield->SetVisibility(true);
 	_shield->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	SOUNDMANAGER->PlaySound(TEXT("P_Shield_On"), GetActorLocation());
 }
 
 void ATFT_Player::ShieldDashCollisionOn()
@@ -1072,13 +1092,14 @@ void ATFT_Player::Fire()
 			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
 			bullet->FireInDirection(_projectileDir);
 
-			SOUNDMANAGER->Play(TEXT("P_Fire"), start, fireRotation);
+			SOUNDMANAGER->PlaySound(TEXT("P_Rifle_Fire"), start, fireRotation);
 		}
 	}
 }
 
 void ATFT_Player::DeathPlayer()
 {
+	_animInstancePlayer->StopAllMontages(0.5f);
 	UIMANAGER->DeathUIA();
 }
 
