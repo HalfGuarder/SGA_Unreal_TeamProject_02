@@ -27,6 +27,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Button")
     void ToggleButton();
 
+    void StartCooldown();
+    void EndCooldown();
+
+    UFUNCTION(BlueprintCallable, Category = "Collision")
+    void EnableEffectCollision();
+    UFUNCTION(BlueprintCallable, Category = "Collision")
+    void DisableEffectCollision();
+    UFUNCTION()
+    void OnEffectOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     class UBoxComponent* BoxComponent;
@@ -53,5 +62,10 @@ public:
     UPROPERTY()
     bool bPlayerIsNearby;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cooldown", meta = (AllowPrivateAccess = "true"))
+    bool bIsCooldown;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect Collision")
+    class USphereComponent* EffectCollision;
 
 };
