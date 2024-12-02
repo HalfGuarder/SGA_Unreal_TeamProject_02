@@ -20,12 +20,21 @@ ATFT_SoundManager::ATFT_SoundManager()
 	CreateSoundCue("P_Sword_Swing", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Sword_Swing_SQ.TFT_Player_Sword_Swing_SQ'");
 	CreateSoundCue("P_Shield_On", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldOn_SQ.TFT_Player_ShieldOn_SQ'");
 	CreateSoundCue("P_Shield_Off", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldOff_SQ.TFT_Player_ShieldOff_SQ'");
+	CreateSoundCue("P_Shield_Hit", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldHit_SQ.TFT_Player_ShieldHit_SQ'");
 	// Rifle
 	CreateSoundCue("P_ChangeWeapon_Rifle", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_SetWeapon_Rifle_SQ.TFT_Player_SetWeapon_Rifle_SQ'");
 	CreateSoundCue("P_Rifle_Fire", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Rifle_Fire_SQ.TFT_Player_Rifle_Fire_SQ'");
 	// Skill
 	CreateSoundCue("P_Rifle_QSkill_LaserHit", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_LaserHit_SQ.TFT_Player_LaserHit_SQ'");
 	CreateSoundCue("P_Rifle_QSkill_LaserFire", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_LaserFire_SQ.TFT_Player_LaserFire_SQ'");
+	// FootStep
+	CreateSoundCue("P_FootStep", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_FootStep_SQ.TFT_Player_FootStep_SQ'");
+	// Dash
+	CreateSoundCue("P_Dash", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Dash_SQ.TFT_Player_Dash_SQ'");
+
+	// Grux
+	CreateSoundCue("Grux_Swing", "/Script/Engine.SoundCue'/Game/Blueprints/Monster/BossMonster_Grux/FX/SFX/Cue/TFT_Grux_Swing_SQ.TFT_Grux_Swing_SQ'");
+	
 }
 
 void ATFT_SoundManager::BeginPlay()

@@ -58,6 +58,9 @@ public:
 	UFUNCTION()
 	void AnimNotify_StunEnd();
 
+	UFUNCTION()
+	void AnimNotify_FootStep();
+
 	void PlayRunningMontage();
 	void StopRunningMontage();
 
@@ -87,6 +90,7 @@ public:
 	PlayerAnimEvent _fireDelegate;
 	PlayerAnimEvent _DeathDelegate;
 	PlayerAnimEvent _stateMontageEndDelegate;
+	PlayerAnimEvent _footStepDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))

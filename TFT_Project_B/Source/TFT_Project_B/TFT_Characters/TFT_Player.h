@@ -67,7 +67,10 @@ protected:
 	void OnShield();
 	void ShieldDashCollisionOn();
 
-	void StateCheck();
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	void StateCheck() override;
+
 	UFUNCTION()
 	void EndState();
 
@@ -84,6 +87,8 @@ protected:
 	void DeathPlayer();
 
 	void RotatePlayer(float DeltaTime);
+
+	void FootStep() override;
 
 public:
 	void AddItemPlayer(ATFT_Item* item);
@@ -245,10 +250,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	class USphereComponent* _shieldDashAttackSphere;
-
-	// State
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
-	bool bIsOnState = false;
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Zoom, meta = (AllowPrivateAccess = "true"))

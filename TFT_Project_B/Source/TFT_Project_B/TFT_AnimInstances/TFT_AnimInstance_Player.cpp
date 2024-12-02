@@ -298,3 +298,8 @@ void UTFT_AnimInstance_Player::AnimNotify_StunEnd()
 {
 	_stateMontageEndDelegate.Broadcast();
 }
+
+void UTFT_AnimInstance_Player::AnimNotify_FootStep()
+{
+	_footStepDelegate.Broadcast();
+}

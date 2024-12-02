@@ -25,6 +25,14 @@ UTFT_AnimInstance_Grux::UTFT_AnimInstance_Grux()
     {
         _skillMontage = sm.Object;
     }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> stn
+    (TEXT("/Script/Engine.AnimMontage'/Game/ParagonGrux/Characters/Heroes/Grux/Animations/TFT_Grux_Stun_AnimMontage.TFT_Grux_Stun_AnimMontage'"));
+
+    if (stn.Succeeded())
+    {
+        _stunMontage = stn.Object;
+    }
 }
 
 void UTFT_AnimInstance_Grux::NativeUpdateAnimation(float DeltaSeconds)
@@ -55,6 +63,29 @@ void UTFT_AnimInstance_Grux::PlaySkillMontage()
     {
         Montage_Play(_skillMontage);
     }
+}
+
+void UTFT_AnimInstance_Grux::PlayAirborneMontage()
+{
+
+}
+
+void UTFT_AnimInstance_Grux::StopAirborneMontage()
+{
+
+}
+
+void UTFT_AnimInstance_Grux::PlayStunMontage()
+{
+    if (!Montage_IsPlaying(_stunMontage))
+    {
+        Montage_Play(_stunMontage);
+    }
+}
+
+void UTFT_AnimInstance_Grux::StopStunMontage()
+{
+
 }
 
 void UTFT_AnimInstance_Grux::JumpToSection(int32 sectionIndex)

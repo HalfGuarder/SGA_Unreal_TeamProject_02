@@ -22,6 +22,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetMesh(FString path) override;
 
+	virtual void AttackStart() override;
+
 	UFUNCTION()
 	void AttackHit_Boss();
 
@@ -35,6 +37,8 @@ public:
 
 	UFUNCTION()
 	void BossDisable();
+
+	void StateCheck() override;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))

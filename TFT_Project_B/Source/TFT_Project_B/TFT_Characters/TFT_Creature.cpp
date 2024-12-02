@@ -93,3 +93,7 @@ void ATFT_Creature::FootStep()
 {
 }
 
+void ATFT_Creature::StateCheck()
+{
+}
+

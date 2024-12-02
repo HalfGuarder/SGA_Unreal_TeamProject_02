@@ -146,6 +146,5 @@ void UTFT_InvenComponent::DisarmWeapon(ATFT_Item* curWeapon)
 void UTFT_InvenComponent::ChangeWeapon()
 {
 	SetWeapon(_spareWeapon);
-
 }
 

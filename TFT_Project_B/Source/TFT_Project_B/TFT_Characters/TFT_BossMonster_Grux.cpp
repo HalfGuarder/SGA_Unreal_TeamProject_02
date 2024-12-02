@@ -14,8 +14,12 @@
 
 #include "TFT_GameInstance.h"
 #include "TFT_UIManager.h"
+#include "TFT_SoundManager.h"
 
 #include "TFT_Player.h"
+
+#include "TFT_AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
@@ -66,6 +70,11 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
             _statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
         }
     }
+
+    if (_stateCom->IsValidLowLevel())
+    {
+        _stateCom->_stateChangeDelegate.AddUObject(this, &ATFT_BossMonster_Grux::StateCheck);
+    }
 }
 
 void ATFT_BossMonster_Grux::BeginPlay()
@@ -108,6 +117,13 @@ void ATFT_BossMonster_Grux::Tick(float DeltaTime)
 void ATFT_BossMonster_Grux::SetMesh(FString path)
 {
     _meshCom->SetMesh(path);
+}
+
+void ATFT_BossMonster_Grux::AttackStart()
+{
+    Super::AttackStart();
+
+    SOUNDMANAGER->PlaySound("Grux_Swing", GetActorLocation());
 }
 
 void ATFT_BossMonster_Grux::AttackHit_Boss()
@@ -258,4 +274,46 @@ void ATFT_BossMonster_Grux::BossDisable()
     
     player->bClearTutorial = true;
     GAMEINSTANCE->_reStartTrg = true;
+}
+
+void ATFT_BossMonster_Grux::StateCheck()
+{
+    Super::StateCheck();
+
+    if (_statCom->IsDead()) return;
+
+    auto curStates = _stateCom->GetCurStates();
+
+    if (curStates.IsEmpty()) return;
+
+    /*for (auto state : curStates)
+    {
+        switch (state)
+        {
+        case StateType::Airborne:
+
+            bIsOnState = true;
+            _animInstance_Grux->PlayAirborneMontage();
+            _canMove = false;
+            _stateCom->InitState();
+            return;
+
+        case StateType::Stun:
+            bIsOnState = true;
+            _animInstance_Grux->PlayStunMontage();
+            _canMove = false;
+            _stateCom->InitState();
+
+            auto controller = Cast<ATFT_AIController>(GetController());
+            if (controller)
+            {
+                controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("IsOnState")), true);
+            }
+
+            return;
+
+        default:
+            break;
+        }
+    }*/
 }

@@ -67,6 +67,8 @@ public:
 	UFUNCTION()
 	virtual void FootStep();
 
+	virtual void StateCheck();
+
 	Delegate_AttackEnded _attackEndedDelegate;
 
 public:
@@ -132,4 +134,8 @@ public:
 	bool bRDashing = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Equip, Meta = (AllowPrivateAccess = true))
 	bool bEquipSword = false;
+
+	// State
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
+	bool bIsOnState = false;
 };

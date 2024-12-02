@@ -211,6 +211,7 @@ void ATFT_Player::PostInitializeComponents()
 		_animInstancePlayer->_fireDelegate.AddUObject(this, &ATFT_Player::Fire);
 		_animInstancePlayer->_DeathDelegate.AddUObject(this, &ATFT_Player::DeathPlayer);
 		_animInstancePlayer->_stateMontageEndDelegate.AddUObject(this, &ATFT_Player::EndState);
+		_animInstancePlayer->_footStepDelegate.AddUObject(this, &ATFT_Player::FootStep);
 	}
 
 	if (HpBarWidgetInstance)
@@ -330,18 +331,6 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 		_invenCom->ChangeWeapon();
 
 		PairWeaponUI();
-
-
-		/*if (bEquipSword)
-		{
-			bEquipSword = false;
-			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
-		}
-		else
-		{
-			bEquipSword = true;
-			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
-		}*/
 	}
 }
 
@@ -633,6 +622,8 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+
+		SOUNDMANAGER->PlaySound("P_Dash", from);
 	}
 }
 
@@ -661,6 +652,8 @@ void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+
+		SOUNDMANAGER->PlaySound("P_Dash", from);
 	}
 }
 
@@ -689,6 +682,8 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+
+		SOUNDMANAGER->PlaySound("P_Dash", from);
 	}
 }
 
@@ -717,6 +712,8 @@ void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
+
+		SOUNDMANAGER->PlaySound("P_Dash", from);
 	}
 }
 
@@ -735,6 +732,8 @@ void ATFT_Player::DashEnd()
 		bRDashing = false;	
 
 		bIsDashing = false;
+
+		SOUNDMANAGER->PlaySound("P_FootStep", GetActorLocation());
 	}
 }
 
@@ -784,6 +783,8 @@ void ATFT_Player::StartRightClick()
 		}
 
 		OnShield();
+
+		SOUNDMANAGER->PlaySound(TEXT("P_Shield_On"), GetActorLocation());
 	}
 	else
 	{
@@ -807,6 +808,8 @@ void ATFT_Player::StopRightClick()
 		}
 
 		OffShield();
+
+		SOUNDMANAGER->PlaySound(TEXT("P_Shield_Off"), GetActorLocation());
 	}
 	else
 	{
@@ -832,7 +835,7 @@ void ATFT_Player::OffShield()
 
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	SOUNDMANAGER->PlaySound(TEXT("P_Shield_Off"), GetActorLocation());
+	// SOUNDMANAGER->PlaySound(TEXT("P_Shield_Off"), GetActorLocation());
 }
 
 void ATFT_Player::OnShield()
@@ -840,7 +843,7 @@ void ATFT_Player::OnShield()
 	_shield->SetVisibility(true);
 	_shield->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
-	SOUNDMANAGER->PlaySound(TEXT("P_Shield_On"), GetActorLocation());
+	// SOUNDMANAGER->PlaySound(TEXT("P_Shield_On"), GetActorLocation());
 }
 
 void ATFT_Player::ShieldDashCollisionOn()
@@ -848,8 +851,23 @@ void ATFT_Player::ShieldDashCollisionOn()
 	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 
+float ATFT_Player::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (bIsDefense)
+	{
+		SOUNDMANAGER->PlaySound("P_Shield_Hit", GetActorLocation());
+		return 0.0f;
+	}
+
+	return 0.0f;
+}
+
 void ATFT_Player::StateCheck()
 {
+	Super::StateCheck();
+
 	if (_statCom->IsDead()) return;
 
 	auto curStates = _stateCom->GetCurStates();
@@ -929,8 +947,30 @@ void ATFT_Player::AttackHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 
-		hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
+		float actualDamage = hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
+
+		if (actualDamage > 0)
+		{
+			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+			if (target != nullptr)
+			{
+				switch (_curAttackIndex)
+				{
+				case 1:
+					target->SetState(StateType::Stun);
+					break;
+				case 2:
+					target->SetState(StateType::Stun);
+					break;
+				case 3:
+					target->SetState(StateType::Stun);
+					break;
+				default:
+					break;
+				}
+			}
+		}
 	}
 
 	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
@@ -1112,6 +1152,53 @@ void ATFT_Player::RotatePlayer(float DeltaTime)
 	SetActorRotation(FRotator(0.0f, nRot.Yaw, 0.0f));
 }
 
+void ATFT_Player::FootStep()
+{
+	Super::FootStep();
+
+	auto player = GetWorld()->GetFirstPlayerController()->GetOwner();
+
+	FVector start = GetActorLocation();
+	FRotator rotator = GetActorRotation();
+	FVector lineDirAndDist = FVector(1.0f, 1.0f, -100.0f);
+	FVector end = start * lineDirAndDist;
+	FHitResult hitResult;
+
+	FCollisionQueryParams qParams;
+	qParams.AddIgnoredActor(this);
+	qParams.bReturnPhysicalMaterial = true;
+
+	GetWorld()->LineTraceSingleByChannel
+	(
+		hitResult,
+		start,
+		end,
+		ECollisionChannel::ECC_Visibility,
+		qParams
+	);
+
+	if (hitResult.PhysMaterial != nullptr)
+	{
+
+		FString hitName = hitResult.PhysMaterial->GetName();
+
+		// UE_LOG(LogTemp, Log, TEXT("%s"), *hitName);
+	}
+
+	if (hitResult.PhysMaterial != nullptr)
+	{
+		switch (hitResult.PhysMaterial->SurfaceType)
+		{
+		case SurfaceType1:
+			SOUNDMANAGER->FadeOutSound("P_FootStep", 0.2f);
+			SOUNDMANAGER->PlaySound("P_FootStep", end);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void ATFT_Player::AddItemPlayer(ATFT_Item* item)
 {
 	if (_invenCom != nullptr) _invenCom->AddItem(item);
@@ -1177,20 +1264,25 @@ void ATFT_Player::PairWeaponUI()
 {
 	if (_invenCom->_currentWeapon != nullptr)
 	{
-		if (_invenCom->_currentWeapon->GetItemID() == 1)
+		UIMANAGER->GetSkillUI()->HiddenSkillSlot();
+
+		switch (_invenCom->_currentWeapon->GetItemID())
 		{
+		case 1:
 			bEquipSword = true;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
-		}
-		else
-		{
+			break;
+
+		case 2:
 			bEquipSword = false;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+			break;
+
+		default:
+			break;
 		}
 	}
 }
-
-
 
 void ATFT_Player::StartDialogueUI()
 {
