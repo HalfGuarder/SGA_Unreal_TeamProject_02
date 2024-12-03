@@ -35,6 +35,8 @@ ATFT_SoundManager::ATFT_SoundManager()
 	// Grux
 	CreateSoundCue("Grux_Swing", "/Script/Engine.SoundCue'/Game/Blueprints/Monster/BossMonster_Grux/FX/SFX/Cue/TFT_Grux_Swing_SQ.TFT_Grux_Swing_SQ'");
 	
+	// Rampage
+	CreateSoundCue("Rampage_normalPunch", "/Script/Engine.SoundCue'/Game/Blueprints/Monster/Sound/Punch.Punch'");
 }
 
 void ATFT_SoundManager::BeginPlay()
