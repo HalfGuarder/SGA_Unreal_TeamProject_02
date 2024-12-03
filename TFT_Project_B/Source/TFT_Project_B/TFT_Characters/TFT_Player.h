@@ -101,6 +101,9 @@ public:
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
 
+	void BulletHendle(int32 curBullet, int32 ALLBullet);
+	void BulletReLoadA();
+
 	UFUNCTION()
 	void PairWeaponUI();
 
@@ -173,6 +176,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* _PlayMenuAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* _PlayReLoadAction;
 
 	class ITFT_InteractionInterface* _interface = nullptr;
 

@@ -168,6 +168,7 @@ void ATFT_Player::BeginPlay()
 		UIMANAGER->GetInvenUI()->_itemUesEvent.AddUObject(this, &ATFT_Player::UseItemPlayer);
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent.AddUObject(this, &ATFT_Player::ChangeEquipment);
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);*/
+		_invenCom->_BulletEvent.AddUObject(this, &ATFT_Player::BulletHendle);
 	}
 
 	if (_shieldDashAttackSphere != nullptr)
@@ -189,6 +190,7 @@ void ATFT_Player::BeginPlay()
 
 		if(bEquipSword == true) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
 		if(bEquipSword == false) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+
 	}
 
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -294,6 +296,8 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	
 		EnhancedInputComponent->BindAction(_PlayMenuAction, ETriggerEvent::Started, this, &ATFT_Player::PlayMenuOpenA);
 		EnhancedInputComponent->BindAction(_Interact, ETriggerEvent::Started, this, &ATFT_Player::Interact);
+
+		EnhancedInputComponent->BindAction(_PlayReLoadAction, ETriggerEvent::Started, this, &ATFT_Player::BulletReLoadA);
 	}
 }
 
@@ -314,7 +318,7 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 
 	if (isPressed)
 	{
-		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); // �ϴ� ���� ����ȭ
+		UIMANAGER->GetSkillUI()->HiddenSkillSlot(); 
 
 		if (_invenCom->_spareWeapon != nullptr)
 		{
@@ -1258,6 +1262,16 @@ void ATFT_Player::ChangeEquipment(ATFT_Item* item)
 void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
+}
+
+void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)
+{
+	UIMANAGER->GetSkillUI()->ThisBulletText(curBullet, ALLBullet);
+}
+
+void ATFT_Player::BulletReLoadA()
+{
+	_invenCom->ReLoadBullet();
 }
 
 void ATFT_Player::PairWeaponUI()

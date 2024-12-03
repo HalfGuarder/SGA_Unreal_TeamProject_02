@@ -34,7 +34,7 @@ ATFT_Item::ATFT_Item()
 void ATFT_Item::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	LoadItemData();
 
 	Init();

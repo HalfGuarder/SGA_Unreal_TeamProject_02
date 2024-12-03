@@ -2,15 +2,11 @@
 
 #pragma once
 
-#include "TFT_Skill_piece.h"
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "TFT_Skill_piece.h"
 #include "TFT_SkillUI.generated.h"
 
-class UTFT_Skill_piece;
-/**
- * 
- */
 UCLASS()
 class TFT_PROJECT_B_API UTFT_SkillUI : public UUserWidget
 {
@@ -20,21 +16,37 @@ public:
 
 	UTFT_Skill_piece* GetSkillSlot(int32 slotNum) { return _skillSlots[slotNum]; }
 
-	void SetSkillSlot(WEAPON_TYPE itemtype, int32 slotNum, float CoolDownTime);
+	void SetSkillSlot(WEAPON_TYPE itemtype, int32 slum, float CoolDownTime);
 	void HiddenSkillSlot();
 	void VisbleSkillSlot(WEAPON_TYPE itemtype);
 
 	void RunCDT(int32 slotNum);
+	
 
-
-private:
-
+	void SetWeaponStackText(WEAPON_TYPE type);
+	void BuletChaek();
+	void ThisBulletText(int32 cur, int32 all);
 public:
-	TArray<UTexture2D*> _skillImgs;
+	TArray<class UTexture2D*> _skillImgs;
 
-	TArray<UTFT_Skill_piece*> _skillSlots;
+	TArray<class UTFT_Skill_piece*> _skillSlots;
 
 	UPROPERTY(meta = (BindWidget))
+
 	class UCanvasPanel* SkillUI_CP;
 
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Weapon_Img;
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BulletStack_Text;
+
+	FText _InfinitySymbol = FText::FromString(TEXT("\u221E"));
+	FText _BuletText;
+private:
+	UTexture2D* _SwordImg;
+	UTexture2D* _GunImg;
+
+	int32 _cur;
+	int32 _all;
 };

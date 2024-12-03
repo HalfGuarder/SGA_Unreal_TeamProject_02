@@ -77,6 +77,8 @@ void UTFT_HPBarWidget::SetHpText(int32 maxHp)
 
 void UTFT_HPBarWidget::CurHpText(int32 curHp)
 {
+	if (curHp < 0) curHp = 0;
+
 	FString hpstring = FString::Printf(TEXT("%d"), curHp);
 
 	CurHp_Text->SetText(FText::FromString(hpstring));

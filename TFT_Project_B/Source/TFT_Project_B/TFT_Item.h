@@ -49,7 +49,7 @@ UCLASS()
 class TFT_PROJECT_B_API ATFT_Item : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:
 	ATFT_Item();
 
@@ -76,6 +76,7 @@ public:
 	UTexture2D* GetMyTexture() { return _ItemTexture; }
 	int32 GetItemGold() { return _Buy; }
 	int32 GetSellGold() { return _Sell; }
+	int32 GetItemSpace() { return _Space; }
 	FString GetItemType() { return _ItemType; }
 	FString GetItemRegion() { return _ItemRegion; }
 	int32 GetItemID() { return _Itemid; }

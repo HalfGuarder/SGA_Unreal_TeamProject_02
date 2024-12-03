@@ -17,7 +17,7 @@ UTFT_InvenComponent::UTFT_InvenComponent()
 void UTFT_InvenComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void UTFT_InvenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -34,6 +34,11 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 		item->Disable();
 
 		return;
+	}
+	else if (item->GetItemType() == "Bullet")
+	{
+		AddPlayerBullet(item->GetItemSpace());
+		item->Disable();
 	}
 	else
 	{
@@ -141,6 +146,44 @@ void UTFT_InvenComponent::DisarmWeapon(ATFT_Item* curWeapon)
 	{
 		curWeapon->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TL_RifleSocket);
 	}
+}
+
+void UTFT_InvenComponent::AddPlayerBullet(int32 Bullet)
+{
+	_Bullet += Bullet;
+	_BulletChangeEvent.Broadcast(_Bullet);
+}
+
+bool UTFT_InvenComponent::UseBullet()
+{
+	if (_curBullet <= 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("no bullets"));
+		return false;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("BANG~"));
+		_curBullet--;
+		_BulletEvent.Broadcast(_curBullet, _Bullet);
+		return true;
+	}
+}
+
+void UTFT_InvenComponent::ReLoadBullet()
+{
+	int32 ammo = _ReLoadCount - _curBullet;
+
+	if (_Bullet < ammo)
+	{
+		UE_LOG(LogTemp, Log, TEXT("ReLoad CRASH"));
+		return;
+	}
+
+	_Bullet -= ammo;
+	_curBullet += ammo;
+	_BulletEvent.Broadcast(_curBullet, _Bullet);
+	UE_LOG(LogTemp, Log, TEXT("ReLoad %d AMMO"), ammo);
 }
 
 void UTFT_InvenComponent::ChangeWeapon()

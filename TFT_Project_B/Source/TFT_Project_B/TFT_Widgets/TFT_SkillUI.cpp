@@ -5,6 +5,9 @@
 
 #include "Components/CanvasPanel.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "Components/Image.h"
+
 
 bool UTFT_SkillUI::Initialize()
 {
@@ -28,7 +31,14 @@ bool UTFT_SkillUI::Initialize()
 	{
 		if (i % 2 == 0) _skillSlots[i]->SetSlotNumText("Q");
 		else _skillSlots[i]->SetSlotNumText("E");
-	}//
+	}
+
+
+
+	_SwordImg = LoadObject<UTexture2D>
+		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/Weapon_Sword.Weapon_Sword'"));
+	_GunImg = LoadObject<UTexture2D>
+		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/Weapon_gun.Weapon_gun'"));
 
 
 	return result;
@@ -61,7 +71,7 @@ void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
 		_skillSlots[1]->SetSlotImg(itemtype, 1);
 		_skillSlots[1]->changedText = false;
 	}
-		break;
+	break;
 	case longLange:
 	{
 		_skillSlots[2]->SetSlotImg(itemtype, 2);
@@ -69,7 +79,7 @@ void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
 		_skillSlots[3]->SetSlotImg(itemtype, 3);
 		_skillSlots[3]->changedText = false;
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -84,3 +94,22 @@ void UTFT_SkillUI::RunCDT(int32 slotNum)
 
 
 }
+
+void UTFT_SkillUI::SetWeaponStackText(WEAPON_TYPE type)
+{
+}
+
+void UTFT_SkillUI::BuletChaek()
+{
+
+}
+
+void UTFT_SkillUI::ThisBulletText(int32 cur, int32 all)
+{
+	FString CurBullet = FString::FromInt(cur); // cur을 문자열로 변환
+	FString AllBullet = FString::FromInt(all); // all을 문자열로 변환
+
+	FString BulletText = CurBullet + TEXT("/") + AllBullet; // 두 문자열을 '/'로 결합
+	_BuletText.FromString(BulletText);
+}
+
