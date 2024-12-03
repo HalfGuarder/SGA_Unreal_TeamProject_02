@@ -64,6 +64,8 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
         _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
         _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
+        _animInstance_Boss->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
+        _animInstance_Boss->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
     }
 
 
@@ -309,4 +311,106 @@ void ATFT_BossMonster_Rampage::BossDisable()
 
 void ATFT_BossMonster_Rampage::UpdateBlackboardTarget()
 {
+}
+
+void ATFT_BossMonster_Rampage::ExplosionHit()
+{
+    FHitResult hitResult;
+    FCollisionQueryParams params(NAME_None, false, this);
+
+    float explosionRange = 500.0f; // Explosion 범위
+    float explosionRadius = 150.0f; // Explosion 반경
+
+    bool bResult = GetWorld()->SweepSingleByChannel(
+        hitResult,
+        GetActorLocation(),
+        GetActorLocation() + GetActorForwardVector() * explosionRange,
+        FQuat::Identity,
+        ECollisionChannel::ECC_GameTraceChannel6,
+        FCollisionShape::MakeSphere(explosionRadius),
+        params
+    );
+
+    FVector vec = GetActorForwardVector() * explosionRange;
+    FVector center = GetActorLocation() + vec * 0.5f;
+    FColor drawColor = FColor::Green;
+
+    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    {
+        drawColor = FColor::Red;
+        FDamageEvent damageEvent;
+
+        float explosionDamage = 30.0f; // Explosion 데미지
+        hitResult.GetActor()->TakeDamage(explosionDamage, damageEvent, GetController(), this);
+        _hitPoint = hitResult.ImpactPoint;
+    }
+
+    DrawDebugSphere(GetWorld(), center, explosionRadius, 20, drawColor, false, 0.1f);
+
+}
+
+void ATFT_BossMonster_Rampage::ChainExplosionHit()
+{
+    FHitResult hitResult;
+    FCollisionQueryParams params(NAME_None, false, this);
+
+    float chainRange = 600.0f; // Chain Explosion 범위
+    float chainRadius = 150.0f; // Chain Explosion 반경
+
+    // 첫 번째 구체 처리
+    bool bResult = GetWorld()->SweepSingleByChannel(
+        hitResult,
+        GetActorLocation(),
+        GetActorLocation() + GetActorForwardVector() * chainRange,
+        FQuat::Identity,
+        ECollisionChannel::ECC_GameTraceChannel6,
+        FCollisionShape::MakeSphere(chainRadius),
+        params
+    );
+
+    FVector vec = GetActorForwardVector() * chainRange;
+    FVector center = GetActorLocation() + vec * 0.5f;
+    FColor drawColor = FColor::Green;
+
+    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    {
+        drawColor = FColor::Red;
+        FDamageEvent damageEvent;
+
+        float chainExplosionDamage = 20.0f; // 첫 번째 구체 데미지
+        hitResult.GetActor()->TakeDamage(chainExplosionDamage, damageEvent, GetController(), this);
+        _hitPoint = hitResult.ImpactPoint;
+    }
+
+    DrawDebugSphere(GetWorld(), center, chainRadius, 20, drawColor, false, 0.1f);
+
+    // 추가 구체 처리 (첫 번째 구체의 앞부분)
+    FHitResult secondHitResult;
+    FVector extendedStartLocation = GetActorLocation() + GetActorForwardVector() * chainRange;
+    FVector extendedEndLocation = extendedStartLocation + GetActorForwardVector() * (chainRange * 0.5f);
+    FVector secondCenter = (extendedStartLocation + extendedEndLocation) * 0.5f;
+
+    bool bSecondHit = GetWorld()->SweepSingleByChannel(
+        secondHitResult,
+        extendedStartLocation,
+        extendedEndLocation,
+        FQuat::Identity,
+        ECollisionChannel::ECC_GameTraceChannel6,
+        FCollisionShape::MakeSphere(chainRadius),
+        params
+    );
+
+    FColor secondDrawColor = FColor::Blue;
+
+    if (bSecondHit && secondHitResult.GetActor()->IsValidLowLevel())
+    {
+        secondDrawColor = FColor::Red;
+        FDamageEvent secondDamageEvent;
+
+        float secondExplosionDamage = 20.0f; // 두 번째 구체 데미지
+        secondHitResult.GetActor()->TakeDamage(secondExplosionDamage, secondDamageEvent, GetController(), this);
+    }
+
+    DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
+
 }

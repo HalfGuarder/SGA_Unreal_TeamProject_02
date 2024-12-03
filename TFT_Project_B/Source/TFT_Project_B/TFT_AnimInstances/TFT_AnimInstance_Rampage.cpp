@@ -141,3 +141,13 @@ void UTFT_AnimInstance_Rampage::AnimNotify_DeathEnd()
 {
 	_deathEndDelegate.Broadcast();
 }
+
+void UTFT_AnimInstance_Rampage::AnimNotify_ExplosionHit()
+{
+    OnExplosionHitDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Rampage::AnimNotify_ChainExplosionHit()
+{
+    OnChainExplosionHitDelegate.Broadcast();
+}

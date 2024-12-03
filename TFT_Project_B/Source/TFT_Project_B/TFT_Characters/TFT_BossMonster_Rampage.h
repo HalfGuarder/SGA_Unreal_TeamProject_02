@@ -48,6 +48,11 @@ public:
 
 	void UpdateBlackboardTarget();
 
+	UFUNCTION()
+	void ExplosionHit(); // Explosion 공격
+
+	UFUNCTION()
+	void ChainExplosionHit(); // Chain Explosion 공격
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
@@ -73,5 +78,6 @@ private:
 	float JumpSkillCooldown = 10.0f;
 	bool bCanUseJumpSkill = true;
 	FTimerHandle JumpSkillCooldownTimerHandle;
+
 
 };

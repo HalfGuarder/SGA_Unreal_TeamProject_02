@@ -11,7 +11,8 @@ DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
 DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
 DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
 DECLARE_MULTICAST_DELEGATE(BossDeathEndDelegate);
-
+DECLARE_MULTICAST_DELEGATE(FExplosionHitDelegate);
+DECLARE_MULTICAST_DELEGATE(FChainExplosionHitDelegate);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Rampage : public UAnimInstance
@@ -41,11 +42,19 @@ public:
 	UFUNCTION()
 	void AnimNotify_DeathEnd();
 
+	UFUNCTION()
+	void AnimNotify_ExplosionHit();
+
+	UFUNCTION()
+	void AnimNotify_ChainExplosionHit();
+
 
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
 	DeathStartDelegate _deathStartDelegate;
 	DeathEndDelegate _deathEndDelegate;
+	FExplosionHitDelegate OnExplosionHitDelegate;
+	FChainExplosionHitDelegate OnChainExplosionHitDelegate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	class UAnimMontage* _myAnimMontage;

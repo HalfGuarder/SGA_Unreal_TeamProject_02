@@ -44,7 +44,7 @@ void UTFT_AnimNotify_RampageEffect::Notify(USkeletalMeshComponent* MeshComp, UAn
 								EffectLocation.Z -= 100.0f; 
 
 								
-								GameInstance->GetEffectManager()->Play(TEXT("Explosion"), 0, EffectLocation, MeshComp->GetComponentRotation());
+								GameInstance->GetEffectManager()->Play(TEXT("chainExplosion"), 1, EffectLocation, MeshComp->GetComponentRotation());
 							}
 						});
 
