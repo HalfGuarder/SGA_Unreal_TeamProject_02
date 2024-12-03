@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TFT_Characters/TFT_Boss_BJ.h"
 #include "TFT_Player.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
@@ -197,7 +196,7 @@ void ATFT_Boss_BJ::Attack_AI()
                 _animInstance_BJ->PlaySlashMontage();
                 _isAttacking = true;
             }
-            else if (randomValue < 35)
+            else if (randomValue < 30)
             {
                 if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
                 {
@@ -224,7 +223,6 @@ void ATFT_Boss_BJ::MoveMessageForward()
     SetActorLocation(newLocation);
 }
 
-
 void ATFT_Boss_BJ::AttackEnd()
 {
 }
@@ -247,7 +245,6 @@ void ATFT_Boss_BJ::DeathStart()
 
     _animInstance_BJ->_deathStartDelegate.RemoveAll(this);
 }
-
 
 void ATFT_Boss_BJ::BossDisable()
 {
