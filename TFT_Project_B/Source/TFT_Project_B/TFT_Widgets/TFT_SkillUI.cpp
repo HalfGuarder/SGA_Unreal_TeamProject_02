@@ -70,6 +70,9 @@ void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
 		_skillSlots[0]->changedText = false;
 		_skillSlots[1]->SetSlotImg(itemtype, 1);
 		_skillSlots[1]->changedText = false;
+
+		Weapon_Img->SetBrushFromTexture(_SwordImg);
+		_MyWeapon = true;
 	}
 	break;
 	case longLange:
@@ -78,6 +81,9 @@ void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
 		_skillSlots[2]->changedText = false;
 		_skillSlots[3]->SetSlotImg(itemtype, 3);
 		_skillSlots[3]->changedText = false;
+
+		Weapon_Img->SetBrushFromTexture(_GunImg);
+		_MyWeapon = false;
 	}
 	break;
 	default:
@@ -95,21 +101,21 @@ void UTFT_SkillUI::RunCDT(int32 slotNum)
 
 }
 
-void UTFT_SkillUI::SetWeaponStackText(WEAPON_TYPE type)
-{
-}
-
-void UTFT_SkillUI::BuletChaek()
-{
-
-}
-
 void UTFT_SkillUI::ThisBulletText(int32 cur, int32 all)
 {
+	if (_MyWeapon) 
+	{
+		BulletStack_Text->SetText(_InfinitySymbol);
+		return;
+	}
+
 	FString CurBullet = FString::FromInt(cur); // cur을 문자열로 변환
 	FString AllBullet = FString::FromInt(all); // all을 문자열로 변환
 
-	FString BulletText = CurBullet + TEXT("/") + AllBullet; // 두 문자열을 '/'로 결합
-	_BuletText.FromString(BulletText);
+	FString BulletText = FString::Printf(TEXT("%s / %s"), *CurBullet, *AllBullet);
+
+	//BulletStack_Text->SetFont(FSlateFontInfo(BulletStack_Text->Font.TypefaceFontName, 15));
+	BulletStack_Text->SetText(FText::FromString(BulletText));
 }
 
+	

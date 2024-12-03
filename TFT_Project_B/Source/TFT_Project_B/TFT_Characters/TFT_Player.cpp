@@ -188,8 +188,14 @@ void ATFT_Player::BeginPlay()
 
 		UIMANAGER->GetSkillUI()->HiddenSkillSlot();
 
-		if(bEquipSword == true) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
-		if(bEquipSword == false) UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+		if (bEquipSword == true)
+		{
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
+		}
+		if (bEquipSword == false)
+		{
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+		}
 
 	}
 
@@ -472,17 +478,20 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 	}
 	else
 	{
-		if (bTurretBuildMode && !bBuildTurret)
+		if(_invenCom->UseBullet())
 		{
-			bBuildTurret = true;
+			if (bTurretBuildMode && !bBuildTurret)
+			{
+				bBuildTurret = true;
 
-			return;
+				return;
+			}
+			_animInstancePlayer->PlayAttackMontage();
+			_isAttacking = true;
+			_curAttackIndex %= 3;
+			_curAttackIndex++;
+			_animInstancePlayer->JumpToSection(_curAttackIndex);
 		}
-		_animInstancePlayer->PlayAttackMontage();
-		_isAttacking = true;
-		_curAttackIndex %= 3;
-		_curAttackIndex++;
-		_animInstancePlayer->JumpToSection(_curAttackIndex);
 	}
 }
 

@@ -10,7 +10,7 @@ class ATFT_Item;
 class UTFT_InvenWidget;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(ItemAdded, ATFT_Item*, int itemIndex)
-DECLARE_MULTICAST_DELEGATE_TwoParams(BulletEvent, int cur, int max)
+DECLARE_MULTICAST_DELEGATE_TwoParams(BulletEvent, int32 cur, int32 max)
 DECLARE_MULTICAST_DELEGATE_OneParam(InvenGold, int gold)
 DECLARE_MULTICAST_DELEGATE(InvenUIOpen);
 DECLARE_MULTICAST_DELEGATE(PairWeaponUIEvent);
