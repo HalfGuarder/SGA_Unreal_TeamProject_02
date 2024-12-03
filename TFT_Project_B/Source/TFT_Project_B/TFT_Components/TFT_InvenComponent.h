@@ -59,6 +59,7 @@ public:
 
 	bool UseBullet();
 	void ReLoadBullet();
+	void SetcurBullet();
 	BulletEvent _BulletEvent;
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))

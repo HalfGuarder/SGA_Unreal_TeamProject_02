@@ -103,19 +103,25 @@ void UTFT_SkillUI::RunCDT(int32 slotNum)
 
 void UTFT_SkillUI::ThisBulletText(int32 cur, int32 all)
 {
-	if (_MyWeapon) 
-	{
-		BulletStack_Text->SetText(_InfinitySymbol);
-		return;
-	}
-
 	FString CurBullet = FString::FromInt(cur); // cur을 문자열로 변환
 	FString AllBullet = FString::FromInt(all); // all을 문자열로 변환
 
-	FString BulletText = FString::Printf(TEXT("%s / %s"), *CurBullet, *AllBullet);
+	_BuletString = FString::Printf(TEXT("%s / %s"), *CurBullet, *AllBullet);
+
 
 	//BulletStack_Text->SetFont(FSlateFontInfo(BulletStack_Text->Font.TypefaceFontName, 15));
-	BulletStack_Text->SetText(FText::FromString(BulletText));
+	BulletStack_Text->SetText(FText::FromString(_BuletString));
+	
+}
+
+void UTFT_SkillUI::SetClosedWeaponStackText()
+{
+	BulletStack_Text->SetText(_InfinitySymbol);
+}
+
+void UTFT_SkillUI::SwapWeaponStackText()
+{
+
 }
 
 	

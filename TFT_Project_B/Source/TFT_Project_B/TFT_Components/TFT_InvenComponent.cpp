@@ -174,16 +174,27 @@ void UTFT_InvenComponent::ReLoadBullet()
 {
 	int32 ammo = _ReLoadCount - _curBullet;
 
-	if (_Bullet < ammo)
+	if (_Bullet <= 0) // 탄이 아예없다면 리턴
 	{
 		UE_LOG(LogTemp, Log, TEXT("ReLoad CRASH"));
 		return;
 	}
+	if (_Bullet < ammo && 0 < _Bullet) // 1발이라도 있다면 그만큼만 장전
+	{
+		ammo = _Bullet;
+		UE_LOG(LogTemp, Log, TEXT("Ammo's miss"));
+	}
+
 
 	_Bullet -= ammo;
 	_curBullet += ammo;
 	_BulletEvent.Broadcast(_curBullet, _Bullet);
 	UE_LOG(LogTemp, Log, TEXT("ReLoad %d AMMO"), ammo);
+}
+
+void UTFT_InvenComponent::SetcurBullet()
+{
+	_BulletEvent.Broadcast(_curBullet, _Bullet);
 }
 
 void UTFT_InvenComponent::ChangeWeapon()

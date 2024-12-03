@@ -23,6 +23,8 @@ public:
 	void RunCDT(int32 slotNum);
 	
 	void ThisBulletText(int32 cur, int32 all);
+	void SetClosedWeaponStackText();
+	void SwapWeaponStackText();
 public:
 	TArray<class UTexture2D*> _skillImgs;
 
@@ -39,6 +41,7 @@ public:
 	class UTextBlock* BulletStack_Text;
 
 	FText _InfinitySymbol = FText::FromString(TEXT("\u221E"));
+	FString _BuletString;
 private:
 	UTexture2D* _SwordImg;
 	UTexture2D* _GunImg;

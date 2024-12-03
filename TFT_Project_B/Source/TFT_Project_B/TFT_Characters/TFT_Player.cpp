@@ -1309,11 +1309,13 @@ void ATFT_Player::PairWeaponUI()
 		case 1:
 			bEquipSword = true;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::closeRange);
+			UIMANAGER->GetSkillUI()->SetClosedWeaponStackText();
 			break;
 
 		case 2:
 			bEquipSword = false;
 			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+			_invenCom->SetcurBullet();
 			break;
 
 		default:
