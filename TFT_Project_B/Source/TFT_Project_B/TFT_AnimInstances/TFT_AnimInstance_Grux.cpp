@@ -27,11 +27,19 @@ UTFT_AnimInstance_Grux::UTFT_AnimInstance_Grux()
     }
 
     static ConstructorHelpers::FObjectFinder<UAnimMontage> stn
-    (TEXT("/Script/Engine.AnimMontage'/Game/ParagonGrux/Characters/Heroes/Grux/Animations/TFT_Grux_Stun_AnimMontage.TFT_Grux_Stun_AnimMontage'"));
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Stun_AnimMontage.TFT_Grux_Stun_AnimMontage'"));
 
     if (stn.Succeeded())
     {
         _stunMontage = stn.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> abrn
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Airborne_AnimMontage.TFT_Grux_Airborne_AnimMontage'"));
+
+    if (abrn.Succeeded())
+    {
+        _airborneMontage = abrn.Object;
     }
 }
 
@@ -67,7 +75,10 @@ void UTFT_AnimInstance_Grux::PlaySkillMontage()
 
 void UTFT_AnimInstance_Grux::PlayAirborneMontage()
 {
-
+    if (!Montage_IsPlaying(_airborneMontage))
+    {
+        Montage_Play(_airborneMontage);
+    }
 }
 
 void UTFT_AnimInstance_Grux::StopAirborneMontage()
@@ -117,4 +128,14 @@ void UTFT_AnimInstance_Grux::AnimNotify_DeathStart()
 void UTFT_AnimInstance_Grux::AnimNotify_DeathEnd()
 {
     _deathEndDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Grux::AnimNotify_AirborneEnd()
+{
+    _stateMontageEndDelegate.Broadcast();
+}
+
+void UTFT_AnimInstance_Grux::AnimNotify_StunEnd()
+{
+    _stateMontageEndDelegate.Broadcast();
 }

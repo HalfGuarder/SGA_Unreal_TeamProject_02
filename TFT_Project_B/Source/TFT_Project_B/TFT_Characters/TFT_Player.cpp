@@ -899,14 +899,14 @@ void ATFT_Player::StateCheck()
 			_animInstancePlayer->PlayAirborneMontage();
 			_canMove = false;
 			_stateCom->InitState();
-			return;
+			break;
 
 		case StateType::Stun:
 			bIsOnState = true;
 			_animInstancePlayer->PlayStunMontage();
 			_canMove = false;
 			_stateCom->InitState();
-			return;
+			break;
 
 		default:
 			break;
@@ -963,27 +963,24 @@ void ATFT_Player::AttackHit()
 		float actualDamage = hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
 
-		if (actualDamage > 0)
+		/*if (actualDamage > 0)
 		{
 			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
-			if (target != nullptr)
+			if (target != nullptr && !target->bIsOnState)
 			{
 				switch (_curAttackIndex)
 				{
 				case 1:
-					target->SetState(StateType::Stun);
+					target->SetState(StateType::Airborne);
 					break;
 				case 2:
-					target->SetState(StateType::Stun);
-					break;
-				case 3:
 					target->SetState(StateType::Stun);
 					break;
 				default:
 					break;
 				}
 			}
-		}
+		}*/
 	}
 
 	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
@@ -1017,8 +1014,17 @@ void ATFT_Player::Q_SkillHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 
-		hitResult.GetActor()->TakeDamage(300.0f, damageEvent, GetController(), this);
+		float actualDamage = hitResult.GetActor()->TakeDamage(30.0f, damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
+
+		if (actualDamage > 0)
+		{
+			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+			if (target != nullptr && !target->bIsOnState)
+			{
+				target->SetState(StateType::Stun);
+			}
+		}
 	}
 
 	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
@@ -1052,8 +1058,17 @@ void ATFT_Player::E_SkillHit()
 		drawColor = FColor::Red;
 		FDamageEvent damageEvent;
 
-		hitResult.GetActor()->TakeDamage(300.0f, damageEvent, GetController(), this);
+		float actualDamage = hitResult.GetActor()->TakeDamage(20.0f, damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
+
+		if (actualDamage > 0)
+		{
+			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+			if (target != nullptr && !target->bIsOnState)
+			{
+				target->SetState(StateType::Airborne);
+			}
+		}
 	}
 
 	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);

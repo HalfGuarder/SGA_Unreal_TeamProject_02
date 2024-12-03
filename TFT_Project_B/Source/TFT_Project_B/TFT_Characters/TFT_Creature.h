@@ -69,6 +69,9 @@ public:
 
 	virtual void StateCheck();
 
+	UFUNCTION()
+	virtual void EndState();
+
 	Delegate_AttackEnded _attackEndedDelegate;
 
 public:

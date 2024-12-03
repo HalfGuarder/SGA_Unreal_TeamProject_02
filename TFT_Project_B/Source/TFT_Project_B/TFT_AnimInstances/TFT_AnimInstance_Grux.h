@@ -6,11 +6,11 @@
 #include "Animation/AnimInstance.h"
 #include "TFT_AnimInstance_Grux.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
-DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
-DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
+DECLARE_MULTICAST_DELEGATE(GruxAnimEvent);
+//DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
+//DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
+//DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
+//DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Grux : public UAnimInstance
@@ -48,12 +48,19 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_DeathEnd();
+
+	UFUNCTION()
+	void AnimNotify_AirborneEnd();
+
+	UFUNCTION()
+	void AnimNotify_StunEnd();
 	
-	AttackStartDelegate _attackStartDelegate;
-	AttackHitDelegate _attackHitDelegate;
-	AttackEndDelegate _attackEndDelegate;
-	DeathStartDelegate _deathStartDelegate;
-	DeathEndDelegate _deathEndDelegate;
+	GruxAnimEvent _attackStartDelegate;
+	GruxAnimEvent _attackHitDelegate;
+	GruxAnimEvent _attackEndDelegate;
+	GruxAnimEvent _deathStartDelegate;
+	GruxAnimEvent _deathEndDelegate;
+	GruxAnimEvent _stateMontageEndDelegate;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))

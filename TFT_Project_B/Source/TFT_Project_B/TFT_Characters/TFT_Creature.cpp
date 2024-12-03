@@ -97,3 +97,7 @@ void ATFT_Creature::StateCheck()
 {
 }
 
+void ATFT_Creature::EndState()
+{
+}
+

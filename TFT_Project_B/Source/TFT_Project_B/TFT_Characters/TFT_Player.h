@@ -71,8 +71,7 @@ protected:
 
 	void StateCheck() override;
 
-	UFUNCTION()
-	void EndState();
+	void EndState() override;
 
 	virtual void AttackStart() override;
 	UFUNCTION()

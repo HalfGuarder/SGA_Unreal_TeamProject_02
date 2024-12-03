@@ -39,6 +39,8 @@ public:
 	void BossDisable();
 
 	void StateCheck() override;
+
+	void EndState() override;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
@@ -53,4 +55,6 @@ private:
 	FVector LockedLocation;
 	FRotator LockedRotation;
 	bool bIsDashing = false;
+
+	FTimerHandle _stateTimerHandle;
 };

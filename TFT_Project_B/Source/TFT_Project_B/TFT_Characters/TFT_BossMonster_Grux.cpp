@@ -18,8 +18,11 @@
 
 #include "TFT_Player.h"
 
-#include "TFT_AIController.h"
+#include "AIController.h"
+#include "TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+#include "TimerManager.h"
 
 ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
@@ -48,6 +51,7 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
         _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
         _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
         _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
+        _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
     }
 
     if (HpBarWidgetClass)
@@ -164,7 +168,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
         if (actualDamage > 0)
         {
             ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
-            if (target != nullptr)
+            if (target != nullptr && !target->bIsOnState)
             {
                 switch (_curAttackIndex)
                 {
@@ -286,7 +290,14 @@ void ATFT_BossMonster_Grux::StateCheck()
 
     if (curStates.IsEmpty()) return;
 
-    /*for (auto state : curStates)
+    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+    
+    if (controller)
+    {
+        controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("IsOnState")), true);
+    }
+
+    for (auto state : curStates)
     {
         switch (state)
         {
@@ -296,24 +307,35 @@ void ATFT_BossMonster_Grux::StateCheck()
             _animInstance_Grux->PlayAirborneMontage();
             _canMove = false;
             _stateCom->InitState();
-            return;
+            GetWorldTimerManager().SetTimer(_stateTimerHandle, this, &ATFT_BossMonster_Grux::EndState, 2.0f, false);
+            break;
 
         case StateType::Stun:
             bIsOnState = true;
             _animInstance_Grux->PlayStunMontage();
             _canMove = false;
             _stateCom->InitState();
-
-            auto controller = Cast<ATFT_AIController>(GetController());
-            if (controller)
-            {
-                controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("IsOnState")), true);
-            }
-
-            return;
+            GetWorldTimerManager().SetTimer(_stateTimerHandle, this, &ATFT_BossMonster_Grux::EndState, 2.0f, false);
+            break;
 
         default:
             break;
         }
-    }*/
+    }
+}
+
+void ATFT_BossMonster_Grux::EndState()
+{
+    Super::EndState();
+
+    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+
+    if (controller)
+    {
+        controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("IsOnState")), false);
+    }
+
+    bIsOnState = false;
+
+    GetWorldTimerManager().ClearTimer(_stateTimerHandle);
 }
