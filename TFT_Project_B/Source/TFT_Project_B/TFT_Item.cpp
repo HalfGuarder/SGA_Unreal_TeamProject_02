@@ -55,9 +55,10 @@ void ATFT_Item::OnMyCharacterOverlap(UPrimitiveComponent* OverlappedComponent, A
 	if (MyPlayer)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Item Name : %s, Attack : %d"), *_Name, _AttackPower);
-		// MyPlayer->AddItemPlayer(this);
 
-		MyPlayer->_invenCom->SetWeapon(this);
+		if(_ItemType == "Equipment") MyPlayer->_invenCom->SetWeapon(this);
+
+		if(_ItemType == "Bullet") MyPlayer->AddItemPlayer(this);
 	}
 }
 

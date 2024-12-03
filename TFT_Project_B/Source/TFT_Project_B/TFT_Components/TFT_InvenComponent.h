@@ -60,7 +60,6 @@ public:
 	bool UseBullet();
 	void ReLoadBullet();
 	void SetcurBullet();
-	BulletEvent _BulletEvent;
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_Item*> _items;
@@ -79,7 +78,7 @@ public:
 	ItemAdded _itemSlectEvent;
 
 	InvenGold _GoldChangeEvnet;
-	InvenGold _BulletChangeEvent;
+	BulletEvent _BulletEvent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	ATFT_Item* _currentWeapon;

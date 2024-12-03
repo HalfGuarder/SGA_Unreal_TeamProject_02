@@ -277,7 +277,7 @@ void ATFT_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(_doubleTapDash_S_Action, ETriggerEvent::Triggered, this, &ATFT_Player::DoubleTapDash_Back);
 		EnhancedInputComponent->BindAction(_doubleTapDash_D_Action, ETriggerEvent::Triggered, this, &ATFT_Player::DoubleTapDash_Right);
 
-		EnhancedInputComponent->BindAction(_attackAction, ETriggerEvent::Started, this, &ATFT_Player::AttackA);
+		EnhancedInputComponent->BindAction(_attackAction, ETriggerEvent::Triggered, this, &ATFT_Player::AttackA);
 
 		EnhancedInputComponent->BindAction(_invenOpenAction, ETriggerEvent::Started, this, &ATFT_Player::InvenopenA);
 
@@ -478,7 +478,9 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 	}
 	else
 	{
-		if(_invenCom->UseBullet())
+		if (_isAttacking || GetWorldTimerManager().IsTimerActive(_BullettimerHandle)) return;
+		
+		if (_invenCom->UseBullet())
 		{
 			if (bTurretBuildMode && !bBuildTurret)
 			{
@@ -491,7 +493,12 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 			_curAttackIndex %= 3;
 			_curAttackIndex++;
 			_animInstancePlayer->JumpToSection(_curAttackIndex);
+
+			
+			GetWorldTimerManager().SetTimer(_BullettimerHandle, this, &ATFT_Player::AttackEnd, 0.5f, false);
+
 		}
+		
 	}
 }
 
@@ -521,7 +528,9 @@ void ATFT_Player::CameraZoom(float alpha)
 void ATFT_Player::AttackEnd()
 {
 	_canMove = true;
+
 	_isAttacking = false;
+	GetWorldTimerManager().ClearTimer(_BullettimerHandle);
 }
 
 void ATFT_Player::E_Skill(const FInputActionValue& value)

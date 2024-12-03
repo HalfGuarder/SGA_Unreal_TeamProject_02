@@ -151,7 +151,7 @@ void UTFT_InvenComponent::DisarmWeapon(ATFT_Item* curWeapon)
 void UTFT_InvenComponent::AddPlayerBullet(int32 Bullet)
 {
 	_Bullet += Bullet;
-	_BulletChangeEvent.Broadcast(_Bullet);
+	_BulletEvent.Broadcast(_curBullet, _Bullet);
 }
 
 bool UTFT_InvenComponent::UseBullet()

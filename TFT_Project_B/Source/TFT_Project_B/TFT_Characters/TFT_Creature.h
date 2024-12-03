@@ -141,4 +141,6 @@ public:
 	// State
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Skill, meta = (AllowPrivateAccess = "true"))
 	bool bIsOnState = false;
+
+	FTimerHandle _BullettimerHandle;
 };
