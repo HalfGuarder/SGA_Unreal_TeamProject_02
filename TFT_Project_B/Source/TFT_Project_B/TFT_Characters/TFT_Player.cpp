@@ -200,6 +200,8 @@ void ATFT_Player::BeginPlay()
 	}
 
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -250,6 +252,7 @@ void ATFT_Player::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	if (_canMove)
 	{
 		RotatePlayer(DeltaTime);
@@ -334,6 +337,19 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 			}
 			else
 			{
+				if (bTurretBuildMode)
+				{
+					if (_turret)
+					{
+						_turret->Destroy();
+						_turret = nullptr;
+					}
+
+					bTurretBuildMode = false;
+					bBuildTurret = false;
+
+					GetWorldTimerManager().PauseTimer(_turretTimerHandle);
+				}
 				SOUNDMANAGER->PlaySound(TEXT("P_ChangeWeapon_Sword"), GetActorLocation());
 			}
 		}
@@ -495,7 +511,7 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 			_animInstancePlayer->JumpToSection(_curAttackIndex);
 
 			
-			GetWorldTimerManager().SetTimer(_BullettimerHandle, this, &ATFT_Player::AttackEnd, 0.5f, false);
+			GetWorldTimerManager().SetTimer(_BullettimerHandle, this, &ATFT_Player::AttackEnd, 0.2f, false);
 
 		}
 		
@@ -559,14 +575,32 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(3)->bCoolDownOn == false)
 		{
+			// 프리뷰 터렛이 활성화되어 있을 때, 다시 E를 누르면 취소
+			if (bTurretBuildMode)
+			{
+				if (_turret)
+				{
+					_turret->Destroy();
+					_turret = nullptr;
+				}
+
+				bTurretBuildMode = false;
+				bBuildTurret = false;
+
+				GetWorldTimerManager().PauseTimer(_turretTimerHandle);
+
+				return;
+			}
+
 			if (GetWorldTimerManager().IsTimerPaused(_turretTimerHandle))
 			{
 				GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
 			}
 
+
 			GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
 
-			UIMANAGER->GetSkillUI()->RunCDT(3);
+			
 		}
 	}
 	
@@ -1095,6 +1129,7 @@ void ATFT_Player::SpawnTurret()
 	FVector lineStart = GetActorLocation() + start;
 	FVector lineEnd = GetActorLocation() + end * 500.0f;
 
+	
 	bool bResult = GetWorld()->LineTraceSingleByChannel
 	(
 		hitResult,
@@ -1129,6 +1164,7 @@ void ATFT_Player::SpawnTurret()
 		}
 	}
 
+
 	if (bBuildTurret && _turret)
 	{
 		_turret->SetActorEnableCollision(false);
@@ -1145,6 +1181,7 @@ void ATFT_Player::SpawnTurret()
 		bTurretBuildMode = false;
 
 		GetWorldTimerManager().PauseTimer(_turretTimerHandle);
+		UIMANAGER->GetSkillUI()->RunCDT(3);
 	}
 
 	// DrawDebugLine(GetWorld(), lineStart, lineEnd, drawColor, false, 1.0f);

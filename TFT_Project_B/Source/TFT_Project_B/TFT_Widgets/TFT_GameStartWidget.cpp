@@ -37,8 +37,6 @@ void UTFT_GameStartWidget::ExitEvent()
 	UWorld* World = GetWorld();
 	APlayerController* PlayerController = World->GetFirstPlayerController();
 
-	UE_LOG(LogTemp, Error, TEXT("StartPage Game End")); // Test용 로그
-
 	// QuitGame 함수 호출
 	UKismetSystemLibrary::QuitGame(World, PlayerController, EQuitPreference::Quit, true);
 }

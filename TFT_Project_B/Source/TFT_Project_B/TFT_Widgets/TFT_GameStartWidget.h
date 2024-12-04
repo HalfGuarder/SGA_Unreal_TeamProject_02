@@ -24,12 +24,5 @@ public:
 	FStartPageEvent _StartEvent;
 
 private:
-
-	//UPROPERTY(meta = (BindWidget))
-	//class UButton* GameStart_Button;
-
-	//UPROPERTY(meta = (BindWidget))
-	//UButton* Exit_Button;
-
 	void HideUI();
 };

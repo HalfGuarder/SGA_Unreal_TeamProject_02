@@ -289,5 +289,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Tutorial, meta = (AllowPrivateAccess = "true"))
 	bool bClearTutorial = false;
 
-	
 };
