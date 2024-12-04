@@ -4,6 +4,7 @@
 #include "TFT_Player.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
 #include "TFT_Widgets/TFT_HPBarWidget.h"
+#include "TFT_SoundManager.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -107,6 +108,60 @@ void ATFT_Boss_BJ::SetMesh(FString path)
     _meshCom->SetMesh(path);
 }
 
+void ATFT_Boss_BJ::AttackStart()
+{
+    Super::AttackStart();
+
+    SOUNDMANAGER->PlaySound("Boss_Attack", GetActorLocation());
+}
+
+void ATFT_Boss_BJ::FootStep()
+{
+    	Super::FootStep();
+
+	auto player = GetWorld()->GetFirstPlayerController()->GetOwner();
+
+	FVector start = GetActorLocation();
+	FRotator rotator = GetActorRotation();
+	FVector lineDirAndDist = FVector(1.0f, 1.0f, -100.0f);
+	FVector end = start * lineDirAndDist;
+	FHitResult hitResult;
+
+	FCollisionQueryParams qParams;
+	qParams.AddIgnoredActor(this);
+	qParams.bReturnPhysicalMaterial = true;
+
+	GetWorld()->LineTraceSingleByChannel
+	(
+		hitResult,
+		start,
+		end,
+		ECollisionChannel::ECC_Visibility,
+		qParams
+	);
+
+	if (hitResult.PhysMaterial != nullptr)
+	{
+
+		FString hitName = hitResult.PhysMaterial->GetName();
+
+		// UE_LOG(LogTemp, Log, TEXT("%s"), *hitName);
+	}
+
+	if (hitResult.PhysMaterial != nullptr)
+	{
+		switch (hitResult.PhysMaterial->SurfaceType)
+		{
+		case SurfaceType1:
+			SOUNDMANAGER->FadeOutSound("Boss_FootStep", 0.2f);
+			SOUNDMANAGER->PlaySound("Boss_FootStep", end);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void ATFT_Boss_BJ::AttackHit_Boss()
 {
     FHitResult hitResult;
@@ -188,6 +243,7 @@ void ATFT_Boss_BJ::Attack_AI()
                 {
                     _animInstance_BJ->PlaySkillMontage();
                     _isAttacking = true;
+                    //SOUNDMANAGER->PlaySound("", GetActorLocation());
                 }
             }
             else if (randomValue < 20)
@@ -195,18 +251,21 @@ void ATFT_Boss_BJ::Attack_AI()
                 GetWorld()->GetTimerManager().SetTimer(MoveTimerHandle, this, &ATFT_Boss_BJ::MoveMessageForward, 1.0f, false);
                 _animInstance_BJ->PlaySlashMontage();
                 _isAttacking = true;
+                SOUNDMANAGER->PlaySound("Boss_Dash", GetActorLocation());
             }
             else if (randomValue < 30)
             {
                 if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_skillMontage))
                 {
                     ActivateSkill();
+                    //SOUNDMANAGER->PlaySound("Boss_Elec", GetActorLocation());
                 }
             }
             else
             {
                 _animInstance_BJ->PlayAttackMontage();
                 _isAttacking = true;
+                SOUNDMANAGER->PlaySound("Boss_Attack", GetActorLocation());
             }
 
             _curAttackIndex %= 4;
@@ -327,6 +386,11 @@ void ATFT_Boss_BJ::SpawnNiagaraEffectAtLocation(FVector Location)
 void ATFT_Boss_BJ::TriggerSkillEffect()
 {
     _isAttacking = false;
+
+    if (SOUNDMANAGER)
+    {
+        SOUNDMANAGER->PlaySound("Boss_Elec", GetActorLocation());
+    }
 
     UNiagaraSystem* NiagaraEffect = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Script/Niagara.NiagaraSystem'/Game/Electric_VFX/Niagara/Electric/Boss_Elec.Boss_Elec'"));
     if (NiagaraEffect)

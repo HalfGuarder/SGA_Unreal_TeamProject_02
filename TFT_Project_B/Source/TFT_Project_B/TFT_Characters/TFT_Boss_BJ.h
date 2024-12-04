@@ -23,6 +23,8 @@ public:
 	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetMesh(FString path) override;
+	virtual void AttackStart() override;
+	virtual void FootStep() override;
 
 	UFUNCTION()
 	void AttackHit_Boss();

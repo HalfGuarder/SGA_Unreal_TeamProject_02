@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "TFT_SoundManager.h"
 
 #include "Kismet/KismetMathLibrary.h"
@@ -37,12 +36,18 @@ ATFT_SoundManager::ATFT_SoundManager()
 	
 	// Rampage
 	CreateSoundCue("Rampage_normalPunch", "/Script/Engine.SoundCue'/Game/Blueprints/Monster/Sound/Punch.Punch'");
+
+	// BossBJ
+	CreateSoundCue("Boss_Attack", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Sword_Swing_SQ.TFT_Player_Sword_Swing_SQ'");
+	CreateSoundCue("Boss_FootStep", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_FootStep_SQ.TFT_Player_FootStep_SQ'");
+	CreateSoundCue("Boss_Dash", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Dash_SQ.TFT_Player_Dash_SQ'");
+	CreateSoundCue("Boss_Elec", "/Script/Engine.SoundCue'/Game/Electric_Shock_SFX_SK/CUE/Boss_Elec_sound.Boss_Elec_sound'");
+	//CreateSoundCue("", "");
 }
 
 void ATFT_SoundManager::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ATFT_SoundManager::CreateSoundCue(FString keyName, FString path)
