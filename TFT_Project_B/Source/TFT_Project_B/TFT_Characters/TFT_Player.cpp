@@ -1491,7 +1491,7 @@ void ATFT_Player::Interact()
 	for (AActor* Actor : OverlappingActors)
 	{
 		ATFT_Button* Button = Cast<ATFT_Button>(Actor);
-		if (Button && Button->bPlayerIsNearby) // 버튼 근처에 있을 때만 토글
+		if (Button && Button->bPlayerNearby) // 버튼 근처에 있을 때만 토글
 		{
 			Button->ToggleButton();
 			break;

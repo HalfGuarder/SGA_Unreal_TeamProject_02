@@ -10,62 +10,82 @@ UCLASS()
 class TFT_PROJECT_B_API ATFT_Button : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	
+
+public:
 	ATFT_Button();
-	
+
 	virtual void BeginPlay() override;
-
-	void AButtonActor();
-
 	virtual void Tick(float DeltaTime) override;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Button")
-    bool bIsOn;
+
+	// 버튼 활성화
+	UFUNCTION(BlueprintCallable, Category = "Button")
+	void ToggleButton();
+
+public:
+	// 이펙트 활성화 관련 함수
+	void ActivateEnergyEffect();
+	void ActivateAttackUpEffect();
+
+	// 보스 데미지 처리
+	void ApplyDamageToBoss();
 
 
-    UFUNCTION(BlueprintCallable, Category = "Button")
-    void ToggleButton();
+	// 콜리전 관리
+	void EnableEffectCollision();
+	void DisableEffectCollision();
 
-    void StartCooldown();
-    void EndCooldown();
+	// 쿨다운 처리
+	void StartCooldown();
+	void EndCooldown();
 
-    UFUNCTION(BlueprintCallable, Category = "Collision")
-    void EnableEffectCollision();
-    UFUNCTION(BlueprintCallable, Category = "Collision")
-    void DisableEffectCollision();
-    UFUNCTION()
-    void OnEffectOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-    
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    class UBoxComponent* BoxComponent;
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-   
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    class UStaticMeshComponent* ButtonMesh;
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
 
-    
-    UFUNCTION()
-    void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-        class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-        bool bFromSweep, const FHitResult& SweepResult);
+	// 타이머 핸들
+	FTimerHandle EnergyEffectTimerHandle;
+	FTimerHandle AttackUpEffectTimerHandle;
+	FTimerHandle DamageTimerHandle;
+	FTimerHandle CooldownTimerHandle;
 
-    UFUNCTION()
-    void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	// 콜리전 관련 이벤트
+	UFUNCTION()
+	void OnEffectOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect", meta = (AllowPrivateAccess = "true"))
-    FVector EffectLocationOffset;
+public:
+	// 버튼 상태 변수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Button", meta = (AllowPrivateAccess = "true"))
+	bool bIsOn;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect", meta = (AllowPrivateAccess = "true"))
-    FRotator EffectRotationOffset;
-    UPROPERTY()
-    bool bPlayerIsNearby;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cooldown", meta = (AllowPrivateAccess = "true"))
+	bool bIsCooldown;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cooldown", meta = (AllowPrivateAccess = "true"))
-    bool bIsCooldown;
+	// 보스가 콜리전에 있는지 확인
+	bool bBossInCollision;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect Collision")
-    class USphereComponent* EffectCollision;
+	// 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* BoxComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ButtonMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Effect Collision", meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* EffectCollision;
+
+	// 이펙트 위치/회전
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect", meta = (AllowPrivateAccess = "true"))
+	FVector EffectLocationOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effect", meta = (AllowPrivateAccess = "true"))
+	FRotator EffectRotationOffset;
+
+
+
+	bool bPlayerNearby;
 };
