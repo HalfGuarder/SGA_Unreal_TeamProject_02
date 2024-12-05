@@ -12,6 +12,7 @@ class UTFT_EquipmentWidget;
 class UTFT_SkillUI;
 class UTFT_Menu;
 class UTFT_DeathWidget;
+class UTFT_EndingWidget;
 
 DECLARE_MULTICAST_DELEGATE(UIOpenEvent);
 
@@ -25,6 +26,7 @@ enum class UIType : int32
 	Menu,
 	DeathUI,
 	Tutorial,
+	EndingUI,
 };
 
 
@@ -66,11 +68,15 @@ public:
 	UFUNCTION()
 	void DeathUIA();
 
+	UFUNCTION()
+	void EndingUIOn();
+
 	UTFT_InvenWidget* GetInvenUI() { return _invenWidget; }
 	UTFT_EquipmentWidget* GetEquipmentUI() { return _EquipmentWidget; }
 	UTFT_SkillUI* GetSkillUI() { return _SkillWidget; }
 	UTFT_Menu* GetMenuUI() { return _MenuWidget; }
 	UTFT_DeathWidget* GetDeathUI() { return _DeathWidget; }
+	
 
 	UFUNCTION(BlueprintCallable)
 	TArray<UUserWidget*> GetWidgets() { return _widgets; }
@@ -115,6 +121,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UUserWidget* _tutorial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UTFT_EndingWidget* _EndingWidget;
 
 	bool _UIInvenarea = false;
 	bool _UIEquipmentarea = false;

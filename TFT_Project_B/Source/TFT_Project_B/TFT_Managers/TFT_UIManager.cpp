@@ -8,6 +8,7 @@
 #include "TFT_SkillUI.h"
 #include "TFT_Menu.h"
 #include "TFT_DeathWidget.h"
+#include "TFT_EndingWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "TFT_GameInstance.h"
@@ -61,6 +62,12 @@ ATFT_UIManager::ATFT_UIManager()
 		_tutorial = CreateWidget<UUserWidget>(GetWorld(), tutorial.Class);
 	}
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> ending(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_EndingWidget_BP.TFT_EndingWidget_BP_C'"));
+	if (tutorial.Succeeded())
+	{
+		_EndingWidget = CreateWidget<UTFT_EndingWidget>(GetWorld(), ending.Class);
+	}
+
 	_widgets.Add(_crossHair);
 	_widgets.Add(_invenWidget);
 	_widgets.Add(_EquipmentWidget);
@@ -68,6 +75,7 @@ ATFT_UIManager::ATFT_UIManager()
 	_widgets.Add(_MenuWidget);
 	_widgets.Add(_DeathWidget);
 	_widgets.Add(_tutorial);
+	_widgets.Add(_EndingWidget);
 }
 
 void ATFT_UIManager::BeginPlay()
@@ -77,6 +85,7 @@ void ATFT_UIManager::BeginPlay()
 	OnoffWidget(UIType::Menu);
 
 	OpenWidget(UIType::SkillUI);
+
 
 
 	_invenOpenEvent.AddUObject(this, &ATFT_UIManager::OpenInvenUIA);
@@ -91,6 +100,8 @@ void ATFT_UIManager::BeginPlay()
 
 	_DeathWidget->_StartPageDelegate.AddUObject(this, &ATFT_UIManager::DeathResetLevel);
 	_DeathWidget->_ReStartDelegate.AddUObject(this, &ATFT_UIManager::ReStart);
+
+	_EndingWidget->_StartPageDelegate.AddUObject(this, &ATFT_UIManager::ResetLevel);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -242,6 +253,12 @@ void ATFT_UIManager::DeathUIA()
 		CloseWidget(UIType::DeathUI);
 		MouseLock(UIType::DeathUI);
 	}
+}
+
+void ATFT_UIManager::EndingUIOn()
+{
+	OpenWidget(UIType::EndingUI);
+	MouseUnLock(UIType::EndingUI);
 }
 
 void ATFT_UIManager::MouseUnLock(UIType type)
