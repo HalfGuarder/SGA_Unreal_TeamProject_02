@@ -20,7 +20,7 @@
 
 ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 {
-	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
+    _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
 	SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Elemental/Meshes/Rampage_Elemental.Rampage_Elemental'");
 
@@ -163,8 +163,6 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
         _hitPoint = hitResult.ImpactPoint;
         drawColor = FColor::Red;
 
-     
-
         ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
         if (target != nullptr)
         {
@@ -184,8 +182,6 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
             }
         }
     }
-
-
 
     DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }

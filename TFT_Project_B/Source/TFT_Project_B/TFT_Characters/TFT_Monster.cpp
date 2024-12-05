@@ -8,6 +8,7 @@
 
 ATFT_Monster::ATFT_Monster()
 {
+	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("MeshComponent"));
 }
 
 void ATFT_Monster::PostInitializeComponents()
@@ -42,4 +43,9 @@ float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 void ATFT_Monster::TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ATFT_Monster::ChangeMesh(TObjectPtr<USkeletalMesh> mesh)
+{
+	_meshCom->ChangeMesh(mesh);
 }

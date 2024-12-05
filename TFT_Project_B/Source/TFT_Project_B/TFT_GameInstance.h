@@ -12,6 +12,7 @@
 class ATFT_UIManager;
 class ATFT_EffectManager;
 class ATFT_SoundManager;
+class ATFT_MonsterSpawnManager;
 
 #define UIMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetUIManager()
 #define EFFECTMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetEffectManager()
@@ -55,6 +56,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ATFT_SoundManager* _soundManager = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
+	ATFT_MonsterSpawnManager* _monsterSpawnManager;
 
 	bool _reStartTrg = false;
 };

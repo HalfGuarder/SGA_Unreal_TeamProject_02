@@ -41,6 +41,8 @@ public:
 	void StateCheck() override;
 
 	void EndState() override;
+
+	void SetAnimInstanceBind();
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))

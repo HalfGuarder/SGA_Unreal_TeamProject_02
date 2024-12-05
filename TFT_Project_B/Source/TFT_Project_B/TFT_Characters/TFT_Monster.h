@@ -8,7 +8,7 @@
 
 
 
-UCLASS(Abstract)
+UCLASS()
 class TFT_PROJECT_B_API ATFT_Monster : public ATFT_Creature
 {
 	GENERATED_BODY()
@@ -34,5 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
+	virtual void ChangeMesh(TObjectPtr<USkeletalMesh> mesh) override;
 
+public:
+	bool bIsSpawned = false;
 };

@@ -39,3 +39,14 @@ void UTFT_MeshComponent::SetMesh(FString path)
 	(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 }
 
+void UTFT_MeshComponent::ChangeMesh(TObjectPtr<USkeletalMesh> mesh)
+{
+	auto character = Cast<ATFT_Creature>(GetOwner());
+
+	character->GetMesh()->SetSkeletalMesh(mesh);
+	// character->GetMesh()->SetSkeletalMeshAsset(mesh);
+
+	character->GetMesh()->SetRelativeLocationAndRotation
+	(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
+}
+

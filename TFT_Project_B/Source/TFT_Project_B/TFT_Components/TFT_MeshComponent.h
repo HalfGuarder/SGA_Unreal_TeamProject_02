@@ -22,4 +22,5 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SetMesh(FString path);
+	void ChangeMesh(TObjectPtr<USkeletalMesh> mesh);
 };

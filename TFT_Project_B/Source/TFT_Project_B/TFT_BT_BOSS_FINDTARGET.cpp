@@ -22,13 +22,22 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
+    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+    if (player)
+    {
+        OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
+
+        return;
+    }
+
     auto currentPawn = OwnerComp.GetAIOwner()->GetPawn();
     if (currentPawn == nullptr)
         return;
 
     auto world = GetWorld();
     FVector center = currentPawn->GetActorLocation();
-    float searchRadius = 1500.0f;
+    float searchRadius = 2000.0f;
 
     if (world == nullptr)
         return;
@@ -45,7 +54,7 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
         FCollisionShape::MakeSphere(searchRadius),
         qparams
     );
-
+   
     if (bResult)
     {
         for (auto& result : overlapResult)
@@ -59,7 +68,7 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
                 {
                     OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), myPlayer);
 
-                    return;
+                    break;
                 }
             }
         }
@@ -68,6 +77,5 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
     else
     {
         OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
-
     }
 }

@@ -52,6 +52,7 @@ public:
 	virtual void InitState() { _stateCom->InitState(); }
 
 	virtual void SetMesh(FString path) PURE_VIRTUAL(ATFT_Creature::SetMesh, );
+	virtual void ChangeMesh(TObjectPtr<USkeletalMesh> mesh) PURE_VIRTUAL(ATFT_Creature::ChangeMesh, );
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 

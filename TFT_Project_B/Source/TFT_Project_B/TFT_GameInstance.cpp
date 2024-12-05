@@ -6,6 +6,7 @@
 #include "TFT_UIManager.h"
 #include "TFT_EffectManager.h"
 #include "TFT_SoundManager.h"
+#include "TFT_MonsterSpawnManager.h"
 
 UTFT_GameInstance::UTFT_GameInstance()
 {
@@ -81,6 +82,11 @@ void UTFT_GameInstance::SpawnManager()
 	{
 		Params.Name = TEXT("SoundManager");
 		_soundManager = World->SpawnActor<ATFT_SoundManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
+	}
+	if (!_monsterSpawnManager || !_monsterSpawnManager->IsValidLowLevel())
+	{
+		Params.Name = TEXT("MonsterSpawnManager");
+		_monsterSpawnManager = World->SpawnActor<ATFT_MonsterSpawnManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
 	}
 }
 
