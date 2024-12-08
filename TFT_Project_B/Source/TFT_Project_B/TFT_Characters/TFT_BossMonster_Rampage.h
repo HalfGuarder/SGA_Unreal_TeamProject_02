@@ -33,9 +33,6 @@ public:
 	
 	virtual void AttackEnd();
 
-	
-	virtual void DropItem();
-
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void DeathStart() override;

@@ -286,9 +286,9 @@ void ATFT_Boss_BJ::AttackEnd()
 {
 }
 
-void ATFT_Boss_BJ::DropItem()
-{
-}
+//void ATFT_Boss_BJ::DropItem()
+//{
+//}
 
 float ATFT_Boss_BJ::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -307,6 +307,8 @@ void ATFT_Boss_BJ::DeathStart()
 
 void ATFT_Boss_BJ::BossDisable()
 {
+    Super::DropItem(MonsterType::BOSS);
+
     this->SetActorHiddenInGame(true);
 
     _animInstance_BJ->_deathEndDelegate.RemoveAll(this);

@@ -56,9 +56,14 @@ void ATFT_Item::OnMyCharacterOverlap(UPrimitiveComponent* OverlappedComponent, A
 	{
 		UE_LOG(LogTemp, Log, TEXT("Item Name : %s, Attack : %d"), *_Name, _AttackPower);
 
-		if(_ItemType == "Equipment") MyPlayer->_invenCom->SetWeapon(this);
+		if(_ItemType == "Equipment") 
+			MyPlayer->_invenCom->SetWeapon(this);
+		else//else if(_ItemType == "Bullet") 
+			MyPlayer->AddItemPlayer(this);
+		
 
-		if(_ItemType == "Bullet") MyPlayer->AddItemPlayer(this);
+		
+		
 	}
 }
 
@@ -127,6 +132,7 @@ void ATFT_Item::SetItemPos(FVector pos, FRotator rot)
 	SetActorLocation(pos);
 	SetActorRotation(rot);
 }
+
 
 void ATFT_Item::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {

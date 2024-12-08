@@ -101,6 +101,7 @@ public:
 
 	void SetItemid(int32 num) { _Itemid = num;  LoadItemData(); }
 
+
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif

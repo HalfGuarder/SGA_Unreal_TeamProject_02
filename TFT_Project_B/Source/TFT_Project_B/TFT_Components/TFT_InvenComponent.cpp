@@ -12,12 +12,24 @@ UTFT_InvenComponent::UTFT_InvenComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	_items.SetNum(_inventoryMaxSize);
+
+	// Monster
+	static ConstructorHelpers::FClassFinder<ATFT_Item> item
+	(TEXT("/Script/CoreUObject.Class'/Script/TFT_Project_B.TFT_Item'"));
+	if (item.Succeeded())
+	{
+		_itemClass = item.Class;
+	}
+	//_monsterItems.SetNum(10);
 }
 
 void UTFT_InvenComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*SetMonsterItem(100);
+	SetMonsterItem(101);
+	SetMonsterItem(102);*/
 }
 
 void UTFT_InvenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -39,6 +51,16 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 	{
 		AddPlayerBullet(item->GetItemSpace());
 		item->Disable();
+	}
+	else if (item->GetItemType() == "Buff")
+	{
+		item->Disable();
+		_BuffGetDelegate.Broadcast();
+	}
+	else if (item->GetItemType() == "RendomBox")
+	{
+		item->Disable();
+		_RandomBoxGetDelegate.Broadcast();
 	}
 	else
 	{
@@ -158,7 +180,7 @@ bool UTFT_InvenComponent::UseBullet()
 {
 	if (_curBullet <= 0)
 	{
-		UE_LOG(LogTemp, Log, TEXT("no bullets"));
+		//UE_LOG(LogTemp, Log, TEXT("no bullets"));
 		return false;
 	}
 	else
@@ -195,6 +217,73 @@ void UTFT_InvenComponent::ReLoadBullet()
 void UTFT_InvenComponent::SetcurBullet()
 {
 	_BulletEvent.Broadcast(_curBullet, _Bullet);
+}
+
+void UTFT_InvenComponent::SetMonsterItem(int32 lineNum)
+{
+	ATFT_Item* NewItem = GetWorld()->SpawnActor<ATFT_Item>(_itemClass, FVector::ZeroVector, FRotator::ZeroRotator);
+
+	if (NewItem)
+	{
+		NewItem->SetItemid(lineNum);
+
+		_MonsterDropItem = NewItem;
+		NewItem->Disable();
+		/*for (int32 i = 0; i < 10; ++i)
+		{
+			if (_monsterItems.IsValidIndex(i) && _monsterItems[i] == nullptr)
+			{
+				_monsterItems[i] = NewItem;
+				NewItem->Disable();
+				return;
+			}
+		}*/
+	}
+
+}
+
+void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
+{
+	float randFloat = FMath::FRandRange(0, PI * 2.0f);
+
+	float X = cosf(randFloat) * 300.0f;
+	float Y = sinf(randFloat) * 300.0f;
+	FVector itemPos = pos + FVector(X, Y, 0.0f);
+
+	int32 dropProbability = FMath::RandRange(0, 99);
+	switch (type)
+	{
+	case MonsterType::NONE:
+		break;
+	case MonsterType::Normal:
+	{
+		int32 NormalDropItemIndex = FMath::RandRange(100, 101);
+
+		SetMonsterItem(NormalDropItemIndex);
+
+		_MonsterDropItem->SetItemPos(pos);
+
+		//if (dropProbability < 29) // 30%
+		//{
+		//	_monsterItems[NormalDropItemIndex]->SetItemPos(itemPos);
+		//}
+
+	}
+		break;
+	case MonsterType::BOSS:
+	{
+		int32 BossDropItemIndex = FMath::RandRange(100, 102);
+
+		SetMonsterItem(BossDropItemIndex);
+
+		_MonsterDropItem->SetItemPos(pos);
+
+		//_monsterItems[BossDropItemIndex]->SetItemPos(itemPos);
+	}
+		break;
+	default:
+		break;
+	}
 }
 
 void UTFT_InvenComponent::ChangeWeapon()

@@ -241,10 +241,6 @@ void ATFT_BossMonster_Rampage::AttackEnd()
 {
 }
 
-void ATFT_BossMonster_Rampage::DropItem()
-{
-}
-
 float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
     float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
@@ -288,6 +284,8 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 
 void ATFT_BossMonster_Rampage::BossDisable()
 {
+    Super::DropItem(MonsterType::Normal);
+
     this->SetActorHiddenInGame(true);
 
     _animInstance_Boss->_deathEndDelegate.RemoveAll(this);

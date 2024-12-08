@@ -8,6 +8,7 @@
 
 ATFT_Monster::ATFT_Monster()
 {
+	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
 	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("MeshComponent"));
 }
 
@@ -29,8 +30,14 @@ void ATFT_Monster::AttackEnd()
 {
 }
 
-void ATFT_Monster::DropItem()
+void ATFT_Monster::DropItem(MonsterType type)
 {
+	if (IsValid(this)) // ¶Ç´Â IsValid(GetWorld())
+	{
+		FVector monsterPos = GetActorLocation();
+		_invenCom->DropMonsterItem(monsterPos, type);
+	}
+	//_invenCom->DropMonsterItem(monsterPos);
 }
 
 float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
