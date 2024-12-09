@@ -185,23 +185,23 @@ void ATFT_NormalMonster_Rampage::Attack_AI()
 {
     if (!_isAttacking && _animInstance_Boss != nullptr)
     {
-        // ´Ù¸¥ ¸ùÅ¸ÁÖ°¡ ½ÇÇà ÁßÀÌÁö ¾ÊÀ» ¶§¸¸ ½ÇÇà
+        // ï¿½Ù¸ï¿½ ï¿½ï¿½Å¸ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage))
         {
-            // ÇöÀç À§Ä¡¸¦ Àá±Ý Ã³¸®
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
             LockedLocation = GetActorLocation();
 
-            // ÀÏ¹Ý °ø°Ý ¸ùÅ¸ÁÖ Àç»ý
+            // ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½
             _animInstance_Boss->PlayAttackMontage();
 
             _isAttacking = true;
 
-            // °ø°Ý ¼½¼Ç ¼øÈ¯ Ã³¸®
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ Ã³ï¿½ï¿½
             _curAttackIndex %= 3;
             _curAttackIndex++;
             _animInstance_Boss->JumpToSection(_curAttackIndex);
 
-            // ¸ùÅ¸ÁÖ Á¾·á ½Ã µ¿ÀÛÀ» Ã³¸®ÇÏ´Â µ¨¸®°ÔÀÌÆ® Ãß°¡
+            // ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½
             //_animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
         }
     }
