@@ -41,6 +41,8 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
+    _statCom->SetLevelAndInit(1);
+
     _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
     if (_animInstance_Grux->IsValidLowLevel())
@@ -85,7 +87,6 @@ void ATFT_BossMonster_Grux::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
 
     UIMANAGER->OpenWidget(UIType::Tutorial);
 }
@@ -260,6 +261,8 @@ void ATFT_BossMonster_Grux::DeathStart()
 
 void ATFT_BossMonster_Grux::BossDisable()
 {
+    Super::DropItem(MonsterType::Normal);
+
     this->SetActorHiddenInGame(true);
 
     _animInstance_Grux->_deathEndDelegate.RemoveAll(this);

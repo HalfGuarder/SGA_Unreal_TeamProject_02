@@ -47,13 +47,15 @@ void ATFT_NormalMonster_Rampage::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
 }
 
 void ATFT_NormalMonster_Rampage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    _statCom->SetLevelAndInit(1);
+
     _animInstance_Boss = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
     if (_animInstance_Boss->IsValidLowLevel())
     {
@@ -239,6 +241,8 @@ void ATFT_NormalMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool b
 
 void ATFT_NormalMonster_Rampage::BossDisable()
 {
+    Super::DropItem(MonsterType::Normal);
+
     this->SetActorHiddenInGame(true);
 
     _animInstance_Boss->_deathEndDelegate.RemoveAll(this);

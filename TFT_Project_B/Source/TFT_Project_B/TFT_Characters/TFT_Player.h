@@ -99,6 +99,7 @@ public:
 	void UIGold(int32 gold);
 	void ChangeEquipment(ATFT_Item* item);
 	void CloseResetEquipment();
+	void AddBuffItemPlayer(ATFT_Item* item);
 
 	void BulletHendle(int32 curBullet, int32 ALLBullet);
 	void BulletReLoadA();

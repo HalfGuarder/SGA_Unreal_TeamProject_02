@@ -39,12 +39,14 @@ void ATFT_Boss_BJ::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
 }
 
 void ATFT_Boss_BJ::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
+
+    _statCom->SetLevelAndInit(1);
+
     _animInstance_BJ = Cast<UTFT_AnimInstance_BJ>(GetMesh()->GetAnimInstance());
     if (_animInstance_BJ->IsValidLowLevel())
     {

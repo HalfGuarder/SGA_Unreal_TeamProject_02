@@ -57,8 +57,7 @@ void UTFT_StatComponent::SetHp(int32 hp)
 		_deathDelegate.Broadcast();
 		_curHp = 0;
 	}
-	if (_curHp > _maxHp)
-		_curHp = _maxHp;
+	if (_curHp > _maxHp) _curHp = _maxHp;
 
 
 	//float ratio = HpRatio();//
@@ -74,16 +73,58 @@ void UTFT_StatComponent::SetHp(int32 hp)
 	//OnHPChanged.Broadcast(HPRatio);//
 }
 
+void UTFT_StatComponent::SetBarrier(int32 barrier)
+{
+	_curBarrier = barrier;
+	if (_curBarrier < 0) _curBarrier = 0;
+	if (_curBarrier > _maxBarrier) _curBarrier = _maxBarrier;
+
+	float Bratio = BarrierRatio();
+	_PlayerBarrierChangedDelegate.Broadcast(Bratio);
+
+}
+
 int32 UTFT_StatComponent::AddCurHp(float amount)
 {
-	int32 beforeHp = _curHp;
+	int32 remainB = 0;
+	if (_curBarrier > 0 && (amount < 0)) // 베리어가 1이라도 있고 데미지일때만
+	{
+		int32 b = AddCurBarrier(amount);
+		
+		if (b == -7249)
+		{
+			remainB = _curBarrier;
+			_curBarrier = 0;
+			_CurBarrierText.Broadcast(_curBarrier);
+			SetBarrier(_curBarrier);
+		}
+		else return 0;
+	} //베리어가 없는 상태에서의 hp로직은 그대로 유지
+
+	int32 beforeHp = _curHp + remainB;
 
 	int32 afterHp = beforeHp + amount;
+
+	if (afterHp >= _maxHp) afterHp = _maxHp;
 
 	_CurHpText.Broadcast(afterHp);
 	SetHp(afterHp);
 
 	return afterHp - beforeHp;
+}
+
+int32 UTFT_StatComponent::AddCurBarrier(float amount)
+{
+	if ((_curBarrier + amount) < 0) return -7249;
+	
+	int32 beforeB = _curBarrier;
+	int32 afterB = beforeB + amount;
+
+	_CurBarrierText.Broadcast(afterB);
+	SetBarrier(afterB);
+
+
+	return afterB - beforeB;
 }
 
 void UTFT_StatComponent::AddAttackDamage(float amount)

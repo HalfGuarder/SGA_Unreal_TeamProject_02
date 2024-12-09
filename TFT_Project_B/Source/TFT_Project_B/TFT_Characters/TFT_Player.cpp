@@ -158,7 +158,6 @@ void ATFT_Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_statCom->SetLevelAndInit(1);
 
 	bIsDialogueActive = false;
 
@@ -173,6 +172,7 @@ void ATFT_Player::BeginPlay()
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent.AddUObject(this, &ATFT_Player::ChangeEquipment);
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);*/
 		_invenCom->_BulletEvent.AddUObject(this, &ATFT_Player::BulletHendle);
+		_invenCom->_BuffGetDelegate.AddUObject(this, &ATFT_Player::AddBuffItemPlayer);
 	}
 
 	if (_shieldDashAttackSphere != nullptr)
@@ -212,6 +212,8 @@ void ATFT_Player::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	_statCom->SetLevelAndInit(1);
+
 	_animInstancePlayer = Cast<UTFT_AnimInstance_Player>(GetMesh()->GetAnimInstance());
 	if (_animInstancePlayer->IsValidLowLevel())
 	{
@@ -238,6 +240,8 @@ void ATFT_Player::PostInitializeComponents()
 			HpBar->SetHpText(_statCom->GetMaxHp());
 			_statCom->_PlayerhpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
 			_statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
+			_statCom->_PlayerBarrierChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierBarValue);
+			_statCom->_CurBarrierText.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierText);
 		}
 	}
 
@@ -249,6 +253,7 @@ void ATFT_Player::PostInitializeComponents()
 	if (_invenCom->IsValidLowLevel())
 	{
 		_invenCom->_pairWeaponUIDelegate.AddUObject(this, &ATFT_Player::PairWeaponUI);
+		//_invenCom->_BuffGetDelegate.AddUObject(this, )
 	}
 }
 
@@ -1340,6 +1345,20 @@ void ATFT_Player::ChangeEquipment(ATFT_Item* item)
 void ATFT_Player::CloseResetEquipment()
 {
 	UIMANAGER->GetEquipmentUI()->ResetChoice();
+}
+
+void ATFT_Player::AddBuffItemPlayer(ATFT_Item* item)
+{
+	if (item->GetItemRegion() == "HP")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HP heal~"));
+		_statCom->AddCurHp(item->GetItemAttackDamage());
+	}
+	else if (item->GetItemRegion() == "Barrier")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Barrier up"));
+		_statCom->AddCurBarrier(item->GetItemAttackDamage());
+	}
 }
 
 void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)

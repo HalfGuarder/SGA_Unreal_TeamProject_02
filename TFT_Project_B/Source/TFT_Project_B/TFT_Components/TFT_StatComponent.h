@@ -58,14 +58,18 @@ public:
 	int32 GetCurExp() { return _curExp; }
 	int32 GetMaxExp() { return _maxExp; }
 	int32 GetAttackDamage() { return _attackDamage; }
+	int32 GetCurBarrier() { return _curBarrier; }
 	float HpRatio() { return _curHp / (float)_maxHp; }
 	float ExpRatio() { return _curExp / (float)_maxExp; }
 	float BossHPRatio() { return (_curHp / (float)_maxHp) / 2; }
+	float BarrierRatio() { return _curBarrier / (float)_maxBarrier; }
 
 	void SetLevelAndInit(int32 level);
 	void SetHp(int32 hp);
+	void SetBarrier(int32 barrier);
 
 	int32 AddCurHp(float amount);
+	int32 AddCurBarrier(float amount);
 	void AddAttackDamage(float amount);
 	void AddMaxHp(int32 amount);
 
@@ -80,7 +84,8 @@ public:
 	DeathDelegate _deathDelegate;
 	ExpChanged _expChangedDelegate;
 	LevelUp _levelUpDelegate;
-	FOnHPChangedDelegate OnHPChanged;
+	CurHpText _CurBarrierText;
+	HpChanged _PlayerBarrierChangedDelegate;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
@@ -90,7 +95,7 @@ protected:
 	int32 _maxLevel = 10;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	int32 _maxHp = 100;
+	int32 _maxHp = 10;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 	int32 _curHp = _maxHp;
@@ -112,6 +117,11 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 	int32 _defense = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
+	int32 _curBarrier = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
+	int32 _maxBarrier = 100;
 
 private:
 	int32 AddsItem_HP = 0;

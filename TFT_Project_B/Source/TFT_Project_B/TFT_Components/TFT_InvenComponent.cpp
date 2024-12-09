@@ -54,13 +54,14 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 	}
 	else if (item->GetItemType() == "Buff")
 	{
+		_BuffGetDelegate.Broadcast(item);
 		item->Disable();
-		_BuffGetDelegate.Broadcast();
 	}
 	else if (item->GetItemType() == "RendomBox")
 	{
+		UE_LOG(LogTemp, Error, TEXT("In development"));
+		_RandomBoxGetDelegate.Broadcast(item);
 		item->Disable();
-		_RandomBoxGetDelegate.Broadcast();
 	}
 	else
 	{
@@ -228,28 +229,13 @@ void UTFT_InvenComponent::SetMonsterItem(int32 lineNum)
 
 		_MonsterDropItem = NewItem;
 		NewItem->Disable();
-		/*for (int32 i = 0; i < 10; ++i)
-		{
-			if (_monsterItems.IsValidIndex(i) && _monsterItems[i] == nullptr)
-			{
-				_monsterItems[i] = NewItem;
-				NewItem->Disable();
-				return;
-			}
-		}*/
 	}
 
 }
 
 void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 {
-	float randFloat = FMath::FRandRange(0, PI * 2.0f);
-
-	float X = cosf(randFloat) * 300.0f;
-	float Y = sinf(randFloat) * 300.0f;
-	FVector itemPos = pos + FVector(X, Y, 0.0f);
-
-	int32 dropProbability = FMath::RandRange(0, 99);
+	int32 dropProbability = FMath::RandRange(0, 99);	
 	switch (type)
 	{
 	case MonsterType::NONE:
@@ -258,14 +244,12 @@ void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 	{
 		int32 NormalDropItemIndex = FMath::RandRange(100, 101);
 
-		SetMonsterItem(NormalDropItemIndex);
+		if (dropProbability <= 29) // 30%
+		{
+			SetMonsterItem(NormalDropItemIndex);
 
-		_MonsterDropItem->SetItemPos(pos);
-
-		//if (dropProbability < 29) // 30%
-		//{
-		//	_monsterItems[NormalDropItemIndex]->SetItemPos(itemPos);
-		//}
+			_MonsterDropItem->SetItemPos(pos);
+		}
 
 	}
 		break;
@@ -276,8 +260,6 @@ void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 		SetMonsterItem(BossDropItemIndex);
 
 		_MonsterDropItem->SetItemPos(pos);
-
-		//_monsterItems[BossDropItemIndex]->SetItemPos(itemPos);
 	}
 		break;
 	default:

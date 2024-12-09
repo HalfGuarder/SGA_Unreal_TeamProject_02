@@ -13,6 +13,7 @@ class UTFT_InvenWidget;
 DECLARE_MULTICAST_DELEGATE_TwoParams(ItemAdded, ATFT_Item*, int itemIndex)
 DECLARE_MULTICAST_DELEGATE_TwoParams(BulletEvent, int32 cur, int32 max)
 DECLARE_MULTICAST_DELEGATE_OneParam(InvenGold, int gold)
+DECLARE_MULTICAST_DELEGATE_OneParam(ItemEvent, ATFT_Item*)
 DECLARE_MULTICAST_DELEGATE(InvenEvent);
 
 UENUM(BlueprintType)
@@ -88,8 +89,8 @@ public:
 	InvenGold _GoldChangeEvnet;
 	BulletEvent _BulletEvent;
 
-	InvenEvent _BuffGetDelegate;
-	InvenEvent _RandomBoxGetDelegate;
+	ItemEvent _BuffGetDelegate;
+	ItemEvent _RandomBoxGetDelegate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	ATFT_Item* _currentWeapon;
@@ -97,8 +98,6 @@ public:
 	ATFT_Item* _spareWeapon;
 
 private:
-	//TArray<ATFT_Item*> _monsterItems;
-
 	UPROPERTY()
 	TSubclassOf<ATFT_Item> _itemClass;
 

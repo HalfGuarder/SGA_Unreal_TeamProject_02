@@ -49,7 +49,6 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
     PlayerController = GetWorld()->GetFirstPlayerController();
 }
 
@@ -57,6 +56,8 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
+    _statCom->SetLevelAndInit(1);
+
     if (HpBarWidgetClass)
     {
         HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
@@ -272,7 +273,7 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 
 void ATFT_BossMonster_Rampage::BossDisable()
 {
-    Super::DropItem(MonsterType::Normal);
+    Super::DropItem(MonsterType::BOSS);
 
     this->SetActorHiddenInGame(true);
 

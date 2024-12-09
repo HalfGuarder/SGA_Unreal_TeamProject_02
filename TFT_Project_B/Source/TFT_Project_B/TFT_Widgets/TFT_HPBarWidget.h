@@ -23,16 +23,18 @@ public:
 	virtual void NativeConstruct() override;
 
 	void SetHpBarValue(float ratio);
-	void SetMpBarValue(float ratio);
+	void SetBarrierBarValue(float ratio);
 	
 	void SetProfileImage(ProfileType num);
 	void SetHpText(int32 maxHp);
 	void CurHpText(int32 curHp);
+
+	void SetBarrierText(int32 Barrier);
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* BP_HpBar;
-	//UPROPERTY(meta = (BindWidget))
-	//class UProgressBar* BP_MpBar;
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* BP_BarrierBar;	
 
 
 	UPROPERTY(meta = (BindWidget))
@@ -41,11 +43,16 @@ private:
 	UTextBlock* MaxHp_Text;
 
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CurBarrierText;
+
+
+	UPROPERTY(meta = (BindWidget))
 	class UImage* profile;
 
 	class UTexture2D* profile_empty;
 	UTexture2D* profile_player;
 	UTexture2D* profile_boss1;
 	UTexture2D* profile_boss2;
+	FText _nullText = FText::FromString("");
 
 };
