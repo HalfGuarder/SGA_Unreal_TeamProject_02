@@ -7,6 +7,7 @@
 #include "TFT_MonsterSpawnManager.generated.h"
 
 class ATFT_BossMonster_Grux;
+class ATFT_BossMonster_Rampage;
 
 UCLASS()
 class TFT_PROJECT_B_API ATFT_MonsterSpawnManager : public AActor
@@ -22,21 +23,117 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	void SpawnMonster(TObjectPtr<USkeletalMesh> mesh);
+private:
+	template <typename MonsterType>
+	void ConstructMonsterSubclass(TSubclassOf<MonsterType> &subclass, FString path);
+
+	void ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &mesh, FString path);
+
+	template <typename MonsterAnim>
+	void ConstructMonsterAnimInst(TSubclassOf<MonsterAnim>& subclass, FString path);
+
+	template <typename MonsterType>
+	void CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num);
+
+	// void CreateMonster(TSubclassOf<ATFT_BossMonster_Grux> subclass, TArray<ATFT_BossMonster_Grux*> mArray, int32 num);
+
+	template <typename MonsterType, typename MonsterAnim>
+	void SpawnMonster(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh);
+
+	template <typename MonsterType, typename MonsterAnim>
+	void SetSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh, FTimerHandle timerhandle, FTimerDelegate timerDlgt, float inRate, bool bLoop);
 
 private:
+	// Grux_Normal
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<ATFT_BossMonster_Grux> _monsterClass;
+	TSubclassOf<ATFT_BossMonster_Grux> _gruxClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class UTFT_AnimInstance_Grux> _monsterAnimClass;
+	TSubclassOf<class UTFT_AnimInstance_Grux> _gruxAnimClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	TArray<ATFT_BossMonster_Grux*> _monsters;
+	TObjectPtr<USkeletalMesh> _gruxMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _monsterMesh;
+	TArray<ATFT_BossMonster_Grux*> _gruxArray;
 
-	float _spawnTimer = 0.0f;
-	
+	// Rampage_Boss
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ATFT_BossMonster_Rampage> _rampageBossClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UTFT_AnimInstance_Rampage> _rampageBossAnimClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _rampageBossMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
+	TArray<ATFT_BossMonster_Rampage*> _rampageBossArray;
+
+	FTimerHandle _gruxSpawnTimerHandle;
+	FTimerDelegate _gruxSpawnTimerDelegate;
+
+	FTimerHandle _rampageBossSpawnTimerHandle;
+	FTimerDelegate _rampageBossSpawnTimerDelegate;
 };
+
+template<typename MonsterType>
+inline void ATFT_MonsterSpawnManager::ConstructMonsterSubclass(TSubclassOf<MonsterType> &subclass, FString path)
+{
+	ConstructorHelpers::FClassFinder<MonsterType> mClass
+	(*path);
+	if (mClass.Succeeded())
+	{
+		subclass = mClass.Class;
+	}
+}
+
+template<typename MonsterAnim>
+inline void ATFT_MonsterSpawnManager::ConstructMonsterAnimInst(TSubclassOf<MonsterAnim>& subclass, FString path)
+{
+	ConstructorHelpers::FClassFinder<MonsterAnim> animClass
+	(*path);
+	if (animClass.Succeeded())
+	{
+		subclass = animClass.Class;
+	}
+}
+
+template<typename MonsterType>
+inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num)
+{
+	for (int32 i = 0; i < num; i++)
+	{
+		auto actor = GetWorld()->SpawnActor(subclass);
+		
+		MonsterType* monster = Cast<MonsterType>(actor);
+
+		mArray.Add(monster);
+		monster->DeActive();
+	}
+}
+
+template<typename MonsterType, typename MonsterAnim>
+inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh)
+{
+	for (auto monster : mArray)
+	{
+		if (monster->bIsSpawned) continue;
+
+		monster->ChangeMesh(mesh);
+		monster->GetMesh()->SetAnimInstanceClass(anim);
+		monster->SetAnimInstanceBind();
+		monster->Active();
+
+		return;
+	}
+}
+
+template<typename MonsterType, typename MonsterAnim>
+inline void ATFT_MonsterSpawnManager::SetSpawnTimer
+(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh, FTimerHandle timerhandle, FTimerDelegate timerDlgt, float inRate, bool bLoop)
+{
+	timerDlgt.BindLambda([this, &mArray, anim, &mesh]()->void {SpawnMonster(mArray, anim, mesh); });
+
+	GetWorldTimerManager().SetTimer(timerhandle, timerDlgt, inRate, bLoop);
+}

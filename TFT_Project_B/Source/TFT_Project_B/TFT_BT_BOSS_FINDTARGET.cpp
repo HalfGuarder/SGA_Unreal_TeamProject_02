@@ -22,16 +22,7 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
-    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
-
-    if (player)
-    {
-        OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
-
-        return;
-    }
-
-    auto currentPawn = OwnerComp.GetAIOwner()->GetPawn();
+    /*auto currentPawn = OwnerComp.GetAIOwner()->GetPawn();
     if (currentPawn == nullptr)
         return;
 
@@ -77,5 +68,5 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
     else
     {
         OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
-    }
+    }*/
 }

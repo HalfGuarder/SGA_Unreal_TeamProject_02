@@ -22,7 +22,7 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 {
     _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
-	SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Elemental/Meshes/Rampage_Elemental.Rampage_Elemental'");
+	// SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Elemental/Meshes/Rampage_Elemental.Rampage_Elemental'");
 
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
@@ -56,19 +56,7 @@ void ATFT_BossMonster_Rampage::BeginPlay()
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	_animInstance_Boss = Cast<UTFT_AnimInstance_Rampage>(GetMesh()->GetAnimInstance());
-    if (_animInstance_Boss->IsValidLowLevel())
-    {
-        _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_Boss->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
-        _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
-        _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
-        _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
-        _animInstance_Boss->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
-        _animInstance_Boss->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
-    }
-
-
+	
     if (HpBarWidgetClass)
     {
         HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
@@ -407,4 +395,31 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
 
     DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
 
+}
+
+void ATFT_BossMonster_Rampage::Active()
+{
+    Super::Active();
+}
+
+void ATFT_BossMonster_Rampage::DeActive()
+{
+    Super::DeActive();
+}
+
+void ATFT_BossMonster_Rampage::SetAnimInstanceBind()
+{
+    Super::SetAnimInstanceBind();
+
+    _animInstance_Boss = Cast<UTFT_AnimInstance_Rampage>(GetMesh()->GetAnimInstance());
+    if (_animInstance_Boss->IsValidLowLevel())
+    {
+        _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+        _animInstance_Boss->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
+        _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
+        _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
+        _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
+        _animInstance_Boss->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
+        _animInstance_Boss->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
+    }
 }

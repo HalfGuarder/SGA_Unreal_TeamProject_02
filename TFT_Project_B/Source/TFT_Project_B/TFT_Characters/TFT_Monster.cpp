@@ -6,6 +6,10 @@
 
 #include "Engine/DamageEvents.h"
 
+#include "AIController.h"
+#include "TFT_Boss_AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+
 ATFT_Monster::ATFT_Monster()
 {
 	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
@@ -55,4 +59,41 @@ void ATFT_Monster::TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, 
 void ATFT_Monster::ChangeMesh(TObjectPtr<USkeletalMesh> mesh)
 {
 	_meshCom->ChangeMesh(mesh);
+}
+
+void ATFT_Monster::Active()
+{
+    bIsSpawned = true;
+
+    SetActorHiddenInGame(false);
+    SetActorEnableCollision(true);
+
+    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+    if (player && controller)
+    {
+        controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
+
+        return;
+    }
+}
+
+void ATFT_Monster::DeActive()
+{
+    bIsSpawned = false;
+
+    SetActorHiddenInGame(true);
+    SetActorEnableCollision(false);
+
+    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+
+    if (controller)
+    {
+        controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Tartget")), nullptr);
+    }
+}
+
+void ATFT_Monster::SetAnimInstanceBind()
+{
 }

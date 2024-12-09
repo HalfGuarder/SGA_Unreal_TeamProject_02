@@ -51,6 +51,12 @@ public:
 	UFUNCTION()
 	void ChainExplosionHit(); // Chain Explosion 공격
 
+	void Active() override;
+
+	void DeActive() override;
+
+	void SetAnimInstanceBind() override;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_Rampage* _animInstance_Boss;

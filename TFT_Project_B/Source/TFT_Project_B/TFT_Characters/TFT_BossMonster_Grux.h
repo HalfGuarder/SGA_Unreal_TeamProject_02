@@ -42,7 +42,11 @@ public:
 
 	void EndState() override;
 
-	void SetAnimInstanceBind();
+	void SetAnimInstanceBind() override;
+
+	void Active() override;
+
+	void DeActive() override;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))

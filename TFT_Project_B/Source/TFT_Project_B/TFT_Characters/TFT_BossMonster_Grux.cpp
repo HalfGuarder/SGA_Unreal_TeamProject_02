@@ -342,6 +342,8 @@ void ATFT_BossMonster_Grux::EndState()
 
 void ATFT_BossMonster_Grux::SetAnimInstanceBind()
 {
+    Super::SetAnimInstanceBind();
+    
     _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
     if (_animInstance_Grux->IsValidLowLevel())
@@ -354,4 +356,14 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
         _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
         _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
     }
+}
+
+void ATFT_BossMonster_Grux::Active()
+{
+    Super::Active();
+}
+
+void ATFT_BossMonster_Grux::DeActive()
+{
+    Super::DeActive();
 }
