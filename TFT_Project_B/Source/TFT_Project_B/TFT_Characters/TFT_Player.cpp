@@ -51,11 +51,15 @@
 #include "TFT_SkillUI.h"
 #include "TFT_Menu.h"
 
+#include "TFT_PlayerSkillComponent.h"
+
 ATFT_Player::ATFT_Player()
 {
 	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
 	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
+
+	_skillCom = CreateDefaultSubobject<UTFT_PlayerSkillComponent>(TEXT("Skill_Com"));
 
 	SetMesh("/Script/Engine.SkeletalMesh'/Game/Blueprints/Characters/Player/Mesh/TFT_SK_SciFi_Soldier_Female_Skin1.TFT_SK_SciFi_Soldier_Female_Skin1'");
 
@@ -977,7 +981,9 @@ void ATFT_Player::AttackStart()
 
 void ATFT_Player::AttackHit()
 {
-	FHitResult hitResult;
+	_skillCom->AttackHit(_statCom->GetAttackDamage(), GetController());
+
+	/*FHitResult hitResult;
 	FCollisionQueryParams params(NAME_None, false, this);
 
 	float attackRange = 100.0f;
@@ -1006,7 +1012,7 @@ void ATFT_Player::AttackHit()
 		float actualDamage = hitResult.GetActor()->TakeDamage(_statCom->GetAttackDamage(), damageEvent, GetController(), this);
 		_hitPoint = hitResult.ImpactPoint;
 
-		/*if (actualDamage > 0)
+		if (actualDamage > 0)
 		{
 			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
 			if (target != nullptr && !target->bIsOnState)
@@ -1023,10 +1029,10 @@ void ATFT_Player::AttackHit()
 					break;
 				}
 			}
-		}*/
+		}
 	}
 
-	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);*/
 }
 
 void ATFT_Player::Q_SkillHit()
@@ -1203,8 +1209,10 @@ void ATFT_Player::Fire()
 			FVector fireLocation = GetActorLocation() + start;
 			FRotator fireRotation = GetControlRotation();
 
-			auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
-			bullet->FireInDirection(_projectileDir);
+			/*auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, start, fireRotation);
+			bullet->FireInDirection(_projectileDir);*/
+
+			_skillCom->Fire(start, fireRotation, _projectileDir);
 
 			SOUNDMANAGER->PlaySound(TEXT("P_Rifle_Fire"), start, fireRotation);
 		}

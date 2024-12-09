@@ -144,7 +144,7 @@ void ATFT_Turret::Fire()
 		FRotator fireRotation = FRotator(_topMesh->GetRelativeRotation().Pitch - 5.0f, _midMesh->GetRelativeRotation().Yaw, 0.0f);
 
 		auto bullet = GetWorld()->SpawnActor<ATFT_Projectile>(_projectileClass, fireLocation, fireRotation);
-		bullet->FireInDirection(direction);
+		bullet->FireInDirection(direction, 50.0f);
 	}
 }
 

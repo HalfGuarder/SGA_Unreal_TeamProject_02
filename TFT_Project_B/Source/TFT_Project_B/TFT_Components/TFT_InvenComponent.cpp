@@ -185,7 +185,6 @@ bool UTFT_InvenComponent::UseBullet()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("BANG~"));
 		_curBullet--;
 		_BulletEvent.Broadcast(_curBullet, _Bullet);
 		return true;

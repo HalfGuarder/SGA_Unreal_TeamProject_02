@@ -255,7 +255,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	class USphereComponent* _shieldDashAttackSphere;
-	
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Skill, meta = (AllowPrivateAccess = "true"))
+	class UTFT_PlayerSkillComponent* _skillCom;
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Zoom, meta = (AllowPrivateAccess = "true"))
 	bool bIsZoom = false;

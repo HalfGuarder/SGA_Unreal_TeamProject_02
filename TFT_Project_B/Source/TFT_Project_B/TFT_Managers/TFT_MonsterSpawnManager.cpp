@@ -26,19 +26,6 @@ ATFT_MonsterSpawnManager::ATFT_MonsterSpawnManager()
 
 }
 
-//void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<ATFT_BossMonster_Grux> subclass, TArray<ATFT_BossMonster_Grux*> mArray, int32 num)
-//{
-//	for (int32 i = 0; i < num; i++)
-//	{
-//		auto actor = GetWorld()->SpawnActor(subclass);
-//
-//		ATFT_BossMonster_Grux* monster = Cast<ATFT_BossMonster_Grux>(actor);
-//
-//		mArray.Add(monster);
-//		monster->DeActive();
-//	}
-//}
-
 void ATFT_MonsterSpawnManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -53,15 +40,6 @@ void ATFT_MonsterSpawnManager::BeginPlay()
 void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	/*_gruxSpawnTimer += DeltaTime;
-
-	if (_gruxSpawnTimer >= 3.0f)
-	{
-		SpawnMonster(_gruxArray, _gruxAnimClass, _gruxMesh);
-		_gruxSpawnTimer = 0;
-	}*/
-
 }
 
 void ATFT_MonsterSpawnManager::ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &mesh, FString path)

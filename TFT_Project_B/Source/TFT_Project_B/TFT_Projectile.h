@@ -20,7 +20,12 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	void FireInDirection(const FVector& ShootDirection);
+	void FireInDirection(const FVector& ShootDirection, float penetrationRate);
+
+	void Active();
+	void DeActive();
+
+	FTimerHandle _lifeTimerHandle;
 
 private:
 	UFUNCTION()
@@ -38,4 +43,5 @@ private:
 
 public:
 	bool bIsFired = false;
+	float _penetrationRate = 0.0f;
 };

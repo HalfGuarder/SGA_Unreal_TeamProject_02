@@ -35,8 +35,6 @@ private:
 	template <typename MonsterType>
 	void CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num);
 
-	// void CreateMonster(TSubclassOf<ATFT_BossMonster_Grux> subclass, TArray<ATFT_BossMonster_Grux*> mArray, int32 num);
-
 	template <typename MonsterType, typename MonsterAnim>
 	void SpawnMonster(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh);
 
@@ -57,6 +55,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_BossMonster_Grux*> _gruxArray;
 
+	FTimerHandle _gruxSpawnTimerHandle;
+	FTimerDelegate _gruxSpawnTimerDelegate;
+
 	// Rampage_Boss
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<ATFT_BossMonster_Rampage> _rampageBossClass;
@@ -69,9 +70,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_BossMonster_Rampage*> _rampageBossArray;
-
-	FTimerHandle _gruxSpawnTimerHandle;
-	FTimerDelegate _gruxSpawnTimerDelegate;
 
 	FTimerHandle _rampageBossSpawnTimerHandle;
 	FTimerDelegate _rampageBossSpawnTimerDelegate;
@@ -123,6 +121,8 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*>& mArray,
 		monster->ChangeMesh(mesh);
 		monster->GetMesh()->SetAnimInstanceClass(anim);
 		monster->SetAnimInstanceBind();
+		// temp
+		monster->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
 		monster->Active();
 
 		return;
