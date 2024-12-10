@@ -30,9 +30,15 @@ void ATFT_MonsterSpawnManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+void ATFT_MonsterSpawnManager::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
 	CreateMonster(_gruxClass, _gruxArray, 10);
 	CreateMonster(_rampageBossClass, _rampageBossArray, 2);
-	
+
 	SetSpawnTimer(_gruxArray, _gruxAnimClass, _gruxMesh, _gruxSpawnTimerHandle, _gruxSpawnTimerDelegate, 3.0f, true);
 	SetSpawnTimer(_rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, _rampageBossSpawnTimerHandle, _rampageBossSpawnTimerDelegate, 10.0f, true);
 }
