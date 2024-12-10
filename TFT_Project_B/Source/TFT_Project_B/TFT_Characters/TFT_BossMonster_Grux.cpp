@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
 
@@ -41,7 +42,7 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(1);
+    _statCom->SetLevelAndInit(2);
 
     _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
@@ -56,14 +57,14 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
         _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
     }
 
-    if (HpBarWidgetClass)
-    {
-        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-        if (HpBarWidgetInstance)
-        {
-            HpBarWidgetInstance->AddToViewport();
-        }
-    }
+    //if (HpBarWidgetClass)
+    //{
+    //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+    //    if (HpBarWidgetInstance)
+    //    {
+    //        HpBarWidgetInstance->AddToViewport();
+    //    }
+    //}
 
     if (HpBarWidgetInstance)
     {
@@ -87,6 +88,7 @@ void ATFT_BossMonster_Grux::BeginPlay()
 {
     Super::BeginPlay();
 
+    GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 
     UIMANAGER->OpenWidget(UIType::Tutorial);
 }

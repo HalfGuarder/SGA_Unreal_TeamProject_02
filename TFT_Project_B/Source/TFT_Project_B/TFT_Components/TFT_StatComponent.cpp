@@ -87,7 +87,7 @@ void UTFT_StatComponent::SetBarrier(int32 barrier)
 int32 UTFT_StatComponent::AddCurHp(float amount)
 {
 	int32 remainB = 0;
-	if (_curBarrier > 0 && (amount < 0)) // º£¸®¾î°¡ 1ÀÌ¶óµµ ÀÖ°í µ¥¹ÌÁöÀÏ¶§¸¸
+	if (_curBarrier > 0 && (amount < 0)) // ï¿½ï¿½ï¿½ï¿½ï¿½î°¡ 1ï¿½Ì¶ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ï¿½ï¿½
 	{
 		int32 b = AddCurBarrier(amount);
 		
@@ -99,7 +99,7 @@ int32 UTFT_StatComponent::AddCurHp(float amount)
 			SetBarrier(_curBarrier);
 		}
 		else return 0;
-	} //º£¸®¾î°¡ ¾ø´Â »óÅÂ¿¡¼­ÀÇ hp·ÎÁ÷Àº ±×´ë·Î À¯Áö
+	} //ï¿½ï¿½ï¿½ï¿½ï¿½î°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ hpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	int32 beforeHp = _curHp + remainB;
 

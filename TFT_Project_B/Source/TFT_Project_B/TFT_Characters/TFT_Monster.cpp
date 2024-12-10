@@ -36,7 +36,7 @@ void ATFT_Monster::AttackEnd()
 
 void ATFT_Monster::DropItem(MonsterType type)
 {
-	if (IsValid(this)) // ¶Ç´Â IsValid(GetWorld())
+	if (IsValid(this)) // ï¿½Ç´ï¿½ IsValid(GetWorld())
 	{
 		FVector monsterPos = GetActorLocation();
 		_invenCom->DropMonsterItem(monsterPos, type);

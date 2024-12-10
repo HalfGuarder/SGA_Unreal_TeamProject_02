@@ -7,6 +7,7 @@
 #include "TFT_AnimInstances/TFT_AnimInstance_NormalBJ.h"
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 #include "TFT_SoundManager.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Components/SkeletalMeshComponent.h"
 
@@ -40,7 +41,9 @@ void ATFT_NormalMonster_BJ::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
+    _statCom->SetLevelAndInit(2);
+
+    GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 }
 
 void ATFT_NormalMonster_BJ::PostInitializeComponents()
@@ -56,14 +59,14 @@ void ATFT_NormalMonster_BJ::PostInitializeComponents()
         _animInstance_BJ->_deathEndDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::BossDisable);
     }
 
-    if (HpBarWidgetClass)
-    {
-        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-        if (HpBarWidgetInstance)
-        {
-            HpBarWidgetInstance->AddToViewport();
-        }
-    }
+    //if (HpBarWidgetClass)
+    //{
+    //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+    //    if (HpBarWidgetInstance)
+    //    {
+    //        HpBarWidgetInstance->AddToViewport();
+    //    }
+    //}
 
     if (HpBarWidgetInstance)
     {

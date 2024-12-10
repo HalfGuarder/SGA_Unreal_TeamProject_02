@@ -6,6 +6,10 @@
 #include "TFT_Characters/TFT_Player.h"
 #include "../TFT_Components/TFT_StatComponent.h"
 #include "TFT_AnimInstances/TFT_AnimInstance_NormalRampage.h"
+#include "TFT_Characters/TFT_Creature.h"
+#include "TFT_Characters/TFT_Monster.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 #include "Engine/DamageEvents.h"
 
@@ -30,17 +34,17 @@ ATFT_NormalMonster_Rampage::ATFT_NormalMonster_Rampage()
     }
 
 
-    armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
-    armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
+    //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
+    //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
 
-    armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
-    armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
+    //armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
+    //armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
 
-    armcapsule_R->SetCapsuleRadius(10.f);
-    armcapsule_R->SetCapsuleHalfHeight(30.f);
+    //armcapsule_R->SetCapsuleRadius(10.f);
+    //armcapsule_R->SetCapsuleHalfHeight(30.f);
 
-    armcapsule_L->SetCapsuleRadius(10.f);
-    armcapsule_L->SetCapsuleHalfHeight(30.f);
+    //armcapsule_L->SetCapsuleRadius(10.f);
+    //armcapsule_L->SetCapsuleHalfHeight(30.f);
 }
 
 void ATFT_NormalMonster_Rampage::BeginPlay()
@@ -48,13 +52,15 @@ void ATFT_NormalMonster_Rampage::BeginPlay()
     Super::BeginPlay();
 
     PlayerController = GetWorld()->GetFirstPlayerController();
+
+    GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 }
 
 void ATFT_NormalMonster_Rampage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(1);
+    _statCom->SetLevelAndInit(2);
 
     _animInstance_Boss = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
     if (_animInstance_Boss->IsValidLowLevel())
@@ -67,14 +73,14 @@ void ATFT_NormalMonster_Rampage::PostInitializeComponents()
     }
 
 
-    if (HpBarWidgetClass)
-    {
-        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-        if (HpBarWidgetInstance)
-        {
-            HpBarWidgetInstance->AddToViewport();
-        }
-    }
+    //if (HpBarWidgetClass)
+    //{
+    //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
+    //    if (HpBarWidgetInstance)
+    //    {
+    //        HpBarWidgetInstance->AddToViewport();
+    //    }
+    //}
 
     if (HpBarWidgetInstance)
     {

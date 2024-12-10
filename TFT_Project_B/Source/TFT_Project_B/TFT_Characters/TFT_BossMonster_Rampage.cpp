@@ -31,17 +31,17 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
     }
 
 
-    armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
-    armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
+    //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
+    //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
 
-    armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
-    armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
+    //armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
+    //armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
 
-    armcapsule_R->SetCapsuleRadius(10.f);
-    armcapsule_R->SetCapsuleHalfHeight(30.f);
+    //armcapsule_R->SetCapsuleRadius(10.f);
+    //armcapsule_R->SetCapsuleHalfHeight(30.f);
 
-    armcapsule_L->SetCapsuleRadius(10.f);
-    armcapsule_L->SetCapsuleHalfHeight(30.f);
+    //armcapsule_L->SetCapsuleRadius(10.f);
+    //armcapsule_L->SetCapsuleHalfHeight(30.f);
 
 }
 
@@ -56,7 +56,7 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-    _statCom->SetLevelAndInit(1);
+    _statCom->SetLevelAndInit(2);
 
     if (HpBarWidgetClass)
     {
