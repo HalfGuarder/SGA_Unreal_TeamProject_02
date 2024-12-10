@@ -29,13 +29,6 @@ ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
     _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
-    /*SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonGrux/Characters/Heroes/Grux/Skins/Tier_2/Grux_Beetle_Red/Meshes/GruxBeetleRed.GruxBeetleRed'");
-
-    static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
-    if (HpBar.Succeeded())
-    {
-        HpBarWidgetClass = HpBar.Class;
-    }*/
 }
 
 void ATFT_BossMonster_Grux::PostInitializeComponents()
@@ -285,8 +278,8 @@ void ATFT_BossMonster_Grux::BossDisable()
     _animInstance_Grux->_deathEndDelegate.RemoveAll(this);
 
     PrimaryActorTick.bCanEverTick = false;
-    auto controller = GetController();
-    if (controller != nullptr) GetController()->UnPossess();
+    _controller = GetController();
+    if (_controller != nullptr) GetController()->UnPossess();
 
     if (HpBarWidgetInstance)
     {
@@ -294,9 +287,8 @@ void ATFT_BossMonster_Grux::BossDisable()
         HpBarWidgetInstance = nullptr;
     }
 
-    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+    DeActive();
     
-    player->bClearTutorial = true;
     GAMEINSTANCE->_reStartTrg = true;
 }
 
@@ -366,7 +358,7 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
     
     _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
-    if (_animInstance_Grux->IsValidLowLevel())
+    if (_animInstance_Grux->IsValidLowLevel() && !bAnimBind)
     {
         _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
         _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
@@ -375,12 +367,20 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
         _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
         _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
         _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
+
+        bAnimBind = true;
     }
 }
 
 void ATFT_BossMonster_Grux::Active()
 {
     Super::Active();
+
+    if (_controller != nullptr)
+    {
+        auto controller = Cast<ATFT_Boss_AIController>(_controller);
+        PossessedBy(controller);
+    }
 }
 
 void ATFT_BossMonster_Grux::DeActive()

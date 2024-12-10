@@ -26,6 +26,14 @@ ATFT_MonsterSpawnManager::ATFT_MonsterSpawnManager()
 
 }
 
+void ATFT_MonsterSpawnManager::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	// _gruxSpawnTimerHandle.Invalidate();
+	// _rampageBossSpawnTimerHandle.Invalidate();
+}
+
 void ATFT_MonsterSpawnManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -36,16 +44,20 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	_gruxArray.Empty();
+	_rampageBossArray.Empty();
+
 	CreateMonster(_gruxClass, _gruxArray, 10);
 	CreateMonster(_rampageBossClass, _rampageBossArray, 2);
 
-	SetSpawnTimer(_gruxArray, _gruxAnimClass, _gruxMesh, _gruxSpawnTimerHandle, _gruxSpawnTimerDelegate, 3.0f, true);
-	SetSpawnTimer(_rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, _rampageBossSpawnTimerHandle, _rampageBossSpawnTimerDelegate, 10.0f, true);
+	SetSpawnTimer(_gruxArray, _gruxAnimClass, _gruxMesh, _gruxSpawnTimerHandle, 3.0f, true);
+	SetSpawnTimer(_rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, _rampageBossSpawnTimerHandle, 10.0f, true);
 }
 
 void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void ATFT_MonsterSpawnManager::ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &mesh, FString path)

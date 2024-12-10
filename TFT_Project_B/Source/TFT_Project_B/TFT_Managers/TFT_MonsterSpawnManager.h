@@ -16,6 +16,7 @@ class TFT_PROJECT_B_API ATFT_MonsterSpawnManager : public AActor
 	
 public:	
 	ATFT_MonsterSpawnManager();
+	virtual void BeginDestroy() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,10 +39,10 @@ private:
 	void CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num);
 
 	template <typename MonsterType, typename MonsterAnim>
-	void SpawnMonster(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh);
+	void SpawnMonster(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh);
 
 	template <typename MonsterType, typename MonsterAnim>
-	void SetSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh, FTimerHandle timerhandle, FTimerDelegate timerDlgt, float inRate, bool bLoop);
+	void SetSpawnTimer(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh, FTimerHandle timerhandle, float inRate, bool bLoop);
 
 private:
 	// Grux_Normal
@@ -58,7 +59,6 @@ private:
 	TArray<ATFT_BossMonster_Grux*> _gruxArray;
 
 	FTimerHandle _gruxSpawnTimerHandle;
-	FTimerDelegate _gruxSpawnTimerDelegate;
 
 	// Rampage_Boss
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
@@ -74,7 +74,7 @@ private:
 	TArray<ATFT_BossMonster_Rampage*> _rampageBossArray;
 
 	FTimerHandle _rampageBossSpawnTimerHandle;
-	FTimerDelegate _rampageBossSpawnTimerDelegate;
+
 };
 
 template<typename MonsterType>
@@ -89,7 +89,7 @@ inline void ATFT_MonsterSpawnManager::ConstructMonsterSubclass(TSubclassOf<Monst
 }
 
 template<typename MonsterAnim>
-inline void ATFT_MonsterSpawnManager::ConstructMonsterAnimInst(TSubclassOf<MonsterAnim>& subclass, FString path)
+inline void ATFT_MonsterSpawnManager::ConstructMonsterAnimInst(TSubclassOf<MonsterAnim> &subclass, FString path)
 {
 	ConstructorHelpers::FClassFinder<MonsterAnim> animClass
 	(*path);
@@ -106,36 +106,43 @@ inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType> sub
 	{
 		auto actor = GetWorld()->SpawnActor(subclass);
 		
-		MonsterType* monster = Cast<MonsterType>(actor);
+		if (actor->IsValidLowLevel())
+		{
+			MonsterType* monster = Cast<MonsterType>(actor);
 
-		mArray.Add(monster);
-		monster->DeActive();
+			mArray.Add(monster);
+			monster->DeActive();
+		}
 	}
 }
 
 template<typename MonsterType, typename MonsterAnim>
-inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh)
+inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh)
 {
 	for (auto monster : mArray)
 	{
-		if (monster->bIsSpawned) continue;
+		if (monster->IsValidLowLevel())
+		{
+			if (monster->bIsSpawned) continue;
 
-		monster->ChangeMesh(mesh);
-		monster->GetMesh()->SetAnimInstanceClass(anim);
-		monster->SetAnimInstanceBind();
-		// temp
-		monster->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
-		monster->Active();
+			monster->ChangeMesh(mesh);
+			monster->GetMesh()->SetAnimInstanceClass(anim);
+			monster->SetAnimInstanceBind();
+			// temp
+			monster->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
+			monster->Active();
 
-		return;
+			return;
+		}
 	}
 }
 
 template<typename MonsterType, typename MonsterAnim>
 inline void ATFT_MonsterSpawnManager::SetSpawnTimer
-(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh>& mesh, FTimerHandle timerhandle, FTimerDelegate timerDlgt, float inRate, bool bLoop)
+(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh, FTimerHandle timerhandle, float inRate, bool bLoop)
 {
-	timerDlgt.BindLambda([this, &mArray, anim, &mesh]()->void {SpawnMonster(mArray, anim, mesh); });
+	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray, anim, mesh);
 
-	GetWorldTimerManager().SetTimer(timerhandle, timerDlgt, inRate, bLoop);
+	GetWorldTimerManager().SetTimer(timerhandle, dlgt, inRate, bLoop);
+	
 }

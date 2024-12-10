@@ -92,6 +92,8 @@ void ATFT_Monster::DeActive()
     {
         controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Tartget")), nullptr);
     }
+
+    _statCom->Reset();
 }
 
 void ATFT_Monster::SetAnimInstanceBind()

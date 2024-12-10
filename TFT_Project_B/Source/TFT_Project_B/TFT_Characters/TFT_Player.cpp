@@ -453,7 +453,6 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 	// if (_invenCom->_currentWeapon == nullptr) return;
-	if (bIsOnState) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -562,8 +561,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
 
-	if (bIsOnState) return;
-
 	bool isPressed = value.Get<bool>();
 	
 	if (bEquipSword)
@@ -618,8 +615,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
-
-	if (bIsOnState) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -832,7 +827,6 @@ void ATFT_Player::StartRightClick()
 {
 	if (bIsShieldDashing) return;
 	if (!_canMove) return;
-	if (bIsOnState) return;
 
 	GetCharacterMovement()->MaxWalkSpeed = defenseWalkSpeed;
 
@@ -939,7 +933,7 @@ void ATFT_Player::StateCheck()
 
 	if (curStates.IsEmpty()) return;
 
-	StopRunning();
+	/*StopRunning();
 
 	for (auto state : curStates)
 	{
@@ -963,7 +957,7 @@ void ATFT_Player::StateCheck()
 		default:
 			break;
 		}
-	}
+	}*/
 }
 
 void ATFT_Player::EndState()
