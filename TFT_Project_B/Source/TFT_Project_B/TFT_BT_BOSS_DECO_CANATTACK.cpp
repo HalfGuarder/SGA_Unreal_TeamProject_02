@@ -31,7 +31,7 @@ bool UTFT_BT_BOSS_DECO_CANATTACK::CalculateRawConditionValue(UBehaviorTreeCompon
 
 
 
-	return distance < 300.0f;
+	return distance < 400.0f;
 
 	return false;
 }

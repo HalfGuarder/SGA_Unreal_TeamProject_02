@@ -170,7 +170,7 @@ void ATFT_Boss_BJ::AttackHit_Boss()
     FCollisionQueryParams params(NAME_None, false, this);
 
     float attackRange = 500.0f;
-    float attackRadius = 100.0f;
+    float attackRadius = 300.0f;
 
     bool bResult = GetWorld()->SweepSingleByChannel(
         hitResult,
@@ -189,37 +189,49 @@ void ATFT_Boss_BJ::AttackHit_Boss()
 
     if (bResult && hitResult.GetActor()->IsValidLowLevel())
     {
-        float hpRatio = _statCom->BossHPRatio();
-        float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
+        AActor* hitActor = hitResult.GetActor();
 
-        float baseDamage = _statCom->GetAttackDamage();
-        float damage = baseDamage * damageMultiplier;
-
-        FDamageEvent damageEvent;
-        hitResult.GetActor()->TakeDamage(damage, damageEvent, GetController(), this);
-        _hitPoint = hitResult.ImpactPoint;
-        drawColor = FColor::Red;
-
-        EFFECTMANAGER->Play("N_Monster_Boss_Attack_Hit", 1, _hitPoint);
-
-
-        ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
-        if (target != nullptr)
+        // Check tags
+        if (hitActor->Tags.Contains(FName("Player")))
         {
-            switch (_curAttackIndex)
+            float hpRatio = _statCom->BossHPRatio();
+            float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
+
+            float baseDamage = _statCom->GetAttackDamage();
+            float damage = baseDamage * damageMultiplier;
+
+            FDamageEvent damageEvent;
+            hitActor->TakeDamage(damage, damageEvent, GetController(), this);
+            _hitPoint = hitResult.ImpactPoint;
+            drawColor = FColor::Red;
+
+            // Play effect
+            EFFECTMANAGER->Play("N_Monster_Boss_Attack_Hit", 1, _hitPoint);
+
+            // Apply state effects if the hit actor is a valid creature
+            ATFT_Creature* target = Cast<ATFT_Creature>(hitActor);
+            if (target != nullptr)
             {
-            case 1:
-                target->SetState(StateType::Airborne);
-                break;
-            case 2:
-                target->SetState(StateType::Stun);
-                break;
-            case 3:
-                target->SetState(StateType::Slow);
-                break;
-            default:
-                break;
+                switch (_curAttackIndex)
+                {
+                case 1:
+                    target->SetState(StateType::Airborne);
+                    break;
+                case 2:
+                    target->SetState(StateType::Stun);
+                    break;
+                case 3:
+                    target->SetState(StateType::Slow);
+                    break;
+                default:
+                    break;
+                }
             }
+        }
+        else if (hitActor->Tags.Contains(FName("Monster")))
+        {
+            // Ignore damage to monsters
+            UE_LOG(LogTemp, Warning, TEXT("Ignored attack damage on another monster: %s"), *hitActor->GetName());
         }
     }
 
