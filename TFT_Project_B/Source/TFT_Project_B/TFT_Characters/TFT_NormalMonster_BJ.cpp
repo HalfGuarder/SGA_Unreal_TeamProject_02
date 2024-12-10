@@ -120,14 +120,14 @@ void ATFT_NormalMonster_BJ::AttackStart()
 
 void ATFT_NormalMonster_BJ::AttackHit_Boss()
 {
-    FHitResult hitResult;
+    TArray<FHitResult> hitResults;
     FCollisionQueryParams params(NAME_None, false, this);
 
     float attackRange = 500.0f;
     float attackRadius = 400.0f;
 
-    bool bResult = GetWorld()->SweepSingleByChannel(
-        hitResult,
+    bool bResult = GetWorld()->SweepMultiByChannel(
+        hitResults,
         GetActorLocation(),
         GetActorLocation() + GetActorForwardVector() * attackRange,
         FQuat::Identity,
@@ -141,13 +141,24 @@ void ATFT_NormalMonster_BJ::AttackHit_Boss()
 
     FColor drawColor = FColor::Green;
 
-    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    if (bResult)
     {
-        AActor* hitActor = hitResult.GetActor();
+        AActor* targetActor = nullptr;
 
-        // "Player" 태그를 가진 액터만 공격 처리
-        if (hitActor->Tags.Contains(FName("Player")))
+        // 필터링: "Player" 태그를 가진 액터만 처리
+        for (const FHitResult& hitResult : hitResults)
         {
+            AActor* hitActor = hitResult.GetActor();
+            if (hitActor && hitActor->Tags.Contains(FName("Player")))
+            {
+                targetActor = hitActor; // "Player" 태그를 가진 액터 발견
+                break; // 가장 가까운 "Player"만 타겟으로 처리
+            }
+        }
+
+        if (targetActor)
+        {
+            // 데미지 처리
             float hpRatio = _statCom->BossHPRatio();
             float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
 
@@ -155,35 +166,29 @@ void ATFT_NormalMonster_BJ::AttackHit_Boss()
             float damage = baseDamage * damageMultiplier;
 
             FDamageEvent damageEvent;
-            hitActor->TakeDamage(damage, damageEvent, GetController(), this);
-            _hitPoint = hitResult.ImpactPoint;
+            targetActor->TakeDamage(damage, damageEvent, GetController(), this);
+            _hitPoint = targetActor->GetActorLocation();
             drawColor = FColor::Red;
 
-            EFFECTMANAGER->Play("N_Monster_Boss_Attack_Hit", 1, _hitPoint);
-
-            ATFT_Creature* target = Cast<ATFT_Creature>(hitActor);
-            if (target != nullptr)
+            // 상태 효과 적용
+            ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
+            if (targetCreature != nullptr)
             {
                 switch (_curAttackIndex)
                 {
                 case 1:
-                    target->SetState(StateType::Airborne);
+                    targetCreature->SetState(StateType::Airborne);
                     break;
                 case 2:
-                    target->SetState(StateType::Stun);
+                    targetCreature->SetState(StateType::Stun);
                     break;
                 case 3:
-                    target->SetState(StateType::Slow);
+                    targetCreature->SetState(StateType::Slow);
                     break;
                 default:
                     break;
                 }
             }
-        }
-        // "Monster" 태그를 가진 액터는 데미지를 무시
-        else if (hitActor->Tags.Contains(FName("Monster")))
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Ignored attack damage on another monster: %s"), *hitActor->GetName());
         }
     }
 

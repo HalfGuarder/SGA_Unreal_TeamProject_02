@@ -118,14 +118,14 @@ void ATFT_BossMonster_Rampage::SetMesh(FString path)
 
 void ATFT_BossMonster_Rampage::AttackHit_Boss()
 {
-    FHitResult hitResult;
+    TArray<FHitResult> hitResults;
     FCollisionQueryParams params(NAME_None, false, this);
 
     float attackRange = 500.0f;
     float attackRadius = 400.0f;
 
-    bool bResult = GetWorld()->SweepSingleByChannel(
-        hitResult,
+    bool bResult = GetWorld()->SweepMultiByChannel(
+        hitResults,
         GetActorLocation(),
         GetActorLocation() + GetActorForwardVector() * attackRange,
         FQuat::Identity,
@@ -139,31 +139,57 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
 
     FColor drawColor = FColor::Green;
 
-    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    if (bResult)
     {
-        AActor* hitActor = hitResult.GetActor();
+        AActor* targetActor = nullptr;
 
-        // 태그 확인: "Player"이면 데미지를 입힘, "Monster"이면 무시
-        if (hitActor->Tags.Contains(FName("Player")))
+        // 필터링: "Player" 태그를 가진 액터만 처리
+        for (const FHitResult& hitResult : hitResults)
         {
+            AActor* hitActor = hitResult.GetActor();
+            if (hitActor && hitActor->Tags.Contains(FName("Player")))
+            {
+                targetActor = hitActor; // "Player" 태그를 가진 액터 발견
+                break; // 가장 가까운 "Player"만 타겟으로 처리
+            }
+        }
+
+        if (targetActor)
+        {
+            // 데미지 처리
+            float hpRatio = _statCom->BossHPRatio();
+            float damageMultiplier = (hpRatio < 0.3f) ? 2.0f : 1.0f;
+
             float baseDamage = _statCom->GetAttackDamage();
-            FDamageEvent damageEvent;
-            hitActor->TakeDamage(baseDamage, damageEvent, GetController(), this);
+            float damage = baseDamage * damageMultiplier;
 
-            drawColor = FColor::Red;  // 성공적인 공격 표시
-        }
-        else if (hitActor->Tags.Contains(FName("Monster")))
-        {
-            // 같은 "Monster" 태그를 가진 경우 데미지 무시
-            UE_LOG(LogTemp, Warning, TEXT("Ignored attack on another monster: %s"), *hitActor->GetName());
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Hit unknown target: %s"), *hitActor->GetName());
+            FDamageEvent damageEvent;
+            targetActor->TakeDamage(damage, damageEvent, GetController(), this);
+            _hitPoint = targetActor->GetActorLocation();
+            drawColor = FColor::Red;
+
+            // 상태 효과 적용
+            ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
+            if (targetCreature != nullptr)
+            {
+                switch (_curAttackIndex)
+                {
+                case 1:
+                    targetCreature->SetState(StateType::Airborne);
+                    break;
+                case 2:
+                    targetCreature->SetState(StateType::Stun);
+                    break;
+                case 3:
+                    targetCreature->SetState(StateType::Slow);
+                    break;
+                default:
+                    break;
+                }
+            }
         }
     }
 
-    // 디버그용으로 구체를 그려 확인
     DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
@@ -290,14 +316,14 @@ void ATFT_BossMonster_Rampage::UpdateBlackboardTarget()
 
 void ATFT_BossMonster_Rampage::ExplosionHit()
 {
-    FHitResult hitResult;
+    TArray<FHitResult> hitResults;
     FCollisionQueryParams params(NAME_None, false, this);
 
     float explosionRange = 500.0f; // Explosion 범위
     float explosionRadius = 150.0f; // Explosion 반경
 
-    bool bResult = GetWorld()->SweepSingleByChannel(
-        hitResult,
+    bool bResult = GetWorld()->SweepMultiByChannel(
+        hitResults,
         GetActorLocation(),
         GetActorLocation() + GetActorForwardVector() * explosionRange,
         FQuat::Identity,
@@ -310,40 +336,55 @@ void ATFT_BossMonster_Rampage::ExplosionHit()
     FVector center = GetActorLocation() + vec * 0.5f;
     FColor drawColor = FColor::Green;
 
-    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    // 여러 충돌 처리
+    if (bResult)
     {
-        AActor* hitActor = hitResult.GetActor();
-
-        if (hitActor->Tags.Contains(FName("Player")))
+        for (const FHitResult& hitResult : hitResults)
         {
-            drawColor = FColor::Red;
-            FDamageEvent damageEvent;
+            if (!hitResult.GetActor() || !hitResult.GetActor()->IsValidLowLevel())
+                continue;
 
-            float explosionDamage = 30.0f; // Explosion 데미지
-            hitActor->TakeDamage(explosionDamage, damageEvent, GetController(), this);
-            _hitPoint = hitResult.ImpactPoint;
-        }
-        else if (hitActor->Tags.Contains(FName("Monster")))
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Ignored explosion damage on another monster: %s"), *hitActor->GetName());
+            AActor* hitActor = hitResult.GetActor();
+
+            // "Player" 태그를 가진 액터만 데미지 처리
+            if (hitActor->Tags.Contains(FName("Player")))
+            {
+                drawColor = FColor::Red;
+                FDamageEvent damageEvent;
+
+                float explosionDamage = 30.0f; // Explosion 데미지
+                hitActor->TakeDamage(explosionDamage, damageEvent, GetController(), this);
+                _hitPoint = hitResult.ImpactPoint;
+
+                UE_LOG(LogTemp, Log, TEXT("Explosion hit player: %s"), *hitActor->GetName());
+            }
+            else if (hitActor->Tags.Contains(FName("Monster")))
+            {
+                // "Monster" 태그를 가진 경우 데미지를 무시
+                UE_LOG(LogTemp, Warning, TEXT("Ignored explosion damage on another monster: %s"), *hitActor->GetName());
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Explosion hit unknown target: %s"), *hitActor->GetName());
+            }
         }
     }
 
+    // 디버그용 구체를 그려서 확인
     DrawDebugSphere(GetWorld(), center, explosionRadius, 20, drawColor, false, 0.1f);
-
 }
 
 void ATFT_BossMonster_Rampage::ChainExplosionHit()
 {
-    FHitResult hitResult;
+    TArray<FHitResult> firstHitResults;
     FCollisionQueryParams params(NAME_None, false, this);
 
     float chainRange = 600.0f; // Chain Explosion 범위
     float chainRadius = 150.0f; // Chain Explosion 반경
 
     // 첫 번째 구체 처리
-    bool bResult = GetWorld()->SweepSingleByChannel(
-        hitResult,
+    bool bFirstResult = GetWorld()->SweepMultiByChannel(
+        firstHitResults,
         GetActorLocation(),
         GetActorLocation() + GetActorForwardVector() * chainRange,
         FQuat::Identity,
@@ -356,35 +397,48 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
     FVector center = GetActorLocation() + vec * 0.5f;
     FColor drawColor = FColor::Green;
 
-    if (bResult && hitResult.GetActor()->IsValidLowLevel())
+    if (bFirstResult)
     {
-        AActor* hitActor = hitResult.GetActor();
-
-        if (hitActor->Tags.Contains(FName("Player")))
+        for (const FHitResult& hitResult : firstHitResults)
         {
-            drawColor = FColor::Red;
-            FDamageEvent damageEvent;
+            if (!hitResult.GetActor() || !hitResult.GetActor()->IsValidLowLevel())
+                continue;
 
-            float chainExplosionDamage = 20.0f; // 첫 번째 구체 데미지
-            hitActor->TakeDamage(chainExplosionDamage, damageEvent, GetController(), this);
-            _hitPoint = hitResult.ImpactPoint;
-        }
-        else if (hitActor->Tags.Contains(FName("Monster")))
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Ignored chain explosion damage on another monster: %s"), *hitActor->GetName());
+            AActor* hitActor = hitResult.GetActor();
+
+            // "Player" 태그를 가진 액터만 데미지 처리
+            if (hitActor->Tags.Contains(FName("Player")))
+            {
+                drawColor = FColor::Red;
+                FDamageEvent damageEvent;
+
+                float chainExplosionDamage = 20.0f; // 첫 번째 구체 데미지
+                hitActor->TakeDamage(chainExplosionDamage, damageEvent, GetController(), this);
+                _hitPoint = hitResult.ImpactPoint;
+
+                UE_LOG(LogTemp, Log, TEXT("Chain explosion hit player: %s"), *hitActor->GetName());
+            }
+            else if (hitActor->Tags.Contains(FName("Monster")))
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Ignored chain explosion damage on another monster: %s"), *hitActor->GetName());
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Chain explosion hit unknown target: %s"), *hitActor->GetName());
+            }
         }
     }
 
     DrawDebugSphere(GetWorld(), center, chainRadius, 20, drawColor, false, 0.1f);
 
-    // 추가 구체 처리 (첫 번째 구체의 앞부분)
-    FHitResult secondHitResult;
+    // 추가 구체 처리
+    TArray<FHitResult> secondHitResults;
     FVector extendedStartLocation = GetActorLocation() + GetActorForwardVector() * chainRange;
     FVector extendedEndLocation = extendedStartLocation + GetActorForwardVector() * (chainRange * 0.5f);
     FVector secondCenter = (extendedStartLocation + extendedEndLocation) * 0.5f;
 
-    bool bSecondHit = GetWorld()->SweepSingleByChannel(
-        secondHitResult,
+    bool bSecondResult = GetWorld()->SweepMultiByChannel(
+        secondHitResults,
         extendedStartLocation,
         extendedEndLocation,
         FQuat::Identity,
@@ -395,21 +449,34 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
 
     FColor secondDrawColor = FColor::Blue;
 
-    if (bSecondHit && secondHitResult.GetActor()->IsValidLowLevel())
+    if (bSecondResult)
     {
-        AActor* secondHitActor = secondHitResult.GetActor();
-
-        if (secondHitActor->Tags.Contains(FName("Player")))
+        for (const FHitResult& secondHitResult : secondHitResults)
         {
-            secondDrawColor = FColor::Red;
-            FDamageEvent secondDamageEvent;
+            if (!secondHitResult.GetActor() || !secondHitResult.GetActor()->IsValidLowLevel())
+                continue;
 
-            float secondExplosionDamage = 20.0f; // 두 번째 구체 데미지
-            secondHitActor->TakeDamage(secondExplosionDamage, secondDamageEvent, GetController(), this);
-        }
-        else if (secondHitActor->Tags.Contains(FName("Monster")))
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Ignored second chain explosion damage on another monster: %s"), *secondHitActor->GetName());
+            AActor* secondHitActor = secondHitResult.GetActor();
+
+            // "Player" 태그를 가진 액터만 데미지 처리
+            if (secondHitActor->Tags.Contains(FName("Player")))
+            {
+                secondDrawColor = FColor::Red;
+                FDamageEvent secondDamageEvent;
+
+                float secondExplosionDamage = 20.0f; // 두 번째 구체 데미지
+                secondHitActor->TakeDamage(secondExplosionDamage, secondDamageEvent, GetController(), this);
+
+                UE_LOG(LogTemp, Log, TEXT("Second chain explosion hit player: %s"), *secondHitActor->GetName());
+            }
+            else if (secondHitActor->Tags.Contains(FName("Monster")))
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Ignored second chain explosion damage on another monster: %s"), *secondHitActor->GetName());
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Second chain explosion hit unknown target: %s"), *secondHitActor->GetName());
+            }
         }
     }
 
