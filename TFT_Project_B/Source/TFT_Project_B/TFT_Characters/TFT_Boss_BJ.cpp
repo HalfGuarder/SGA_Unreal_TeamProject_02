@@ -5,6 +5,7 @@
 #include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 #include "TFT_SoundManager.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -38,6 +39,8 @@ ATFT_Boss_BJ::ATFT_Boss_BJ()
 void ATFT_Boss_BJ::BeginPlay()
 {
     Super::BeginPlay();
+
+    GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 
 }
 

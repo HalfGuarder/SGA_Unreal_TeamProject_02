@@ -452,77 +452,29 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 void ATFT_Player::AttackA(const FInputActionValue& value)
 {
 	if (GetCurHp() <= 0) return;
-	// if (_invenCom->_currentWeapon == nullptr) return;
 
 	bool isPressed = value.Get<bool>();
 
-	if (bEquipSword)
+	if (bEquipSword) 
 	{
 		if (_isAttacking == false && isPressed && _animInstancePlayer != nullptr)
 		{
-			// _animInstancePlayer->StopRunningMontage();
 			_animInstancePlayer->PlayAttackMontage();
 			_isAttacking = true;
-			_canMove = false;
+			/*_canMove = false; */
+
+			
+			FRotator controlRotation = GetControlRotation();
+			controlRotation.Pitch = 0.0f; 
+			controlRotation.Roll = 0.0f;  
+			SetActorRotation(controlRotation);
+
 			_curAttackIndex %= 3;
 			_curAttackIndex++;
 			_animInstancePlayer->JumpToSection(_curAttackIndex);
 
 			SOUNDMANAGER->PlaySound("P_Sword_Swing", GetActorLocation());
-
-			//if (auto _animInstTM = Cast<UTFT_AnimInstance_Player>(_animInstancePlayer))
-			//{
-			//	if (_invenCom->_currentWeapon->_Itemid == 1)
-			//	{
-			//		_animInstTM->PlayAttackMontage();
-			//		_isAttacking = true;
-
-			//		_curAttackIndex %= 3;
-			//		_curAttackIndex++;
-
-			//		_animInstTM->JumpToSection(_curAttackIndex);
-			//	}
-			//	else if (_invenCom->_currentWeapon->_Itemid == 3)
-			//	{
-			//		_animInstTM->PlayAttackMontage2Hend();
-			//		_isAttacking = true;
-
-			//		_curAttackIndex %= 2;
-			//		_curAttackIndex++;
-
-			//		_animInstTM->JumpToSection(_curAttackIndex);
-			//	}
-			//	else
-			//	{
-			//		//UE_LOG(LogTemp, Log, TEXT("no Weapon no attack"));
-			//		_animInstTM->PlayAttackMontage();
-			//	}
-			//}
 		}
-	}
-	else
-	{
-		if (_isAttacking || GetWorldTimerManager().IsTimerActive(_BullettimerHandle)) return;
-		
-		if (_invenCom->UseBullet())
-		{
-			if (bTurretBuildMode && !bBuildTurret)
-			{
-				bBuildTurret = true;
-
-				return;
-			}
-			_animInstancePlayer->PlayAttackMontage();
-			_isAttacking = true;
-			_curAttackIndex %= 3;
-			_curAttackIndex++;
-			_animInstancePlayer->JumpToSection(_curAttackIndex);
-
-			
-			GetWorldTimerManager().SetTimer(_BullettimerHandle, this, &ATFT_Player::AttackEnd, 0.2f, false);
-
-		}
-		
 	}
 }
 

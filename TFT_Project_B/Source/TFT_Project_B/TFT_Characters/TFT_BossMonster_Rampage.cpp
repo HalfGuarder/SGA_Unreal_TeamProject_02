@@ -6,6 +6,7 @@
 #include "TFT_Widgets/TFT_HPBarWidget.h"
 #include "TFT_Characters/TFT_Player.h"
 #include "../TFT_Components/TFT_StatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Engine/DamageEvents.h"
 
@@ -50,6 +51,8 @@ void ATFT_BossMonster_Rampage::BeginPlay()
     Super::BeginPlay();
 
     PlayerController = GetWorld()->GetFirstPlayerController();
+
+    GetCharacterMovement()->MaxWalkSpeed = 500.0f;
 }
 
 void ATFT_BossMonster_Rampage::PostInitializeComponents()
