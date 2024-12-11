@@ -6,6 +6,7 @@
 
 #include "Engine/DamageEvents.h"
 
+#include "TFT_StatComponent.h"
 #include "AIController.h"
 #include "TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -48,6 +49,16 @@ void ATFT_Monster::DropItem(MonsterType type)
 float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float damage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	if (_statCom->IsDead())
+	{
+		auto player = Cast<ATFT_Player>(DamageCauser);
+
+		if (player != nullptr)
+		{
+			player->_statCom->SetExp(_possessionExp);
+		}
+	}
 
 	return damage;
 }

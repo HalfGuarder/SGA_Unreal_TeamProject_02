@@ -26,6 +26,11 @@ void UTFT_HPBarWidget::NativeConstruct()
 		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/Boss_swordman_profile.Boss_swordman_profile'"));
 
 	profile->SetBrushFromTexture(profile_empty);
+
+	if (!PB_ExpBar)
+	{
+		UE_LOG(LogTemp, Error, TEXT("PB_ExpBar is nullptr!"));
+	}
 }
 
 void UTFT_HPBarWidget::SetHpBarValue(float ratio)
@@ -36,6 +41,12 @@ void UTFT_HPBarWidget::SetHpBarValue(float ratio)
 void UTFT_HPBarWidget::SetBarrierBarValue(float ratio)
 {
 	BP_BarrierBar->SetPercent(ratio);
+}
+
+void UTFT_HPBarWidget::SetExpBarValue(float ratio)
+{
+	PB_ExpBar->SetPercent(ratio);
+
 }
 
 void UTFT_HPBarWidget::SetProfileImage(ProfileType num)
@@ -95,6 +106,5 @@ void UTFT_HPBarWidget::SetBarrierText(int32 Barrier)
 	FString Barrierstring = FString::Printf(TEXT("%d"), Barrier);
 
 	CurBarrierText->SetText(FText::FromString(Barrierstring));
-
 }
 

@@ -34,6 +34,8 @@ ATFT_Boss_BJ::ATFT_Boss_BJ()
     {
         HpBarWidgetClass = HpBar.Class;
     }
+
+    _possessionExp = 100;
 }
 
 void ATFT_Boss_BJ::BeginPlay()
@@ -173,7 +175,11 @@ void ATFT_Boss_BJ::AttackHit_Boss()
     FCollisionQueryParams params(NAME_None, false, this);
 
     float attackRange = 500.0f;
+<<<<<<< Updated upstream
     float attackRadius = 400.0f;
+=======
+    float attackRadius = 200.0f;
+>>>>>>> Stashed changes
 
     bool bResult = GetWorld()->SweepMultiByChannel(
         hitResults,

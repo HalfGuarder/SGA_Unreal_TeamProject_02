@@ -24,6 +24,7 @@ public:
 
 	void SetHpBarValue(float ratio);
 	void SetBarrierBarValue(float ratio);
+	void SetExpBarValue(float ratio);
 	
 	void SetProfileImage(ProfileType num);
 	void SetHpText(int32 maxHp);
@@ -35,7 +36,8 @@ private:
 	class UProgressBar* BP_HpBar;
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* BP_BarrierBar;	
-
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* PB_ExpBar;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CurHp_Text;

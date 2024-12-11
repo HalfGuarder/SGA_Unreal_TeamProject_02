@@ -35,6 +35,9 @@ ATFT_NormalMonster_BJ::ATFT_NormalMonster_BJ()
     {
         HpBarWidgetClass = HpBar.Class;
     }
+
+    _possessionExp = 100;
+
 }
 
 void ATFT_NormalMonster_BJ::BeginPlay()

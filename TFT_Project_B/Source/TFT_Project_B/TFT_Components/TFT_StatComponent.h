@@ -92,7 +92,7 @@ protected:
 	int32 _curLevel = 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	int32 _maxLevel = 10;
+	int32 _maxLevel = 5;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 	int32 _maxHp = 10;
