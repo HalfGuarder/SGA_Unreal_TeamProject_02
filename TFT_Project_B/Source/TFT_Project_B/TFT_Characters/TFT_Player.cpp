@@ -476,6 +476,30 @@ void ATFT_Player::AttackA(const FInputActionValue& value)
 			SOUNDMANAGER->PlaySound("P_Sword_Swing", GetActorLocation());
 		}
 	}
+	else
+	{
+		if (_isAttacking || GetWorldTimerManager().IsTimerActive(_BullettimerHandle)) return;
+
+		if (_invenCom->UseBullet())
+		{
+			if (bTurretBuildMode && !bBuildTurret)
+			{
+				bBuildTurret = true;
+
+				return;
+			}
+			_animInstancePlayer->PlayAttackMontage();
+			_isAttacking = true;
+			_curAttackIndex %= 3;
+			_curAttackIndex++;
+			_animInstancePlayer->JumpToSection(_curAttackIndex);
+
+
+			GetWorldTimerManager().SetTimer(_BullettimerHandle, this, &ATFT_Player::AttackEnd, 0.2f, false);
+
+		}
+
+	}
 }
 
 void ATFT_Player::InvenopenA(const FInputActionValue& value)
