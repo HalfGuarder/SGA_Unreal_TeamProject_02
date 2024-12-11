@@ -37,18 +37,18 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 
     _statCom->SetLevelAndInit(2);
 
-    _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
+    //_animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
-    if (_animInstance_Grux->IsValidLowLevel())
-    {
-        _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
-        _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
-        _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
-        _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
-        _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
-        _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
-    }
+    //if (_animInstance_Grux->IsValidLowLevel())
+    //{
+    //    _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+    //    _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
+    //    _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
+    //    _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
+    //    // _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
+    //    _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
+    //    _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
+    //}
 
     //if (HpBarWidgetClass)
     //{
@@ -71,9 +71,9 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
         }
     }
 
-    if (_stateCom->IsValidLowLevel())
+    if (_statCom->IsValidLowLevel())
     {
-        _stateCom->_stateChangeDelegate.AddUObject(this, &ATFT_BossMonster_Grux::StateCheck);
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
     }
 }
 
@@ -107,11 +107,11 @@ void ATFT_BossMonster_Grux::Tick(float DeltaTime)
         }
     }
 
-    if (_isAttacking && !bIsDashing)
+    /*if (_isAttacking && !bIsDashing)
     {
         SetActorLocation(LockedLocation);
         SetActorRotation(LockedRotation);
-    }
+    }*/
 }
 
 void ATFT_BossMonster_Grux::SetMesh(FString path)
@@ -264,8 +264,11 @@ void ATFT_BossMonster_Grux::DeathStart()
 {
     Super::DeathStart();
 
-    _animInstance_Grux->StopAllMontages(0.2f);
-    _animInstance_Grux->_deathStartDelegate.RemoveAll(this);
+    // _animInstance_Grux->StopAllMontages(0.0f);
+
+    _animInstance_Grux->PlayDeathMontage();
+
+    GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Grux::BossDisable, 2.0f, false);
 
     UIMANAGER->CloseWidget(UIType::Tutorial);
 }
@@ -274,13 +277,7 @@ void ATFT_BossMonster_Grux::BossDisable()
 {
     Super::DropItem(MonsterType::Normal);
 
-    this->SetActorHiddenInGame(true);
-
-    _animInstance_Grux->_deathEndDelegate.RemoveAll(this);
-
     PrimaryActorTick.bCanEverTick = false;
-    _controller = GetController();
-    if (_controller != nullptr) GetController()->UnPossess();
 
     if (HpBarWidgetInstance)
     {
@@ -289,8 +286,6 @@ void ATFT_BossMonster_Grux::BossDisable()
     }
 
     DeActive();
-    
-    GAMEINSTANCE->_reStartTrg = true;
 }
 
 void ATFT_BossMonster_Grux::StateCheck()
@@ -357,34 +352,33 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
 {
     Super::SetAnimInstanceBind();
     
-    _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
-
-    if (_animInstance_Grux->IsValidLowLevel() && !bAnimBind)
+    if (!bAnimBind)
     {
-        _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
-        _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
-        _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
-        _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
-        _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
-        _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
+        _animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
 
-        bAnimBind = true;
+        if (_animInstance_Grux->IsValidLowLevel())
+        {
+            _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+            _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
+            _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
+            _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
+            _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
+            _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
+            _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
+
+            bAnimBind = true;
+        }
     }
 }
 
 void ATFT_BossMonster_Grux::Active()
 {
     Super::Active();
-
-    if (_controller != nullptr)
-    {
-        auto controller = Cast<ATFT_Boss_AIController>(_controller);
-        PossessedBy(controller);
-    }
+  
 }
 
 void ATFT_BossMonster_Grux::DeActive()
 {
     Super::DeActive();
+
 }

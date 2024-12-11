@@ -24,6 +24,7 @@ void ATFT_Monster::PostInitializeComponents()
 void ATFT_Monster::BeginPlay()
 {
 	Super::BeginPlay();
+    _controller = Cast<ATFT_Boss_AIController>(GetController());
 }
 
 void ATFT_Monster::Attack_AI()
@@ -68,15 +69,19 @@ void ATFT_Monster::Active()
     SetActorHiddenInGame(false);
     SetActorEnableCollision(true);
 
-    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+    //auto controller = 
     auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
-    if (player && controller)
+    if (player && _controller)
     {
-        controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
+        _controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
 
         return;
     }
+
+    _statCom->Reset();
+
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATFT_Monster::DeActive()
@@ -86,14 +91,15 @@ void ATFT_Monster::DeActive()
     SetActorHiddenInGame(true);
     SetActorEnableCollision(false);
 
-    auto controller = Cast<ATFT_Boss_AIController>(GetController());
+    //auto controller = Cast<ATFT_Boss_AIController>(GetController());
 
-    if (controller)
+    if (_controller)
     {
-        controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Tartget")), nullptr);
-    }
+        _controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Tartget")), nullptr);
+    } 
 
-    _statCom->Reset();
+    PrimaryActorTick.bCanEverTick = false;
+
 }
 
 void ATFT_Monster::SetAnimInstanceBind()

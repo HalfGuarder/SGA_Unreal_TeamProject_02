@@ -63,8 +63,7 @@ private:
 	bool bIsDashing = false;
 
 	FTimerHandle _stateTimerHandle;
+	FTimerHandle _deathTimerHandle;
 
-	AController* _controller = nullptr;
-
-	bool bAnimBind = false;
+	
 };

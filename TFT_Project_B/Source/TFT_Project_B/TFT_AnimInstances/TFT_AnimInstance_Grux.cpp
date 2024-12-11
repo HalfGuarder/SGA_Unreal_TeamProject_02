@@ -26,6 +26,14 @@ UTFT_AnimInstance_Grux::UTFT_AnimInstance_Grux()
         _skillMontage = sm.Object;
     }
 
+    ConstructorHelpers::FObjectFinder<UAnimMontage> dth
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Death_AnimMontage.TFT_Grux_Death_AnimMontage'"));
+
+    if (dth.Succeeded())
+    {
+        _deathMontage = dth.Object;
+    }
+
     static ConstructorHelpers::FObjectFinder<UAnimMontage> stn
     (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Stun_AnimMontage.TFT_Grux_Stun_AnimMontage'"));
 
@@ -70,6 +78,14 @@ void UTFT_AnimInstance_Grux::PlaySkillMontage()
     if (!Montage_IsPlaying(_skillMontage))
     {
         Montage_Play(_skillMontage);
+    }
+}
+
+void UTFT_AnimInstance_Grux::PlayDeathMontage()
+{
+    if (!Montage_IsPlaying(_deathMontage))
+    {
+        Montage_Play(_deathMontage);
     }
 }
 

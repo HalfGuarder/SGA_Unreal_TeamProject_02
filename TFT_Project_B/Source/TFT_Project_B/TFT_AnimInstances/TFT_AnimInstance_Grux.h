@@ -26,6 +26,8 @@ public:
 
 	void PlaySkillMontage();
 
+	void PlayDeathMontage();
+
 	void PlayAirborneMontage();
 	void StopAirborneMontage();
 
@@ -80,6 +82,8 @@ public:
 	class UAnimMontage* _attackMontage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _skillMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _deathMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* _stunMontage;

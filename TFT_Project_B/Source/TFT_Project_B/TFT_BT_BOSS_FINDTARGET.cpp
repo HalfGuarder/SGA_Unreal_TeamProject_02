@@ -67,6 +67,6 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
     }
     else
     {
-        OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
+        //OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), nullptr);
     }
 }

@@ -47,11 +47,11 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 	_gruxArray.Empty();
 	_rampageBossArray.Empty();
 
-	CreateMonster(_gruxClass, _gruxArray, 10);
-	CreateMonster(_rampageBossClass, _rampageBossArray, 2);
+	CreateMonster(_gruxClass, _gruxArray, _gruxAnimClass, _gruxMesh, 10);
+	CreateMonster(_rampageBossClass, _rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, 2);
 
-	SetSpawnTimer(_gruxArray, _gruxAnimClass, _gruxMesh, _gruxSpawnTimerHandle, 3.0f, true);
-	SetSpawnTimer(_rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, _rampageBossSpawnTimerHandle, 10.0f, true);
+	SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
+	SetSpawnTimer(_rampageBossArray,  _rampageBossSpawnTimerHandle, 10.0f, true);
 }
 
 void ATFT_MonsterSpawnManager::Tick(float DeltaTime)

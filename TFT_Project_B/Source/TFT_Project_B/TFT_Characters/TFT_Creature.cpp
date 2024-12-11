@@ -80,8 +80,8 @@ void ATFT_Creature::DeathStart()
 {
 	this->SetActorEnableCollision(false);
 	PrimaryActorTick.bCanEverTick = false;
-	auto controller = GetController();
-	if (controller != nullptr) GetController()->UnPossess();
+	// auto controller = GetController();
+	// if (controller != nullptr) GetController()->UnPossess();
 }
 
 void ATFT_Creature::Disable()

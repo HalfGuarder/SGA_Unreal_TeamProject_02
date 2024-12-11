@@ -44,4 +44,9 @@ public:
 
 public:
 	bool bIsSpawned = false;
+	bool bAnimBind = false;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
+	class ATFT_Boss_AIController* _controller = nullptr;
 };

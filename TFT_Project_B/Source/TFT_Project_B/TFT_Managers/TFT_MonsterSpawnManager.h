@@ -35,14 +35,14 @@ private:
 	template <typename MonsterAnim>
 	void ConstructMonsterAnimInst(TSubclassOf<MonsterAnim>& subclass, FString path);
 
+	template <typename MonsterType, typename MonsterAnim>
+	void CreateMonster(TSubclassOf<MonsterType>& subclass, TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 num);
+
 	template <typename MonsterType>
-	void CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num);
+	void SpawnMonster(TArray<MonsterType*> mArray);
 
-	template <typename MonsterType, typename MonsterAnim>
-	void SpawnMonster(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh);
-
-	template <typename MonsterType, typename MonsterAnim>
-	void SetSpawnTimer(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh, FTimerHandle timerhandle, float inRate, bool bLoop);
+	template <typename MonsterType>
+	void SetSpawnTimer(TArray<MonsterType*> &mArray, FTimerHandle timerhandle, float inRate, bool bLoop);
 
 private:
 	// Grux_Normal
@@ -99,8 +99,8 @@ inline void ATFT_MonsterSpawnManager::ConstructMonsterAnimInst(TSubclassOf<Monst
 	}
 }
 
-template<typename MonsterType>
-inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType> subclass, TArray<MonsterType*> &mArray, int32 num)
+template<typename MonsterType, typename MonsterAnim>
+inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType>& subclass, TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 num)
 {
 	for (int32 i = 0; i < num; i++)
 	{
@@ -110,14 +110,18 @@ inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType> sub
 		{
 			MonsterType* monster = Cast<MonsterType>(actor);
 
+			monster->ChangeMesh(mesh);
+			monster->GetMesh()->SetAnimInstanceClass(anim);
+			monster->SetAnimInstanceBind();
+
 			mArray.Add(monster);
 			monster->DeActive();
 		}
 	}
 }
 
-template<typename MonsterType, typename MonsterAnim>
-inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh)
+template<typename MonsterType>
+inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
 {
 	for (auto monster : mArray)
 	{
@@ -125,9 +129,6 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, 
 		{
 			if (monster->bIsSpawned) continue;
 
-			monster->ChangeMesh(mesh);
-			monster->GetMesh()->SetAnimInstanceClass(anim);
-			monster->SetAnimInstanceBind();
 			// temp
 			monster->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
 			monster->Active();
@@ -137,11 +138,11 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, 
 	}
 }
 
-template<typename MonsterType, typename MonsterAnim>
+template<typename MonsterType>
 inline void ATFT_MonsterSpawnManager::SetSpawnTimer
-(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh, FTimerHandle timerhandle, float inRate, bool bLoop)
+(TArray<MonsterType*> &mArray, FTimerHandle timerhandle, float inRate, bool bLoop)
 {
-	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray, anim, mesh);
+	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray);
 
 	GetWorldTimerManager().SetTimer(timerhandle, dlgt, inRate, bLoop);
 	
