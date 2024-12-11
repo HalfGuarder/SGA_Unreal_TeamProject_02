@@ -54,7 +54,7 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 	_gruxArray.Empty();
 	_rampageBossArray.Empty();
 
-	CreateMonster(_gruxClass, _gruxArray, _gruxAnimClass, _gruxMesh, 20);
+	CreateMonster(_gruxClass, _gruxArray, _gruxAnimClass, _gruxMesh, 100);
 	CreateMonster(_rampageBossClass, _rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, 10);
 
 	// SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
@@ -69,23 +69,31 @@ void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 
 	if (_playTime >= 1.0f && !bOnStage_1)
 	{
-		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
+		ChangeSpawnTimer(_gruxArray, 2, _gruxSpawnTimerHandle, 3.0f, true);
 		bOnStage_1 = true;
+	}
+
+	if (_playTime >= 20.0f && !bSrdSpawn_1)
+	{
+		_player = Cast<AActor>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		SurroundSpawn(_gruxArray, 4, 30, 900.0f);
+		bSrdSpawn_1 = true;
 	}
 
 	if (_playTime >= 30.0f && !bOnStage_2)
 	{
-		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 2.0f, true);
-		ChangeSpawnTimer(_rampageBossArray, _rampageBossSpawnTimerHandle, 1.0f, false);
+		ChangeSpawnTimer(_gruxArray, 3, _gruxSpawnTimerHandle, 2.0f, true);
+		ChangeSpawnTimer(_rampageBossArray, 4, _rampageBossSpawnTimerHandle, 1.0f, false);
 		bOnStage_2 = true;
 	}
 
 	if (_playTime >= 60.0f && !bOnStage_3)
 	{
-		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 1.0f, true);
-		ChangeSpawnTimer(_rampageBossArray, _rampageBossSpawnTimerHandle, 5.0f, true);
+		ChangeSpawnTimer(_gruxArray, 4, _gruxSpawnTimerHandle, 1.0f, true);
+		ChangeSpawnTimer(_rampageBossArray, 5, _rampageBossSpawnTimerHandle, 5.0f, true);
 		bOnStage_3 = true;
 	}
+
 }
 
 void ATFT_MonsterSpawnManager::ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &mesh, FString path)

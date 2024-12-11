@@ -40,17 +40,22 @@ private:
 	void CreateMonster(TSubclassOf<MonsterType>& subclass, TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 num);
 
 	template <typename MonsterType>
-	void SpawnMonster(TArray<MonsterType*> mArray);
+	void SpawnMonster(TArray<MonsterType*> mArray, int32 level);
 
 	template <typename MonsterType>
-	void SetSpawnTimer(TArray<MonsterType*> &mArray, FTimerHandle timerHandle, float inRate, bool bLoop);
+	void SetSpawnTimer(TArray<MonsterType*> &mArray, int32 level, FTimerHandle timerHandle, float inRate, bool bLoop);
 
 	template <typename MonsterType>
-	void ChangeSpawnTimer(TArray<MonsterType*>& mArray, FTimerHandle timerHandle, float inRate, bool bLoop);
+	void ChangeSpawnTimer(TArray<MonsterType*>& mArray, int32 level, FTimerHandle timerHandle, float inRate, bool bLoop);
 
 	void SetSpawnPos();
 
+	template <typename MonsterType>
+	void SurroundSpawn(TArray<MonsterType*> mArray, int32 level, int32 num, float dist);
+
 private:
+	AActor* _player = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = SpawnPos, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> _spawnPositions;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = SpawnPos, meta = (AllowPrivateAccess = "true"))
@@ -62,8 +67,14 @@ private:
 
 	float _playTime = 0.0f;
 
+	// Surround Spawn
+	// TArray<FVector>
+
 	// Stages
 	bool bOnStage_1 = false; bool bOnStage_2 = false; bool bOnStage_3 = false; bool bOnStage_4 = false;
+
+	// Events
+	bool bSrdSpawn_1 = false;
 
 	// Grux_Normal
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
@@ -141,7 +152,7 @@ inline void ATFT_MonsterSpawnManager::CreateMonster(TSubclassOf<MonsterType>& su
 }
 
 template<typename MonsterType>
-inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
+inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, int32 level)
 {
 	for (auto monster : mArray)
 	{
@@ -151,6 +162,7 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
 
 			_randSpawnNum = FMath::RandRange(0, 3);
 			monster->SetActorLocation(_spawnPositions[_randSpawnNum]->GetActorLocation());
+			monster->ChangeLevel(level);
 			monster->Active();
 
 			return;
@@ -160,18 +172,53 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
 
 template<typename MonsterType>
 inline void ATFT_MonsterSpawnManager::SetSpawnTimer
-(TArray<MonsterType*> &mArray, FTimerHandle timerHandle, float inRate, bool bLoop)
+(TArray<MonsterType*> &mArray, int32 level, FTimerHandle timerHandle, float inRate, bool bLoop)
 {
-	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray);
+	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray, level);
 
 	GetWorldTimerManager().SetTimer(timerHandle, dlgt, inRate, bLoop);
 	
 }
 
 template<typename MonsterType>
-inline void ATFT_MonsterSpawnManager::ChangeSpawnTimer(TArray<MonsterType*>& mArray, FTimerHandle timerHandle, float inRate, bool bLoop)
+inline void ATFT_MonsterSpawnManager::ChangeSpawnTimer(TArray<MonsterType*>& mArray, int32 level, FTimerHandle timerHandle, float inRate, bool bLoop)
 {
 	GetWorldTimerManager().ClearTimer(timerHandle);
 	
-	SetSpawnTimer(mArray, timerHandle, inRate, bLoop);
+	SetSpawnTimer(mArray, level, timerHandle, inRate, bLoop);
+}
+
+template<typename MonsterType>
+inline void ATFT_MonsterSpawnManager::SurroundSpawn(TArray<MonsterType*> mArray, int32 level, int32 num, float dist)
+{
+	for (int32 i = 0; i < num; i++)
+	{
+		for (auto monster : mArray)
+		{
+			if (monster->IsValidLowLevel())
+			{
+				if (monster->bIsSpawned) continue;
+
+				if (_player == nullptr) return;
+
+				FVector pPos = _player->GetActorLocation();
+				pPos.Z = 0.0f;
+
+				double randRange = FMath::RandRange(0.0f, 360.0f);
+				FVector randPos = pPos.RotateAngleAxis(randRange, FVector::ZAxisVector);
+				randPos.Normalize();
+				randPos *= dist;
+
+				FVector sumPos = pPos + randPos;
+
+				FVector srdPos = FVector(sumPos.X, sumPos.Y, 0.0f);
+
+				monster->SetActorLocation(srdPos);
+				monster->ChangeLevel(level);
+				monster->Active();
+
+				break;
+			}
+		}
+	}
 }

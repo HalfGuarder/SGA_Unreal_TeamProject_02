@@ -42,6 +42,8 @@ public:
 
 	virtual void SetAnimInstanceBind();
 
+	virtual void ChangeLevel(int32 level);
+
 public:
 	bool bIsSpawned = false;
 	bool bAnimBind = false;

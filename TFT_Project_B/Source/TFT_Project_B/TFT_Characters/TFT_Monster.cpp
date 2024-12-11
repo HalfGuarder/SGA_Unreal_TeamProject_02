@@ -105,3 +105,8 @@ void ATFT_Monster::DeActive()
 void ATFT_Monster::SetAnimInstanceBind()
 {
 }
+
+void ATFT_Monster::ChangeLevel(int32 level)
+{
+    _statCom->SetLevelAndInit(level);
+}

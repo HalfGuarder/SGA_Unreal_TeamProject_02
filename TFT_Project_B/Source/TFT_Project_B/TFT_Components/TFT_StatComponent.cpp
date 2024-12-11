@@ -63,10 +63,12 @@ void UTFT_StatComponent::SetHp(int32 hp)
 	//float ratio = HpRatio();//
 	//_hpChangedDelegate.Broadcast(ratio);//
 
-	float bossratio = 0.15 + BossHPRatio();
+	// float bossratio = 0.15 + BossHPRatio();
+	float bossratio = BossHPRatio();
 	_BosshpChangedDelegate.Broadcast(bossratio);
 
-	float playerratio = 0.25 + (HpRatio() * (0.7 - 0.25));
+	// float playerratio = 0.25 + (HpRatio() * (0.7 - 0.25));
+	float playerratio = HpRatio();
 	_PlayerhpChangedDelegate.Broadcast(playerratio);
 
 	//float HPRatio = static_cast<float>(_curHp) / _maxHp;//
@@ -81,6 +83,7 @@ void UTFT_StatComponent::SetBarrier(int32 barrier)
 
 	float Bratio = BarrierRatio();
 	_PlayerBarrierChangedDelegate.Broadcast(Bratio);
+	_CurBarrierText.Broadcast(_curBarrier);
 
 }
 
@@ -95,7 +98,6 @@ int32 UTFT_StatComponent::AddCurHp(float amount)
 		{
 			remainB = _curBarrier;
 			_curBarrier = 0;
-			_CurBarrierText.Broadcast(_curBarrier);
 			SetBarrier(_curBarrier);
 		}
 		else return 0;
