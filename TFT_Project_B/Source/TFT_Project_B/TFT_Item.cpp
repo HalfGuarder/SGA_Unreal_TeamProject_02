@@ -73,15 +73,18 @@ void ATFT_Item::Init()
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 
+
+	if (_Itemid == 1 || _Itemid == 2) return;
+
 	if (_meshComponent)
 	{
-		//_meshComponent->SetSimulatePhysics(true); // 물리 시뮬레이션 활성화
-		//_meshComponent->SetEnableGravity(true);  // 중력 활성화
+		_meshComponent->SetSimulatePhysics(true); // 물리 시뮬레이션 활성화
+		_meshComponent->SetEnableGravity(true);  // 중력 활성화
 
-		//_meshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		//_meshComponent->SetCollisionObjectType(ECC_PhysicsBody);
+		_meshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		_meshComponent->SetCollisionObjectType(ECC_PhysicsBody);
 
-		//_meshComponent->SetCollisionResponseToAllChannels(ECR_Block);
+		_meshComponent->SetCollisionResponseToAllChannels(ECR_Block);
 	}
 }
 
