@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "TFT_MonsterSpawnManager.generated.h"
 
 class ATFT_BossMonster_Grux;
@@ -42,9 +43,28 @@ private:
 	void SpawnMonster(TArray<MonsterType*> mArray);
 
 	template <typename MonsterType>
-	void SetSpawnTimer(TArray<MonsterType*> &mArray, FTimerHandle timerhandle, float inRate, bool bLoop);
+	void SetSpawnTimer(TArray<MonsterType*> &mArray, FTimerHandle timerHandle, float inRate, bool bLoop);
+
+	template <typename MonsterType>
+	void ChangeSpawnTimer(TArray<MonsterType*>& mArray, FTimerHandle timerHandle, float inRate, bool bLoop);
+
+	void SetSpawnPos();
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = SpawnPos, meta = (AllowPrivateAccess = "true"))
+	TArray<AActor*> _spawnPositions;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = SpawnPos, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> _spawnPosClass;
+	int32 _randSpawnNum = 0;
+
+	FVector _spawnPosVector1 = FVector(-3200.0f, -2800.0f, 100.0f); FVector _spawnPosVector2 = FVector(-3200.0f, 2800.0f, 100.0f);
+	FVector _spawnPosVector3 = FVector(3200.0f, 2800.0f, 100.0f); FVector _spawnPosVector4 = FVector(3200.0f, -2800.0f, 100.0f);
+
+	float _playTime = 0.0f;
+
+	// Stages
+	bool bOnStage_1 = false; bool bOnStage_2 = false; bool bOnStage_3 = false; bool bOnStage_4 = false;
+
 	// Grux_Normal
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Monster, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<ATFT_BossMonster_Grux> _gruxClass;
@@ -129,8 +149,8 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
 		{
 			if (monster->bIsSpawned) continue;
 
-			// temp
-			monster->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
+			_randSpawnNum = FMath::RandRange(0, 3);
+			monster->SetActorLocation(_spawnPositions[_randSpawnNum]->GetActorLocation());
 			monster->Active();
 
 			return;
@@ -140,10 +160,18 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray)
 
 template<typename MonsterType>
 inline void ATFT_MonsterSpawnManager::SetSpawnTimer
-(TArray<MonsterType*> &mArray, FTimerHandle timerhandle, float inRate, bool bLoop)
+(TArray<MonsterType*> &mArray, FTimerHandle timerHandle, float inRate, bool bLoop)
 {
 	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray);
 
-	GetWorldTimerManager().SetTimer(timerhandle, dlgt, inRate, bLoop);
+	GetWorldTimerManager().SetTimer(timerHandle, dlgt, inRate, bLoop);
 	
+}
+
+template<typename MonsterType>
+inline void ATFT_MonsterSpawnManager::ChangeSpawnTimer(TArray<MonsterType*>& mArray, FTimerHandle timerHandle, float inRate, bool bLoop)
+{
+	GetWorldTimerManager().ClearTimer(timerHandle);
+	
+	SetSpawnTimer(mArray, timerHandle, inRate, bLoop);
 }

@@ -15,12 +15,11 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Montager.TFT_Rampage_Montager'"));
     if (am.Succeeded())
     {
-        _myAnimMontage = am.Object;
+        _attackMontage = am.Object;
     }
 
     static ConstructorHelpers::FObjectFinder<UAnimMontage> jm
     (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_JumpAttack_Montage.TFT_Rampage_JumpAttack_Montage'"));
-
     if (jm.Succeeded())
     {
        _JumpskillMontage = jm.Object;
@@ -28,10 +27,16 @@ UTFT_AnimInstance_Rampage::UTFT_AnimInstance_Rampage()
 
     static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
     (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Fire.TFT_Rampage_Fire'"));
-
     if (sm.Succeeded())
     {
         _skillMontage = sm.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> dth
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Death_AnimMontage.TFT_Rampage_Death_AnimMontage'"));
+    if (dth.Succeeded())
+    {
+        _deathMontage = dth.Object;
     }
 
 }
@@ -52,10 +57,10 @@ void UTFT_AnimInstance_Rampage::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_Rampage::PlayAttackMontage()
 {
-    if (!Montage_IsPlaying(_myAnimMontage))
+    if (!Montage_IsPlaying(_attackMontage))
     {
        
-        float playResult = Montage_Play(_myAnimMontage);
+        float playResult = Montage_Play(_attackMontage);
 
         
         if (playResult > 0.0f)
@@ -113,6 +118,14 @@ void UTFT_AnimInstance_Rampage::PlaySkillMontage()
         {
             UE_LOG(LogTemp, Error, TEXT("Pawn Owner Cast Failed"));
         }
+    }
+}
+
+void UTFT_AnimInstance_Rampage::PlayDeathMontage()
+{
+    if (!Montage_IsPlaying(_deathMontage))
+    {
+        Montage_Play(_deathMontage);
     }
 }
 

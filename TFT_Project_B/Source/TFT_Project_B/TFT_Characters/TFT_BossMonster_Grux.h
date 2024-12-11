@@ -17,8 +17,8 @@ class TFT_PROJECT_B_API ATFT_BossMonster_Grux : public ATFT_Monster
 public:
 	ATFT_BossMonster_Grux();
 
-	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetMesh(FString path) override;
 

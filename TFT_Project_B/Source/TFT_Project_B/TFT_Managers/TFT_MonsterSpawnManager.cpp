@@ -14,6 +14,13 @@ ATFT_MonsterSpawnManager::ATFT_MonsterSpawnManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FClassFinder<AActor> sPos
+	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Spawn/TFT_SpawnPos_BP.TFT_SpawnPos_BP_C'"));
+	if (sPos.Succeeded())
+	{
+		_spawnPosClass = sPos.Class;
+	}
+
 	// Grux
 	ConstructMonsterSubclass(_gruxClass, "/Script/Engine.Blueprint'/Game/Blueprints/Monster/BossMonster_Grux/TFT_BossMonster_Grux_BP.TFT_BossMonster_Grux_BP_C'");
 	ConstructMonsterMesh(_gruxMesh, "/Script/Engine.SkeletalMesh'/Game/ParagonGrux/Characters/Heroes/Grux/Skins/Tier_2/Grux_Beetle_Red/Meshes/GruxBeetleRed.GruxBeetleRed'");
@@ -30,8 +37,6 @@ void ATFT_MonsterSpawnManager::BeginDestroy()
 {
 	Super::BeginDestroy();
 
-	// _gruxSpawnTimerHandle.Invalidate();
-	// _rampageBossSpawnTimerHandle.Invalidate();
 }
 
 void ATFT_MonsterSpawnManager::BeginPlay()
@@ -44,20 +49,43 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	SetSpawnPos();
+
 	_gruxArray.Empty();
 	_rampageBossArray.Empty();
 
-	CreateMonster(_gruxClass, _gruxArray, _gruxAnimClass, _gruxMesh, 10);
-	CreateMonster(_rampageBossClass, _rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, 2);
+	CreateMonster(_gruxClass, _gruxArray, _gruxAnimClass, _gruxMesh, 20);
+	CreateMonster(_rampageBossClass, _rampageBossArray, _rampageBossAnimClass, _rampageBossMesh, 10);
 
-	SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
-	SetSpawnTimer(_rampageBossArray,  _rampageBossSpawnTimerHandle, 10.0f, true);
+	// SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
+	// SetSpawnTimer(_rampageBossArray,  _rampageBossSpawnTimerHandle, 10.0f, true);
 }
 
 void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	_playTime += DeltaTime;
+
+	if (_playTime >= 1.0f && !bOnStage_1)
+	{
+		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
+		bOnStage_1 = true;
+	}
+
+	if (_playTime >= 30.0f && !bOnStage_2)
+	{
+		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 2.0f, true);
+		ChangeSpawnTimer(_rampageBossArray, _rampageBossSpawnTimerHandle, 1.0f, false);
+		bOnStage_2 = true;
+	}
+
+	if (_playTime >= 60.0f && !bOnStage_3)
+	{
+		ChangeSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 1.0f, true);
+		ChangeSpawnTimer(_rampageBossArray, _rampageBossSpawnTimerHandle, 5.0f, true);
+		bOnStage_3 = true;
+	}
 }
 
 void ATFT_MonsterSpawnManager::ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &mesh, FString path)
@@ -67,5 +95,40 @@ void ATFT_MonsterSpawnManager::ConstructMonsterMesh(TObjectPtr<USkeletalMesh> &m
 	if (mMesh.Succeeded())
 	{
 		mesh = mMesh.Object;
+	}
+}
+
+void ATFT_MonsterSpawnManager::SetSpawnPos()
+{
+	for (int32 i = 0; i < 4; i++)
+	{
+		auto spawnPos = GetWorld()->SpawnActor(_spawnPosClass);
+
+		if (spawnPos->IsValidLowLevel())
+		{
+			_spawnPositions.Add(spawnPos);
+
+			switch (i)
+			{
+			case 0:
+				spawnPos->SetActorLocation(_spawnPosVector1);
+				break;
+
+			case 1:
+				spawnPos->SetActorLocation(_spawnPosVector2);
+				break;
+
+			case 2:
+				spawnPos->SetActorLocation(_spawnPosVector3);
+				break;
+
+			case 3:
+				spawnPos->SetActorLocation(_spawnPosVector4);
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 }

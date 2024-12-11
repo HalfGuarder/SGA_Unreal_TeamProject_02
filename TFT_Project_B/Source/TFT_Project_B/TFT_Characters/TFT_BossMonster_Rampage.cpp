@@ -23,14 +23,11 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 {
     _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
-	// SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Elemental/Meshes/Rampage_Elemental.Rampage_Elemental'");
-
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
     {
         HpBarWidgetClass = HpBar.Class;
     }
-
 
     //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
@@ -83,6 +80,10 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
         }
     }
 
+    if (_statCom->IsValidLowLevel())
+    {
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
+    }
 }
 
 void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
@@ -172,7 +173,7 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
             drawColor = FColor::Red;
 
             // 상태 효과 적용
-            ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
+            /*ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
             if (targetCreature != nullptr)
             {
                 switch (_curAttackIndex)
@@ -189,7 +190,7 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
                 default:
                     break;
                 }
-            }
+            }*/
         }
     }
 
@@ -200,38 +201,38 @@ void ATFT_BossMonster_Rampage::Attack_AI()
 {
     Super::Attack_AI();
 
-    if (!_isAttacking && _animInstance_Boss != nullptr)
+    if (!_isAttacking && _animInstance_Rampage != nullptr)
     {
-        if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage) &&
-            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_skillMontage) &&
-            !_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_JumpskillMontage))
+        if (!_animInstance_Rampage->Montage_IsPlaying(_animInstance_Rampage->_attackMontage) &&
+            !_animInstance_Rampage->Montage_IsPlaying(_animInstance_Rampage->_skillMontage) &&
+            !_animInstance_Rampage->Montage_IsPlaying(_animInstance_Rampage->_JumpskillMontage))
         {
             LockedLocation = GetActorLocation();
 
             if (bCanUseJumpSkill)
             {
-                _animInstance_Boss->PlayJumpSkillMontage();
+                _animInstance_Rampage->PlayJumpSkillMontage();
                 bCanUseJumpSkill = false;
                 GetWorld()->GetTimerManager().SetTimer(JumpSkillCooldownTimerHandle, this, &ATFT_BossMonster_Rampage::ResetJumpSkillCooldown, JumpSkillCooldown, false);
             }
             else if (bCanUseSkill)
             {
-                _animInstance_Boss->PlaySkillMontage();
+                _animInstance_Rampage->PlaySkillMontage();
                 bCanUseSkill = false;
                 GetWorld()->GetTimerManager().SetTimer(SkillCooldownTimerHandle, this, &ATFT_BossMonster_Rampage::ResetSkillCooldown, SkillCooldown, false);
             }
             else
             {
-                _animInstance_Boss->PlayAttackMontage();
+                _animInstance_Rampage->PlayAttackMontage();
             }
 
             _isAttacking = true;
 
             _curAttackIndex %= 3;
             _curAttackIndex++;
-            _animInstance_Boss->JumpToSection(_curAttackIndex);
+            _animInstance_Rampage->JumpToSection(_curAttackIndex);
 
-            _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
+            _animInstance_Rampage->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
         }
     }
    
@@ -280,14 +281,18 @@ void ATFT_BossMonster_Rampage::DeathStart()
         UE_LOG(LogTemp, Error, TEXT("GetWorld() returned nullptr! Cannot find NPC2."));
     }
 
-    _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
+    // _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
+
+    // TODO
+    _animInstance_Rampage->PlayDeathMontage();
+    GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Rampage::BossDisable, 2.0f, false);
 }
 
 void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
 {
     _isAttacking = false;
 
-    _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
+    _animInstance_Rampage->OnMontageEnded.RemoveDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
 }
 
 
@@ -296,21 +301,23 @@ void ATFT_BossMonster_Rampage::BossDisable()
 {
     Super::DropItem(MonsterType::BOSS);
 
-    this->SetActorHiddenInGame(true);
+    // this->SetActorHiddenInGame(true);
 
-    _animInstance_Boss->_deathEndDelegate.RemoveAll(this);
+    //_animInstance_Rampage->_deathEndDelegate.RemoveAll(this);
     //_animInstance_Boss->_attackStartDelegate.RemoveAll(this);
     //_animInstance_Boss->_attackHitDelegate.RemoveAll(this);
 
     PrimaryActorTick.bCanEverTick = false;
-    auto controller = GetController();
-    if (controller != nullptr) GetController()->UnPossess();
+    // auto controller = GetController();
+    // if (controller != nullptr) GetController()->UnPossess();
 
     if (HpBarWidgetInstance)
     {
         HpBarWidgetInstance->RemoveFromParent();
         HpBarWidgetInstance = nullptr;
     }
+
+    DeActive();
 }
 
 void ATFT_BossMonster_Rampage::UpdateBlackboardTarget()
@@ -486,6 +493,29 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
     DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
 }
 
+void ATFT_BossMonster_Rampage::SetAnimInstanceBind()
+{
+    Super::SetAnimInstanceBind();
+
+    if (!bAnimBind)
+    {
+        _animInstance_Rampage = Cast<UTFT_AnimInstance_Rampage>(GetMesh()->GetAnimInstance());
+        
+        if (_animInstance_Rampage->IsValidLowLevel())
+        {
+            _animInstance_Rampage->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+            _animInstance_Rampage->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
+            _animInstance_Rampage->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
+            // _animInstance_Rampage->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
+            _animInstance_Rampage->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
+            _animInstance_Rampage->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
+            _animInstance_Rampage->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
+        
+            bAnimBind = true;
+        }
+    }
+}
+
 void ATFT_BossMonster_Rampage::Active()
 {
     Super::Active();
@@ -494,21 +524,4 @@ void ATFT_BossMonster_Rampage::Active()
 void ATFT_BossMonster_Rampage::DeActive()
 {
     Super::DeActive();
-}
-
-void ATFT_BossMonster_Rampage::SetAnimInstanceBind()
-{
-    Super::SetAnimInstanceBind();
-
-    _animInstance_Boss = Cast<UTFT_AnimInstance_Rampage>(GetMesh()->GetAnimInstance());
-    if (_animInstance_Boss->IsValidLowLevel())
-    {
-        _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_Boss->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
-        _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
-        _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
-        _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
-        _animInstance_Boss->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
-        _animInstance_Boss->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
-    }
 }

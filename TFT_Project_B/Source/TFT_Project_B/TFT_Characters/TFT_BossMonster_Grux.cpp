@@ -6,7 +6,6 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
 
@@ -31,33 +30,20 @@ ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 
 }
 
+void ATFT_BossMonster_Grux::BeginPlay()
+{
+    Super::BeginPlay();
+
+    GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+
+    // UIMANAGER->OpenWidget(UIType::Tutorial);
+}
+
 void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
     _statCom->SetLevelAndInit(2);
-
-    //_animInstance_Grux = Cast<UTFT_AnimInstance_Grux>(GetMesh()->GetAnimInstance());
-
-    //if (_animInstance_Grux->IsValidLowLevel())
-    //{
-    //    _animInstance_Grux->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-    //    _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
-    //    _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
-    //    _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
-    //    // _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
-    //    _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
-    //    _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
-    //}
-
-    //if (HpBarWidgetClass)
-    //{
-    //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-    //    if (HpBarWidgetInstance)
-    //    {
-    //        HpBarWidgetInstance->AddToViewport();
-    //    }
-    //}
 
     if (HpBarWidgetInstance)
     {
@@ -77,20 +63,12 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
     }
 }
 
-void ATFT_BossMonster_Grux::BeginPlay()
-{
-    Super::BeginPlay();
-
-    GetCharacterMovement()->MaxWalkSpeed = 300.0f;
-
-    UIMANAGER->OpenWidget(UIType::Tutorial);
-}
 
 void ATFT_BossMonster_Grux::Tick(float DeltaTime)
 {
     AActor* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 
-    if (Player)
+    /*if (Player)
     {
         float Distance = FVector::Dist(Player->GetActorLocation(), GetActorLocation());
 
@@ -105,7 +83,7 @@ void ATFT_BossMonster_Grux::Tick(float DeltaTime)
                 HpBarWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
             }
         }
-    }
+    }*/
 
     /*if (_isAttacking && !bIsDashing)
     {
@@ -179,7 +157,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
             drawColor = FColor::Red;
 
             // 상태 효과 적용
-            ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
+            /*ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
             if (targetCreature != nullptr)
             {
                 switch (_curAttackIndex)
@@ -196,7 +174,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
                 default:
                     break;
                 }
-            }
+            }*/
         }
     }
 
@@ -270,7 +248,7 @@ void ATFT_BossMonster_Grux::DeathStart()
 
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Grux::BossDisable, 2.0f, false);
 
-    UIMANAGER->CloseWidget(UIType::Tutorial);
+    // UIMANAGER->CloseWidget(UIType::Tutorial);
 }
 
 void ATFT_BossMonster_Grux::BossDisable()
@@ -362,7 +340,7 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
             _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
             _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
             _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
-            _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
+            // _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
             _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
             _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
 

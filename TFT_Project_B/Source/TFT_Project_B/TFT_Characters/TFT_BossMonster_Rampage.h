@@ -59,7 +59,7 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
-	class UTFT_AnimInstance_Rampage* _animInstance_Boss;
+	class UTFT_AnimInstance_Rampage* _animInstance_Rampage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* armcapsule_R;
@@ -82,5 +82,5 @@ private:
 	bool bCanUseJumpSkill = true;
 	FTimerHandle JumpSkillCooldownTimerHandle;
 
-
+	FTimerHandle _deathTimerHandle;
 };
