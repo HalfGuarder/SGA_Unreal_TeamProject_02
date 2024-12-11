@@ -46,16 +46,12 @@ public:
 
 public:
 	bool bIsSpawned = false;
-<<<<<<< Updated upstream
 	bool bAnimBind = false;
-
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class ATFT_Boss_AIController* _controller = nullptr;
-=======
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = EXP, meta = (AllowPrivateAccess = true))
 	int32 _possessionExp;
->>>>>>> Stashed changes
 };

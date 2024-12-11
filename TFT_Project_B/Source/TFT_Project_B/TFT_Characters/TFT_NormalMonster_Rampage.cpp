@@ -43,15 +43,12 @@ ATFT_NormalMonster_Rampage::ATFT_NormalMonster_Rampage()
     //armcapsule_R->SetCapsuleRadius(10.f);
     //armcapsule_R->SetCapsuleHalfHeight(30.f);
 
-<<<<<<< Updated upstream
     //armcapsule_L->SetCapsuleRadius(10.f);
     //armcapsule_L->SetCapsuleHalfHeight(30.f);
-=======
     armcapsule_L->SetCapsuleRadius(10.f);
     armcapsule_L->SetCapsuleHalfHeight(30.f);
 
     _possessionExp = 100;
->>>>>>> Stashed changes
 }
 
 void ATFT_NormalMonster_Rampage::BeginPlay()

@@ -29,16 +29,13 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
         HpBarWidgetClass = HpBar.Class;
     }
 
-<<<<<<< Updated upstream
     //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
 
     //armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
     //armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
-=======
     armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
     armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
->>>>>>> Stashed changes
 
     //armcapsule_R->SetCapsuleRadius(10.f);
     //armcapsule_R->SetCapsuleHalfHeight(30.f);

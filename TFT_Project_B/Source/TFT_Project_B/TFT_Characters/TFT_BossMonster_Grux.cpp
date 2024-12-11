@@ -28,9 +28,9 @@ ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
     _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 
+    _possessionExp = 100;
 }
 
-<<<<<<< Updated upstream
 void ATFT_BossMonster_Grux::BeginPlay()
 {
     Super::BeginPlay();
@@ -38,15 +38,16 @@ void ATFT_BossMonster_Grux::BeginPlay()
     GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 
     // UIMANAGER->OpenWidget(UIType::Tutorial);
-=======
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
     {
         HpBarWidgetClass = HpBar.Class;
-    }*/
+    }
 
-    _possessionExp = 100;
->>>>>>> Stashed changes
+    _statCom->SetLevelAndInit(100);
+
+    UIMANAGER->OpenWidget(UIType::Tutorial);
+
 }
 
 void ATFT_BossMonster_Grux::PostInitializeComponents()
@@ -72,18 +73,6 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
         _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
     }
 }
-
-<<<<<<< Updated upstream
-=======
-void ATFT_BossMonster_Grux::BeginPlay()
-{
-    Super::BeginPlay();
-
-    _statCom->SetLevelAndInit(100);
-
-    UIMANAGER->OpenWidget(UIType::Tutorial);
-}
->>>>>>> Stashed changes
 
 void ATFT_BossMonster_Grux::Tick(float DeltaTime)
 {
