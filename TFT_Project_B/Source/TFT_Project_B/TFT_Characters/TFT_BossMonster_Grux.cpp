@@ -15,7 +15,6 @@
 #include "TFT_GameInstance.h"
 #include "TFT_UIManager.h"
 #include "TFT_SoundManager.h"
-
 #include "TFT_Player.h"
 
 #include "UObject/ConstructorHelpers.h"

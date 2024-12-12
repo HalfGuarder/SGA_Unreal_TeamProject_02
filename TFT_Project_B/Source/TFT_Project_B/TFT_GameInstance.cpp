@@ -25,7 +25,6 @@ void UTFT_GameInstance::Init()
 	Super::Init();
 
 	SpawnManager();
-
 }
 
 FTFT_StatData* UTFT_GameInstance::GetStatDataByLevel(int32 level)
