@@ -84,8 +84,15 @@ void ATFT_Item::Init()
 		_meshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		_meshComponent->SetCollisionObjectType(ECC_PhysicsBody);
 
-		_meshComponent->SetCollisionResponseToAllChannels(ECR_Block);
-	}
+		//// 사용자 정의 채널 접근
+		//FName CustomChannelName(TEXT("TFT_Item"));
+		//ECollisionChannel CustomChannel = UCollisionProfile::Get()->ConvertToCollisionChannel(true, CustomChannelName);
+
+		//if (CustomChannel != ECC_OverlapAll_Deprecated) // 채널이 유효한 경우
+		//{
+		//	_meshComponent->SetCollisionResponseToChannel(CustomChannel, ECR_Block); // 사용자 정의 채널에 Block 설정
+		//}
+	} 
 }
 
 void ATFT_Item::Disable()

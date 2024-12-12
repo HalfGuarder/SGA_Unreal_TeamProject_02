@@ -141,17 +141,20 @@ void UTFT_StatComponent::AddMaxHp(int32 amount)
 	AddsItem_HP += amount;
 }
 
-void UTFT_StatComponent::SetExp(int32 amount)
+void UTFT_StatComponent::AddExp(int32 amount)
 {
 	_curExp += amount;
 
+	_CurExpText.Broadcast(_curExp);
+
+	if (_curLevel >= _maxLevel) return;
+
 	if (_curExp >= _maxExp)
 	{
-		_curExp = _curExp - _maxExp;
+		_curExp -= _maxExp;
 
 		_curLevel++;
-		if (_curLevel >= _maxLevel) _curLevel = _maxLevel;
-		_levelUpDelegate.Broadcast();
+		_levelUpDelegate.Broadcast(); // Level up effect
 
 		SetLevelAndInit(_curLevel);
 	}

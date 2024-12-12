@@ -35,12 +35,17 @@ void UTFT_HPBarWidget::NativeConstruct()
 
 void UTFT_HPBarWidget::SetHpBarValue(float ratio)
 {
-	BP_HpBar->SetPercent(ratio);
+	PB_HpBar->SetPercent(ratio);
 }
 
 void UTFT_HPBarWidget::SetBarrierBarValue(float ratio)
 {
-	BP_BarrierBar->SetPercent(ratio);
+	PB_BarrierBar->SetPercent(ratio);
+}
+
+void UTFT_HPBarWidget::SetExpBarValue(float ratio)
+{
+	PB_ExpBar->SetPercent(ratio);
 }
 
 void UTFT_HPBarWidget::SetProfileImage(ProfileType num)
@@ -100,5 +105,19 @@ void UTFT_HPBarWidget::SetBarrierText(int32 Barrier)
 	FString Barrierstring = FString::Printf(TEXT("%d"), Barrier);
 
 	CurBarrierText->SetText(FText::FromString(Barrierstring));
+}
+
+void UTFT_HPBarWidget::SetExpText(int32 maxExp)
+{
+	FString expstring = FString::Printf(TEXT("%d"), maxExp);
+
+	MaxExpBarText->SetText(FText::FromString(expstring));
+}
+
+void UTFT_HPBarWidget::CurExpText(int32 curExp)
+{
+	FString expstring = FString::Printf(TEXT("%d"), curExp);
+
+	CurExpBarText->SetText(FText::FromString(expstring));
 }
 

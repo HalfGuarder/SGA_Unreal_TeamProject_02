@@ -20,16 +20,12 @@ UTFT_InvenComponent::UTFT_InvenComponent()
 	{
 		_itemClass = item.Class;
 	}
-	//_monsterItems.SetNum(10);
 }
 
 void UTFT_InvenComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*SetMonsterItem(100);
-	SetMonsterItem(101);
-	SetMonsterItem(102);*/
 }
 
 void UTFT_InvenComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

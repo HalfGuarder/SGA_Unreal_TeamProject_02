@@ -238,11 +238,13 @@ void ATFT_Player::PostInitializeComponents()
 		{
 			HpBar->SetProfileImage(ProfileType::PLAYER);
 			HpBar->SetHpText(_statCom->GetMaxHp());
+			HpBar->SetExpText(_statCom->GetMaxExp());
 			_statCom->_PlayerhpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
 			_statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
 			_statCom->_PlayerBarrierChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierBarValue);
 			_statCom->_CurBarrierText.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierText);
-			//_statCom->_expChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpBarValue);
+			_statCom->_expChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpBarValue);
+			_statCom->_CurExpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurExpText);
 		}
 	}
 

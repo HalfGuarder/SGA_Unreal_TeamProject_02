@@ -31,13 +31,16 @@ public:
 	void CurHpText(int32 curHp);
 
 	void SetBarrierText(int32 Barrier);
+
+	void SetExpText(int32 maxExp);
+	void CurExpText(int32 curExp);
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* BP_HpBar;
+	class UProgressBar* PB_HpBar;
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* BP_BarrierBar;	
+	UProgressBar* PB_BarrierBar;	
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_ExpBar;
+	UProgressBar* PB_ExpBar;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CurHp_Text;
@@ -46,6 +49,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CurBarrierText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxExpBarText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* CurExpBarText;
 
 
 	UPROPERTY(meta = (BindWidget))

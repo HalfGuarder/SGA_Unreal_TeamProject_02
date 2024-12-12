@@ -56,7 +56,7 @@ float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 
 		if (player != nullptr)
 		{
-			player->_statCom->SetExp(_possessionExp);
+			player->_statCom->AddExp(_possessionExp);
 		}
 	}
 

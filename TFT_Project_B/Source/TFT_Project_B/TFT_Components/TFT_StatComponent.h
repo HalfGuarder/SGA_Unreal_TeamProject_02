@@ -9,10 +9,8 @@
 #include "TFT_StatComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(DeathDelegate)
-DECLARE_MULTICAST_DELEGATE_OneParam(HpChanged, float)
-DECLARE_MULTICAST_DELEGATE_OneParam(ExpChanged, float)
+DECLARE_MULTICAST_DELEGATE_OneParam(StatChanged, float)
 DECLARE_MULTICAST_DELEGATE(LevelUp)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHPChangedDelegate, float)
 DECLARE_MULTICAST_DELEGATE_OneParam(CurHpText, int32)
 
 
@@ -75,17 +73,18 @@ public:
 
 	bool IsDead() { return _curHp <= 0; }
 
-	void SetExp(int32 amount);
+	void AddExp(int32 amount);
 
-	HpChanged _hpChangedDelegate;
-	HpChanged _BosshpChangedDelegate;
-	HpChanged _PlayerhpChangedDelegate;
+	StatChanged _hpChangedDelegate;
+	StatChanged _BosshpChangedDelegate;
+	StatChanged _PlayerhpChangedDelegate;
 	CurHpText _CurHpText;
 	DeathDelegate _deathDelegate;
-	ExpChanged _expChangedDelegate;
+	StatChanged _expChangedDelegate;
+	CurHpText _CurExpText;
 	LevelUp _levelUpDelegate;
 	CurHpText _CurBarrierText;
-	HpChanged _PlayerBarrierChangedDelegate;
+	StatChanged _PlayerBarrierChangedDelegate;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
@@ -95,7 +94,7 @@ protected:
 	int32 _maxLevel = 5;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	int32 _maxHp = 10;
+	int32 _maxHp = 7249;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 	int32 _curHp = _maxHp;
