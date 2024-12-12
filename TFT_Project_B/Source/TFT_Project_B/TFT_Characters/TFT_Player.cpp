@@ -211,7 +211,7 @@ void ATFT_Player::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	_statCom->SetLevelAndInit(10);
+	_statCom->SetLevelAndInit(101);
 
 	_animInstancePlayer = Cast<UTFT_AnimInstance_Player>(GetMesh()->GetAnimInstance());
 	if (_animInstancePlayer->IsValidLowLevel())

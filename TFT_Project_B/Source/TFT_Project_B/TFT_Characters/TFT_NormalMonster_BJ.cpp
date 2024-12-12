@@ -44,7 +44,7 @@ void ATFT_NormalMonster_BJ::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(2);
+    _statCom->SetLevelAndInit(1);
 
     GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 }

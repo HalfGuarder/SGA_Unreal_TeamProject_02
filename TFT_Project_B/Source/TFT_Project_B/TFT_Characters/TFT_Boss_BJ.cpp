@@ -50,7 +50,7 @@ void ATFT_Boss_BJ::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(2);
+    _statCom->SetLevelAndInit(201);
 
     _animInstance_BJ = Cast<UTFT_AnimInstance_BJ>(GetMesh()->GetAnimInstance());
     if (_animInstance_BJ->IsValidLowLevel())

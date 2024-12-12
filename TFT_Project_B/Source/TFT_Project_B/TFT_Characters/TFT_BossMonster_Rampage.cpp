@@ -59,7 +59,7 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	
-    _statCom->SetLevelAndInit(2);
+    _statCom->SetLevelAndInit(201);
 
     if (HpBarWidgetClass)
     {

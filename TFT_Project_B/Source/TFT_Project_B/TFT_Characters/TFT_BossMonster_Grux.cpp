@@ -51,7 +51,7 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    // _statCom->SetLevelAndInit(2);
+    _statCom->SetLevelAndInit(1);
 
     if (HpBarWidgetInstance)
     {

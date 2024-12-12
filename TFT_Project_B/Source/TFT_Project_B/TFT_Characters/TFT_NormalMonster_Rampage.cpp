@@ -64,7 +64,7 @@ void ATFT_NormalMonster_Rampage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    // _statCom->SetLevelAndInit(2);
+    _statCom->SetLevelAndInit(1);
 
     _animInstance_Boss = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
     if (_animInstance_Boss->IsValidLowLevel())
