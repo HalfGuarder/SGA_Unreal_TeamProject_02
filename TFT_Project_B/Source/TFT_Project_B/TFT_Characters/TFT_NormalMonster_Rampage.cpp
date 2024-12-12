@@ -45,8 +45,8 @@ ATFT_NormalMonster_Rampage::ATFT_NormalMonster_Rampage()
 
     //armcapsule_L->SetCapsuleRadius(10.f);
     //armcapsule_L->SetCapsuleHalfHeight(30.f);
-    armcapsule_L->SetCapsuleRadius(10.f);
-    armcapsule_L->SetCapsuleHalfHeight(30.f);
+    //armcapsule_L->SetCapsuleRadius(10.f);
+   // armcapsule_L->SetCapsuleHalfHeight(30.f);
 
     _possessionExp = 100;
 }
@@ -64,7 +64,7 @@ void ATFT_NormalMonster_Rampage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(2);
+    // _statCom->SetLevelAndInit(2);
 
     _animInstance_Boss = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
     if (_animInstance_Boss->IsValidLowLevel())

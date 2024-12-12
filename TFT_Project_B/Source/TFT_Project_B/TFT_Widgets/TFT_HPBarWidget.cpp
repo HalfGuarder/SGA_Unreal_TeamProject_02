@@ -43,12 +43,6 @@ void UTFT_HPBarWidget::SetBarrierBarValue(float ratio)
 	BP_BarrierBar->SetPercent(ratio);
 }
 
-void UTFT_HPBarWidget::SetExpBarValue(float ratio)
-{
-	PB_ExpBar->SetPercent(ratio);
-
-}
-
 void UTFT_HPBarWidget::SetProfileImage(ProfileType num)
 {
 	switch (num)

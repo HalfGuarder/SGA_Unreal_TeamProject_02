@@ -18,6 +18,7 @@
 
 #include "TFT_Player.h"
 
+#include "UObject/ConstructorHelpers.h"
 #include "AIController.h"
 #include "TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -38,23 +39,20 @@ void ATFT_BossMonster_Grux::BeginPlay()
     GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 
     // UIMANAGER->OpenWidget(UIType::Tutorial);
-    static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
-    if (HpBar.Succeeded())
-    {
-        HpBarWidgetClass = HpBar.Class;
-    }
+    //static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
+    //if (HpBar.Succeeded())
+    //{
+    //    HpBarWidgetClass = HpBar.Class;
+    //}
 
-    _statCom->SetLevelAndInit(100);
-
-    UIMANAGER->OpenWidget(UIType::Tutorial);
-
+    // UIMANAGER->OpenWidget(UIType::Tutorial);
 }
 
 void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(2);
+    // _statCom->SetLevelAndInit(2);
 
     if (HpBarWidgetInstance)
     {

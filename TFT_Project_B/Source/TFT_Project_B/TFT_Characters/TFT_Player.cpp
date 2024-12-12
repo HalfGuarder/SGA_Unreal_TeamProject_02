@@ -83,7 +83,7 @@ ATFT_Player::ATFT_Player()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
-	_statCom->SetExp(0);
+	//_statCom->SetExp(0);
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/Player_HpBar_BP.Player_HpBar_BP_C'"));
 	if (HpBar.Succeeded())
@@ -205,7 +205,7 @@ void ATFT_Player::BeginPlay()
 
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	_statCom->SetLevelAndInit(1);
+	//_statCom->SetLevelAndInit(1);
 }
 
 void ATFT_Player::PostInitializeComponents()
@@ -242,7 +242,7 @@ void ATFT_Player::PostInitializeComponents()
 			_statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
 			_statCom->_PlayerBarrierChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierBarValue);
 			_statCom->_CurBarrierText.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierText);
-			_statCom->_expChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpBarValue);
+			//_statCom->_expChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpBarValue);
 		}
 	}
 
