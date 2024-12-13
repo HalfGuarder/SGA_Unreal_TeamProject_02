@@ -35,7 +35,7 @@ void UTFT_StatComponent::SetLevelAndInit(int32 level)
 	if (myGameInstance)
 	{
 		FTFT_StatData* data = myGameInstance->GetStatDataByLevel(level);
-		_curLevel = level;
+		_curLevel = data->level;
 		_maxHp = data->maxHP;
 		_curHp = _maxHp;
 		_maxMp = data->maxMP;
@@ -147,19 +147,30 @@ void UTFT_StatComponent::AddExp(int32 amount)
 {
 	_curExp += amount;
 
-	_CurExpText.Broadcast(_curExp);
+	if (_curLevel >= _maxLevel)
+	{
+		UE_LOG(LogTemp, Log, TEXT("your max Level~"));
 
-	if (_curLevel >= _maxLevel) return;
+		_CurExpText.Broadcast(_curExp);
+		float ratio = ExpRatio();
+
+		_expChangedDelegate.Broadcast(ratio);
+		return;
+	}
 
 	if (_curExp >= _maxExp)
 	{
 		_curExp -= _maxExp;
 
 		_curLevel++;
-		_levelUpDelegate.Broadcast(); // Level up effect
+		_levelUpDelegate.Broadcast(_curLevel); // Level up effect
 
-		SetLevelAndInit(_curLevel);
+		SetLevelAndInit(100 + _curLevel);
+
+		_HpUpDelegate.Broadcast(_maxHp);
+		_ExpUpDelegate.Broadcast(_maxExp);
 	}
+	_CurExpText.Broadcast(_curExp);
 
 	float ratio = ExpRatio();
 

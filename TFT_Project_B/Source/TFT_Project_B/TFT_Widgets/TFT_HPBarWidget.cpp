@@ -26,11 +26,6 @@ void UTFT_HPBarWidget::NativeConstruct()
 		(nullptr, TEXT("/Script/Engine.Texture2D'/Game/Blueprints/Widget/Widget_textrue/Boss_swordman_profile.Boss_swordman_profile'"));
 
 	profile->SetBrushFromTexture(profile_empty);
-
-	if (!PB_ExpBar)
-	{
-		UE_LOG(LogTemp, Error, TEXT("PB_ExpBar is nullptr!"));
-	}
 }
 
 void UTFT_HPBarWidget::SetHpBarValue(float ratio)
@@ -120,4 +115,21 @@ void UTFT_HPBarWidget::CurExpText(int32 curExp)
 
 	CurExpBarText->SetText(FText::FromString(expstring));
 }
+
+void UTFT_HPBarWidget::SetLevelText(int32 curLevel)
+{
+	FString levelstring = FString::Printf(TEXT("%d"), curLevel);
+
+	LevelText->SetText(FText::FromString("LV. " + levelstring));
+}
+
+void UTFT_HPBarWidget::SetMaxHPText(int32 maxHP)
+{
+	FString hpstring = FString::Printf(TEXT("%d"), maxHP);
+
+	MaxHp_Text->SetText(FText::FromString(hpstring));
+}
+
+
+
 

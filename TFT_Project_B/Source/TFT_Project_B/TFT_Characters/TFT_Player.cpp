@@ -244,6 +244,9 @@ void ATFT_Player::PostInitializeComponents()
 			_statCom->_CurBarrierText.AddUObject(HpBar, &UTFT_HPBarWidget::SetBarrierText);
 			_statCom->_expChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpBarValue);
 			_statCom->_CurExpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurExpText);
+			_statCom->_levelUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetLevelText);
+			_statCom->_HpUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetMaxHPText);
+			_statCom->_ExpUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpText);
 		}
 	}
 

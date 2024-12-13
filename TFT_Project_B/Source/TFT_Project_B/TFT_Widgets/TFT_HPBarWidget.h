@@ -34,6 +34,9 @@ public:
 
 	void SetExpText(int32 maxExp);
 	void CurExpText(int32 curExp);
+	void SetLevelText(int32 curLevel);
+
+	void SetMaxHPText(int32 maxHP);
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_HpBar;
@@ -56,6 +59,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* CurExpBarText;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LevelText;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* profile;

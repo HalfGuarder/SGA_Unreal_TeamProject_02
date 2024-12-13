@@ -8,9 +8,8 @@
 
 #include "TFT_StatComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(DeathDelegate)
+DECLARE_MULTICAST_DELEGATE(StatDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(StatChanged, float)
-DECLARE_MULTICAST_DELEGATE(LevelUp)
 DECLARE_MULTICAST_DELEGATE_OneParam(CurHpText, int32)
 
 
@@ -84,12 +83,14 @@ public:
 	StatChanged _BosshpChangedDelegate;
 	StatChanged _PlayerhpChangedDelegate;
 	CurHpText _CurHpText;
-	DeathDelegate _deathDelegate;
+	StatDelegate _deathDelegate;
 	StatChanged _expChangedDelegate;
 	CurHpText _CurExpText;
-	LevelUp _levelUpDelegate;
 	CurHpText _CurBarrierText;
 	StatChanged _PlayerBarrierChangedDelegate;
+	CurHpText _levelUpDelegate;
+	CurHpText _HpUpDelegate;
+	CurHpText _ExpUpDelegate;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
