@@ -209,18 +209,18 @@ void UTFT_AnimInstance_Player::PlayShieldDashMontage()
 	}
 }
 
-void UTFT_AnimInstance_Player::StopShiedlDashMontage()
-{
-	if (Montage_IsPlaying(_shieldDashMontage))
-	{
-		Montage_Stop(0.2f, _shieldDashMontage);
-
-		Montage_Play(_shieldDashEndMontage);
-
-		bIsShieldDashing = false;
-		_shieldDashEndDelegate.Broadcast();
-	}
-}
+//void UTFT_AnimInstance_Player::StopShiedlDashMontage()
+//{
+//	if (Montage_IsPlaying(_shieldDashMontage))
+//	{
+//		Montage_Stop(0.2f, _shieldDashMontage);
+//
+//		Montage_Play(_shieldDashEndMontage);
+//
+//		bIsShieldDashing = false;
+//		_shieldDashEndDelegate.Broadcast();
+//	}
+//}
 
 void UTFT_AnimInstance_Player::PlayUpperSwingMontage()
 {

@@ -548,11 +548,7 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(1)->bCoolDownOn == false)
 		{
-			if (!bIsDefense) return;
-
-			//StopDefense();
-			StopRightClick();
-
+			if (bIsDefense) return;
 			_animInstancePlayer->PlayUpperSwingMontage();
 
 			UIMANAGER->GetSkillUI()->RunCDT(1);
@@ -603,11 +599,7 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 	{
 		if(UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
 		{
-			if (!bIsDefense) return;
-			bIsShieldDashing = true;
-
-			//StopDefense();
-			StopRightClick();
+			if (bIsDefense) return;
 
 			_animInstancePlayer->PlayShieldDashMontage();
 
@@ -1506,14 +1498,14 @@ void ATFT_Player::Interact()
 
 void ATFT_Player::ShieldDash_OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	auto enemy = Cast<ATFT_Monster>(OtherActor);
+	//auto enemy = Cast<ATFT_Monster>(OtherActor);
 
-	if (enemy != nullptr)
-	{
-		Q_SkillHit();
+	//if (enemy != nullptr)
+	//{
+	//	Q_SkillHit();
 
-		_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//	_shieldDashAttackSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		_animInstancePlayer->StopShiedlDashMontage();
-	}
+	//	_animInstancePlayer->StopShiedlDashMontage();
+	//}
 }
