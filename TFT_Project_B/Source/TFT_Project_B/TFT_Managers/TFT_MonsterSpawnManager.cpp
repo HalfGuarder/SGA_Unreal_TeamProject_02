@@ -90,7 +90,7 @@ void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 	if (_playTime >= 60.0f && !bOnStage_3)
 	{
 		ChangeSpawnTimer(_gruxArray, 4, _gruxSpawnTimerHandle, 1.0f, true);
-		ChangeSpawnTimer(_rampageBossArray, 5, _rampageBossSpawnTimerHandle, 5.0f, true);
+		ChangeSpawnTimer(_rampageBossArray, 204, _rampageBossSpawnTimerHandle, 5.0f, true);
 		bOnStage_3 = true;
 	}
 

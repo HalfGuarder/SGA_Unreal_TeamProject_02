@@ -1058,38 +1058,38 @@ void ATFT_Player::Q_SkillHit()
 
 void ATFT_Player::E_SkillHit()
 {
-	FHitResult hitResult;
+	TArray<FHitResult> hitResults; 
 	FCollisionQueryParams params(NAME_None, false, this);
 
-	float attackRange = 500.0f;
-	float attackRadius = 100.0f;
+	float attackRange = 1000.0f;    
+	float attackRadius = 1000.0f;   
 
-	bool bResult = GetWorld()->SweepSingleByChannel
-	(
-		hitResult,
+	
+	bool bResult = GetWorld()->SweepMultiByChannel(
+		hitResults,
 		GetActorLocation(),
-		GetActorLocation() + GetActorForwardVector() * attackRange,
+		GetActorLocation() + FVector::UpVector * 0.1f, 
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel7,
 		FCollisionShape::MakeSphere(attackRadius),
 		params
 	);
 
-	FVector vec = GetActorForwardVector() * attackRange;
-	FVector center = GetActorLocation() + vec * 0.5f;
 	FColor drawColor = FColor::Green;
 
-	if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	
+	for (const FHitResult& hitResult : hitResults)
 	{
-		drawColor = FColor::Red;
-		FDamageEvent damageEvent;
-
-		float actualDamage = hitResult.GetActor()->TakeDamage(20.0f, damageEvent, GetController(), this);
-		_hitPoint = hitResult.ImpactPoint;
-
-		if (actualDamage > 0)
+		if (hitResult.GetActor()->IsValidLowLevel())
 		{
-			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+			drawColor = FColor::Red;
+			FDamageEvent damageEvent;
+
+			
+			float actualDamage = hitResult.GetActor()->TakeDamage(100.0f, damageEvent, GetController(), this);
+
+			
+			ATFT_Monster* target = Cast<ATFT_Monster>(hitResult.GetActor());
 			if (target != nullptr && !target->bIsOnState)
 			{
 				target->SetState(StateType::Airborne);
@@ -1097,7 +1097,8 @@ void ATFT_Player::E_SkillHit()
 		}
 	}
 
-	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
+	// 디버그 구체 그리기
+	DrawDebugSphere(GetWorld(), GetActorLocation(), attackRadius, 20, drawColor, false, 0.1f);
 }
 
 void ATFT_Player::SpawnTurret()
