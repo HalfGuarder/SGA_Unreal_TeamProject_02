@@ -35,16 +35,20 @@ public:
 
 	virtual void AttackEnd();
 
-
-	//virtual void DropItem();
-
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void DeathStart() override;
 
-
 	UFUNCTION()
 	void BossDisable();
+
+	void SetAnimInstanceBind() override;
+
+	void PreActive() override;
+
+	void Active() override;
+
+	void DeActive() override;
 
 private:
 	FTimerHandle MoveTimerHandle;
@@ -57,6 +61,7 @@ protected:
 	FVector TargetLocation;
 	FTimerHandle SkillTimerHandle;
 	FTimerHandle NiagaraEffectTimerHandle;
+	FTimerHandle _deathTimerHandle;
 
 	void SpawnNiagaraEffectAtLocation(FVector Location);
 	void TriggerSkillEffect();

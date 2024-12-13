@@ -193,7 +193,7 @@ public:
 	UAnimMontage* _rollingMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Animation, meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* _myAnimMontage;
+	UAnimMontage* _attackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> DialogueWidgetClass;

@@ -13,7 +13,14 @@ UTFT_AnimInstance_NormalRampage::UTFT_AnimInstance_NormalRampage()
     (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_DH/Animation/TFT_Rampage_Montager.TFT_Rampage_Montager'"));
     if (am.Succeeded())
     {
-        _myAnimMontage = am.Object;
+        _attackMontage = am.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UAnimMontage> dth
+    (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_Grux/Animation/TFT_Grux_Death_AnimMontage.TFT_Grux_Death_AnimMontage'"));
+    if (dth.Succeeded())
+    {
+        _deathMontage = dth.Object;
     }
 }
 
@@ -33,10 +40,10 @@ void UTFT_AnimInstance_NormalRampage::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_NormalRampage::PlayAttackMontage()
 {
-    if (!Montage_IsPlaying(_myAnimMontage))
+    if (!Montage_IsPlaying(_attackMontage))
     {
 
-        float playResult = Montage_Play(_myAnimMontage);
+        float playResult = Montage_Play(_attackMontage);
 
 
         if (playResult > 0.0f)
@@ -58,6 +65,14 @@ void UTFT_AnimInstance_NormalRampage::PlayAttackMontage()
         {
 
         }
+    }
+}
+
+void UTFT_AnimInstance_NormalRampage::PlayDeathMontage()
+{
+    if (!Montage_IsPlaying(_deathMontage))
+    {
+        Montage_Play(_deathMontage);
     }
 }
 

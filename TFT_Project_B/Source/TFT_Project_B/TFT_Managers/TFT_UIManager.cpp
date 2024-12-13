@@ -98,10 +98,10 @@ void ATFT_UIManager::BeginPlay()
 	_MenuWidget->_MenuContinueEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
 	_MenuWidget->_MenuStartPageEvent.AddUObject(this, &ATFT_UIManager::ResetLevel);
 
-	_DeathWidget->_StartPageDelegate.AddUObject(this, &ATFT_UIManager::DeathResetLevel);
+	_DeathWidget->_startPageDelegate.AddUObject(this, &ATFT_UIManager::DeathResetLevel);
 	_DeathWidget->_ReStartDelegate.AddUObject(this, &ATFT_UIManager::ReStart);
 
-	_EndingWidget->_StartPageDelegate.AddUObject(this, &ATFT_UIManager::ResetLevel);
+	_EndingWidget->_startPageDelegate.AddUObject(this, &ATFT_UIManager::ResetLevel);
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)
@@ -257,6 +257,8 @@ void ATFT_UIManager::DeathUIA()
 
 void ATFT_UIManager::EndingUIOn()
 {
+	GetWorld()->GetWorldSettings()->SetTimeDilation(0.0f);
+
 	OpenWidget(UIType::EndingUI);
 	MouseUnLock(UIType::EndingUI);
 }

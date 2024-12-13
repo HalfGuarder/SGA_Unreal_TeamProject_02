@@ -29,7 +29,7 @@ void UTFT_DeathWidget::ReStartEvent()
 
 void UTFT_DeathWidget::StartPageEvent()
 {
-	_StartPageDelegate.Broadcast();
+	_startPageDelegate.Broadcast();
 
 }
 

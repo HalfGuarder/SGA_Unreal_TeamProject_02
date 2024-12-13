@@ -14,7 +14,7 @@
 ATFT_Monster::ATFT_Monster()
 {
 	_invenCom = CreateDefaultSubobject<UTFT_InvenComponent>(TEXT("Inven_Com"));
-	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("MeshComponent"));
+	_meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
 }
 
 void ATFT_Monster::PostInitializeComponents()
@@ -38,10 +38,14 @@ void ATFT_Monster::AttackEnd()
 
 void ATFT_Monster::DropItem(MonsterType type)
 {
+    if (bItemDroped) return;
+
 	if (IsValid(this)) // �Ǵ� IsValid(GetWorld())
 	{
 		FVector monsterPos = GetActorLocation();
 		_invenCom->DropMonsterItem(monsterPos, type);
+
+        bItemDroped = true;
 	}
 	//_invenCom->DropMonsterItem(monsterPos);
 }
@@ -63,6 +67,20 @@ float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 	return damage;
 }
 
+void ATFT_Monster::DeathStart()
+{
+    Super::DeathStart();
+
+    auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+    if (player && _controller)
+    {
+        _controller->UnPossess();
+
+        return;
+    }
+}
+
 void ATFT_Monster::TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
@@ -71,20 +89,29 @@ void ATFT_Monster::TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, 
 void ATFT_Monster::ChangeMesh(TObjectPtr<USkeletalMesh> mesh)
 {
 	_meshCom->ChangeMesh(mesh);
+    bAnimBind = false;
+}
+
+void ATFT_Monster::PreActive()
+{
+    _meshCom->Activate(true);
 }
 
 void ATFT_Monster::Active()
 {
     bIsSpawned = true;
 
+    _meshCom->Activate(true);
+
     SetActorHiddenInGame(false);
     SetActorEnableCollision(true);
 
-    //auto controller = 
     auto player = Cast<ATFT_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
     if (player && _controller)
     {
+        _controller->Possess(this);
+
         _controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), player);
 
         return;
@@ -93,6 +120,8 @@ void ATFT_Monster::Active()
     _statCom->Reset();
 
     PrimaryActorTick.bCanEverTick = true;
+
+    bItemDroped = false;
 }
 
 void ATFT_Monster::DeActive()
@@ -102,15 +131,14 @@ void ATFT_Monster::DeActive()
     SetActorHiddenInGame(true);
     SetActorEnableCollision(false);
 
-    //auto controller = Cast<ATFT_Boss_AIController>(GetController());
-
-    if (_controller)
+    /*if (_controller)
     {
         _controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Tartget")), nullptr);
-    } 
+    } */
 
     PrimaryActorTick.bCanEverTick = false;
 
+    _meshCom->Deactivate();
 }
 
 void ATFT_Monster::SetAnimInstanceBind()

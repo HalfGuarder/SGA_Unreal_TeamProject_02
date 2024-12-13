@@ -23,30 +23,11 @@
 
 ATFT_NormalMonster_Rampage::ATFT_NormalMonster_Rampage()
 {
-    _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
-
-    SetMesh("/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Meshes/Rampage.Rampage'");
-
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
     {
         HpBarWidgetClass = HpBar.Class;
     }
-
-
-    //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
-    //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
-
-    //armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
-    //armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
-
-    //armcapsule_R->SetCapsuleRadius(10.f);
-    //armcapsule_R->SetCapsuleHalfHeight(30.f);
-
-    //armcapsule_L->SetCapsuleRadius(10.f);
-    //armcapsule_L->SetCapsuleHalfHeight(30.f);
-    //armcapsule_L->SetCapsuleRadius(10.f);
-   // armcapsule_L->SetCapsuleHalfHeight(30.f);
 
     _possessionExp = 100;
 }
@@ -65,17 +46,6 @@ void ATFT_NormalMonster_Rampage::PostInitializeComponents()
     Super::PostInitializeComponents();
 
     _statCom->SetLevelAndInit(1);
-
-    _animInstance_Boss = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
-    if (_animInstance_Boss->IsValidLowLevel())
-    {
-        _animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_Boss->_attackStartDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::AttackStart);
-        _animInstance_Boss->_attackHitDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::AttackHit_Boss);
-        _animInstance_Boss->_deathStartDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::DeathStart);
-        _animInstance_Boss->_deathEndDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::BossDisable);
-    }
-
 
     //if (HpBarWidgetClass)
     //{
@@ -126,6 +96,11 @@ void ATFT_NormalMonster_Rampage::Tick(float DeltaTime)
     if (_isAttacking)
     {
         SetActorLocation(LockedLocation);
+    }
+
+    if (_statCom->IsValidLowLevel())
+    {
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::DeathStart);
     }
 }
 
@@ -213,23 +188,23 @@ void ATFT_NormalMonster_Rampage::AttackHit_Boss()
 
 void ATFT_NormalMonster_Rampage::Attack_AI()
 {
-    if (!_isAttacking && _animInstance_Boss != nullptr)
+    if (!_isAttacking && _animInstance_Rampage != nullptr)
     {
         // �ٸ� ��Ÿ�ְ� ���� ������ ���� ���� ����
-        if (!_animInstance_Boss->Montage_IsPlaying(_animInstance_Boss->_myAnimMontage))
+        if (!_animInstance_Rampage->Montage_IsPlaying(_animInstance_Rampage->_attackMontage))
         {
             // ���� ��ġ�� ��� ó��
             LockedLocation = GetActorLocation();
 
             // �Ϲ� ���� ��Ÿ�� ���
-            _animInstance_Boss->PlayAttackMontage();
+            _animInstance_Rampage->PlayAttackMontage();
 
             _isAttacking = true;
 
             // ���� ���� ��ȯ ó��
             _curAttackIndex %= 3;
             _curAttackIndex++;
-            _animInstance_Boss->JumpToSection(_curAttackIndex);
+            _animInstance_Rampage->JumpToSection(_curAttackIndex);
 
             // ��Ÿ�� ���� �� ������ ó���ϴ� ��������Ʈ �߰�
             //_animInstance_Boss->OnMontageEnded.AddDynamic(this, &ATFT_BossMonster_Rampage::ResetMovementLock);
@@ -257,37 +232,84 @@ void ATFT_NormalMonster_Rampage::DeathStart()
 {
     Super::DeathStart();
 
-    _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
+    // _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
+
+    // _animInstance_Rampage->PlayDeathMontage();
+    GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_NormalMonster_Rampage::BossDisable, 2.0f, false);
 }
 
 void ATFT_NormalMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bInterrupted)
 {
     _isAttacking = false;
 
-    _animInstance_Boss->OnMontageEnded.RemoveDynamic(this, &ATFT_NormalMonster_Rampage::ResetMovementLock);
+    _animInstance_Rampage->OnMontageEnded.RemoveDynamic(this, &ATFT_NormalMonster_Rampage::ResetMovementLock);
 }
 
 void ATFT_NormalMonster_Rampage::BossDisable()
 {
     Super::DropItem(MonsterType::Normal);
 
-    this->SetActorHiddenInGame(true);
+    // this->SetActorHiddenInGame(true);
 
-    _animInstance_Boss->_deathEndDelegate.RemoveAll(this);
+    // _animInstance_Rampage->_deathEndDelegate.RemoveAll(this);
     //_animInstance_Boss->_attackStartDelegate.RemoveAll(this);
     //_animInstance_Boss->_attackHitDelegate.RemoveAll(this);
 
     PrimaryActorTick.bCanEverTick = false;
-    auto controller = GetController();
-    if (controller != nullptr) GetController()->UnPossess();
+    //auto controller = GetController();
+    //if (controller != nullptr) GetController()->UnPossess();
 
     if (HpBarWidgetInstance)
     {
         HpBarWidgetInstance->RemoveFromParent();
         HpBarWidgetInstance = nullptr;
     }
+
+    DeActive();
 }
 
 void ATFT_NormalMonster_Rampage::UpdateBlackboardTarget()
 {
+}
+
+void ATFT_NormalMonster_Rampage::PreActive()
+{
+    Super::PreActive();
+}
+
+void ATFT_NormalMonster_Rampage::Active()
+{
+    Super::Active();
+}
+
+void ATFT_NormalMonster_Rampage::DeActive()
+{
+    Super::DeActive();
+    
+    if (_animInstance_Rampage->IsValidLowLevel())
+    {
+        _animInstance_Rampage->OnMontageEnded.Clear();
+        _animInstance_Rampage->_attackStartDelegate.Clear();
+        _animInstance_Rampage->_attackHitDelegate.Clear();
+        _animInstance_Rampage->_deathEndDelegate.Clear();
+    }
+}
+
+void ATFT_NormalMonster_Rampage::SetAnimInstanceBind()
+{
+    Super::SetAnimInstanceBind();
+    if (!bAnimBind)
+    {
+        _animInstance_Rampage = Cast<UTFT_AnimInstance_NormalRampage>(GetMesh()->GetAnimInstance());
+        
+        if (_animInstance_Rampage->IsValidLowLevel())
+        {
+            _animInstance_Rampage->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+            _animInstance_Rampage->_attackStartDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::AttackStart);
+            _animInstance_Rampage->_attackHitDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::AttackHit_Boss);
+            _animInstance_Rampage->_deathEndDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::BossDisable);
+        
+            bAnimBind = true;
+        }
+    }
 }

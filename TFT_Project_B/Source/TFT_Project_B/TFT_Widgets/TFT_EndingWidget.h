@@ -22,5 +22,5 @@ public:
 	UFUNCTION()
 	void StartPageEvent();
 
-	EndingEvent _StartPageDelegate;
+	EndingEvent _startPageDelegate;
 };

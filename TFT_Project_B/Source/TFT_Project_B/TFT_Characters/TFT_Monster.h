@@ -36,6 +36,10 @@ public:
 
 	virtual void ChangeMesh(TObjectPtr<USkeletalMesh> mesh) override;
 
+	virtual void DeathStart() override;
+
+	virtual void PreActive();
+
 	virtual void Active();
 
 	virtual void DeActive();
@@ -45,8 +49,12 @@ public:
 	virtual void ChangeLevel(int32 level);
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Spawn, meta = (AllowPrivateAccess = true))
 	bool bIsSpawned = false;
+
 	bool bAnimBind = false;
+	bool bItemDroped = false;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class ATFT_Boss_AIController* _controller = nullptr;

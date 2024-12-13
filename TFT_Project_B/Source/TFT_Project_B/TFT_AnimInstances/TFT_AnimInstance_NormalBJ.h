@@ -6,11 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "TFT_AnimInstance_NormalBJ.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(AttackStartDelegate);
-DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
-DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
-DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
-DECLARE_MULTICAST_DELEGATE(BossDeathEndDelegate);
+DECLARE_MULTICAST_DELEGATE(BJNormalAnimEvent);
 
 /**
  * 
@@ -27,6 +23,7 @@ public:
 
 	void PlayAttackMontage();
 
+	void PlayDeathMontage();
 
 	void JumpToSection(int32 sectionIndex);
 
@@ -43,14 +40,14 @@ public:
 	void AnimNotify_DeathEnd();
 
 
-	AttackStartDelegate _attackStartDelegate;
-	AttackHitDelegate _attackHitDelegate;
-	DeathStartDelegate _deathStartDelegate;
-	DeathEndDelegate _deathEndDelegate;
+	BJNormalAnimEvent _attackStartDelegate;
+	BJNormalAnimEvent _attackHitDelegate;
+	BJNormalAnimEvent _deathStartDelegate;
+	BJNormalAnimEvent _deathEndDelegate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _myAnimMontage;
-
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
+	class UAnimMontage* _attackMontage;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -64,6 +61,7 @@ private:
 	float _vertical;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float _horizontal;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _attackMontage;
+	UAnimMontage* _deathMontage;
 };

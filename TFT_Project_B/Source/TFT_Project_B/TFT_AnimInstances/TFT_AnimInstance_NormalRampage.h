@@ -26,9 +26,8 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	void PlayAttackMontage();
+	void PlayDeathMontage();
 	
-	
-
 	void JumpToSection(int32 sectionIndex);
 
 	UFUNCTION()
@@ -43,23 +42,22 @@ public:
 	UFUNCTION()
 	void AnimNotify_DeathEnd();
 
-
-
-
 	AttackStartDelegate _attackStartDelegate;
 	AttackHitDelegate _attackHitDelegate;
 	DeathStartDelegate _deathStartDelegate;
 	DeathEndDelegate _deathEndDelegate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	class UAnimMontage* _attackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _myAnimMontage;
+	UAnimMontage* _JumpskillMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _JumpskillMontage;
+	UAnimMontage* _skillMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _skillMontage;
+	UAnimMontage* _deathMontage;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -73,6 +71,5 @@ private:
 	float _vertical;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float _horizontal;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _attackMontage;
+
 };

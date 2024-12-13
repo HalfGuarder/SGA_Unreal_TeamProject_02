@@ -21,27 +21,11 @@
 
 ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 {
-    _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
-
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
     {
         HpBarWidgetClass = HpBar.Class;
     }
-
-    //armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
-    //armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
-
-    //armcapsule_L = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_L"));
-    //armcapsule_L->SetupAttachment(GetMesh(), TEXT("arm_L"));
-    armcapsule_R = CreateDefaultSubobject<UCapsuleComponent>(TEXT("armcapsule_R"));
-    armcapsule_R->SetupAttachment(GetMesh(), TEXT("arm_R"));
-
-    //armcapsule_R->SetCapsuleRadius(10.f);
-    //armcapsule_R->SetCapsuleHalfHeight(30.f);
-
-    //armcapsule_L->SetCapsuleRadius(10.f);
-    //armcapsule_L->SetCapsuleHalfHeight(30.f);
 
     _possessionExp = 100;
 }
@@ -266,7 +250,8 @@ float ATFT_BossMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& Dam
 void ATFT_BossMonster_Rampage::DeathStart()
 {
     Super::DeathStart();
-    if (GetWorld())
+
+    /*if (GetWorld())
     {
         for (TActorIterator<ATFT_NPC2> NPC2Itr(GetWorld()); NPC2Itr; ++NPC2Itr)
         {
@@ -282,11 +267,10 @@ void ATFT_BossMonster_Rampage::DeathStart()
     else
     {
         UE_LOG(LogTemp, Error, TEXT("GetWorld() returned nullptr! Cannot find NPC2."));
-    }
+    }*/
 
     // _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
 
-    // TODO
     _animInstance_Rampage->PlayDeathMontage();
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Rampage::BossDisable, 2.0f, false);
 }
@@ -496,6 +480,11 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
     DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
 }
 
+void ATFT_BossMonster_Rampage::PreActive()
+{
+    Super::PreActive();
+}
+
 void ATFT_BossMonster_Rampage::SetAnimInstanceBind()
 {
     Super::SetAnimInstanceBind();
@@ -509,7 +498,6 @@ void ATFT_BossMonster_Rampage::SetAnimInstanceBind()
             _animInstance_Rampage->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
             _animInstance_Rampage->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackStart);
             _animInstance_Rampage->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::AttackHit_Boss);
-            // _animInstance_Rampage->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
             _animInstance_Rampage->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::BossDisable);
             _animInstance_Rampage->OnExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ExplosionHit);
             _animInstance_Rampage->OnChainExplosionHitDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::ChainExplosionHit);
@@ -527,4 +515,14 @@ void ATFT_BossMonster_Rampage::Active()
 void ATFT_BossMonster_Rampage::DeActive()
 {
     Super::DeActive();
+
+    if (_animInstance_Rampage->IsValidLowLevel())
+    {
+        _animInstance_Rampage->OnMontageEnded.Clear();
+        _animInstance_Rampage->_attackStartDelegate.Clear();
+        _animInstance_Rampage->_attackHitDelegate.Clear();
+        _animInstance_Rampage->_deathEndDelegate.Clear();
+        _animInstance_Rampage->OnExplosionHitDelegate.Clear();
+        _animInstance_Rampage->OnChainExplosionHitDelegate.Clear();
+    }
 }

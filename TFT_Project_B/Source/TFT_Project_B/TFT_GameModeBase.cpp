@@ -3,6 +3,7 @@
 
 #include "TFT_GameModeBase.h"
 #include "TFT_GameInstance.h"
+#include "TFT_UIManager.h"
 #include "TFT_Widgets/TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -10,9 +11,10 @@
 
 ATFT_GameModeBase::ATFT_GameModeBase()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	static ConstructorHelpers::FClassFinder<ATFT_Player> player
 	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/TFT_Player_BP.TFT_Player_BP_C'"));
-
 	if (player.Succeeded())
 	{
 		_player = player.Class;
@@ -24,17 +26,15 @@ ATFT_GameModeBase::ATFT_GameModeBase()
 	}
 }
 
-
-
 void ATFT_GameModeBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
 
 	if (GameStartInstance->IsValidLowLevel())
 	{
 		GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
 	}
+
 	GAMEINSTANCE->_reStartDelegate.AddUObject(this, &ATFT_GameModeBase::ReStart);
 }
 
@@ -54,7 +54,20 @@ void ATFT_GameModeBase::BeginPlay()
 	{
 		GameStart();
 	}
+}
 
+void ATFT_GameModeBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	_playTime += DeltaTime;
+
+	if (_playTime >= 90.0f && !bGameEnd)
+	{
+		UIMANAGER->EndingUIOn();
+
+		bGameEnd = true;
+	}
 }
 
 void ATFT_GameModeBase::GameStart()
@@ -76,8 +89,6 @@ void ATFT_GameModeBase::GameStart()
 
 	MouseLock();
 }
-
-
 
 void ATFT_GameModeBase::ReStart()
 {

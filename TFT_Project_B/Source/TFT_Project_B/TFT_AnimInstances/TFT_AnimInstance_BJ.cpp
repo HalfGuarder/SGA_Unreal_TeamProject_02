@@ -8,24 +8,31 @@
 
 UTFT_AnimInstance_BJ::UTFT_AnimInstance_BJ()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm (TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/NEW_BOSS_ATTACKBoss_Attack.NEW_BOSS_ATTACKBoss_Attack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm (TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_BJ/Animations/Animation/NEW_BOSS_ATTACKBoss_Attack.NEW_BOSS_ATTACKBoss_Attack'"));
 	if (bm.Succeeded())
 	{
 		_attackMontage = bm.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> sm
-	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Skill.Boss_Skill'"));
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_BJ/Animations/Animation/Boss_Skill.Boss_Skill'"));
 	if (sm.Succeeded())
 	{
 		_skillMontage = sm.Object;
 	}
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> em
-	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/Boss_Slash.Boss_Slash'"));
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_BJ/Animations/Animation/Boss_Slash.Boss_Slash'"));
 	if (em.Succeeded())
 	{
 		_slashMontage = em.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> dth
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_BJ/Animations/Animation/TFT_BJ_Death_AnimMontage.TFT_BJ_Death_AnimMontage'"));
+	if (dth.Succeeded())
+	{
+		_deathMontage = dth.Object;
 	}
 }
 
@@ -45,9 +52,9 @@ void UTFT_AnimInstance_BJ::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_BJ::PlayAttackMontage()
 {
-	if (!Montage_IsPlaying(_myAnimMontage))
+	if (!Montage_IsPlaying(_attackMontage))
 	{
-		Montage_Play(_myAnimMontage);
+		Montage_Play(_attackMontage);
 
 		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
 		if (myCharacter)
@@ -94,6 +101,14 @@ void UTFT_AnimInstance_BJ::PlaySlashMontage()
 		else
 		{
 		}
+	}
+}
+
+void UTFT_AnimInstance_BJ::PlayDeathMontage()
+{
+	if (!Montage_IsPlaying(_deathMontage))
+	{
+		Montage_Play(_deathMontage);
 	}
 }
 

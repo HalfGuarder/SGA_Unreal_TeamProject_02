@@ -8,10 +8,18 @@
 
 UTFT_AnimInstance_NormalBJ::UTFT_AnimInstance_NormalBJ()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/NEW_BOSS_ATTACKBoss_Attack.NEW_BOSS_ATTACKBoss_Attack'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> bm
+	(TEXT("/Script/Engine.AnimMontage'/Game/Animation/Animation/Boss_Animation/Animation/NEW_BOSS_ATTACKBoss_Attack.NEW_BOSS_ATTACKBoss_Attack'"));
 	if (bm.Succeeded())
 	{
 		_attackMontage = bm.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> dth
+	(TEXT("/Script/Engine.AnimMontage'/Game/Blueprints/Monster/BossMonster_BJ/Animations/Animation/TFT_BJ_Death_AnimMontage.TFT_BJ_Death_AnimMontage'"));
+	if (dth.Succeeded())
+	{
+		_deathMontage = dth.Object;
 	}
 }
 
@@ -31,9 +39,9 @@ void UTFT_AnimInstance_NormalBJ::NativeUpdateAnimation(float DeltaSeconds)
 
 void UTFT_AnimInstance_NormalBJ::PlayAttackMontage()
 {
-	if (!Montage_IsPlaying(_myAnimMontage))
+	if (!Montage_IsPlaying(_attackMontage))
 	{
-		Montage_Play(_myAnimMontage);
+		Montage_Play(_attackMontage);
 
 		ATFT_Monster* myCharacter = Cast<ATFT_Monster>(TryGetPawnOwner());
 		if (myCharacter)
@@ -44,7 +52,14 @@ void UTFT_AnimInstance_NormalBJ::PlayAttackMontage()
 		{
 			UE_LOG(LogTemp, Error, TEXT("Pawn Owner Cast Failed"));
 		}
+	}
+}
 
+void UTFT_AnimInstance_NormalBJ::PlayDeathMontage()
+{
+	if (!Montage_IsPlaying(_attackMontage))
+	{
+		Montage_Play(_attackMontage);
 	}
 }
 

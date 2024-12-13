@@ -26,8 +26,6 @@
 
 ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
-    _meshCom = CreateDefaultSubobject<UTFT_MeshComponent>(TEXT("Mesh_Com"));
-
     _possessionExp = 100;
 }
 
@@ -51,7 +49,11 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(1);
+    if (_statCom->IsValidLowLevel())
+    {
+        _statCom->SetLevelAndInit(1);
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
+    }
 
     if (HpBarWidgetInstance)
     {
@@ -63,11 +65,6 @@ void ATFT_BossMonster_Grux::PostInitializeComponents()
             _statCom->_BosshpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
             _statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
         }
-    }
-
-    if (_statCom->IsValidLowLevel())
-    {
-        _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
     }
 }
 
@@ -249,8 +246,6 @@ void ATFT_BossMonster_Grux::DeathStart()
 {
     Super::DeathStart();
 
-    // _animInstance_Grux->StopAllMontages(0.0f);
-
     _animInstance_Grux->PlayDeathMontage();
 
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Grux::BossDisable, 2.0f, false);
@@ -347,13 +342,17 @@ void ATFT_BossMonster_Grux::SetAnimInstanceBind()
             _animInstance_Grux->_attackStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackStart);
             _animInstance_Grux->_attackHitDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackHit_Boss);
             _animInstance_Grux->_attackEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::AttackEnd);
-            // _animInstance_Grux->_deathStartDelegate.AddUObject(this, &ATFT_BossMonster_Grux::DeathStart);
             _animInstance_Grux->_deathEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::BossDisable);
             _animInstance_Grux->_stateMontageEndDelegate.AddUObject(this, &ATFT_BossMonster_Grux::EndState);
 
             bAnimBind = true;
         }
     }
+}
+
+void ATFT_BossMonster_Grux::PreActive()
+{
+    Super::PreActive();
 }
 
 void ATFT_BossMonster_Grux::Active()
@@ -366,4 +365,13 @@ void ATFT_BossMonster_Grux::DeActive()
 {
     Super::DeActive();
 
+    if (_animInstance_Grux->IsValidLowLevel())
+    {
+        _animInstance_Grux->OnMontageEnded.Clear();
+        _animInstance_Grux->_attackStartDelegate.Clear();
+        _animInstance_Grux->_attackHitDelegate.Clear();
+        _animInstance_Grux->_attackEndDelegate.Clear();
+        _animInstance_Grux->_deathEndDelegate.Clear();
+        _animInstance_Grux->_stateMontageEndDelegate.Clear();
+    }
 }

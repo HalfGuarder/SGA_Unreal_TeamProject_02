@@ -24,13 +24,9 @@ public:
 	UFUNCTION()
 	void AttackHit_Boss();
 
-
 	virtual void Attack_AI();
 
-
-
 	virtual void AttackEnd();
-
 
 	virtual void DropItem();
 
@@ -46,11 +42,17 @@ public:
 
 	void UpdateBlackboardTarget();
 
+	void PreActive() override;
 
+	void Active() override;
+
+	void DeActive() override;
+
+	void SetAnimInstanceBind() override;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
-	class UTFT_AnimInstance_NormalRampage* _animInstance_Boss;
+	class UTFT_AnimInstance_NormalRampage* _animInstance_Rampage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* armcapsule_R;
@@ -58,12 +60,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* armcapsule_L;
 
-
 	bool bIsDead = false;
 
 	APlayerController* PlayerController;
 
 	FVector LockedLocation;
 
-
+	FTimerHandle _deathTimerHandle;
 };

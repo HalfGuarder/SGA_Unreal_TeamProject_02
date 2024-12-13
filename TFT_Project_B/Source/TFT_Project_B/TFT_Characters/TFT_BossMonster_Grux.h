@@ -44,6 +44,8 @@ public:
 
 	void SetAnimInstanceBind() override;
 
+	void PreActive() override;
+
 	void Active() override;
 
 	void DeActive() override;

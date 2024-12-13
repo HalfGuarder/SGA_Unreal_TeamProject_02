@@ -51,6 +51,8 @@ public:
 	UFUNCTION()
 	void ChainExplosionHit(); // Chain Explosion 공격
 
+	void PreActive() override;
+
 	void Active() override;
 
 	void DeActive() override;

@@ -23,30 +23,33 @@ public:
 	virtual void SetMesh(FString path) override;
 	virtual void AttackStart() override;
 	
-
 	UFUNCTION()
 	void AttackHit_Boss();
 
 	virtual void Attack_AI();
 
-
 	virtual void AttackEnd();
-
-
-	//virtual void DropItem();
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void DeathStart() override;
 
-
 	UFUNCTION()
 	void BossDisable();
 
+	void SetAnimInstanceBind() override;
+
+	void PreActive() override;
+
+	void Active() override;
+
+	void DeActive() override;
+
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class UTFT_AnimInstance_NormalBJ* _animInstance_BJ;
 
-
+	FTimerHandle _deathTimerHandle;
 
 
 };

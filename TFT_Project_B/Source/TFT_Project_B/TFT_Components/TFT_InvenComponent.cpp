@@ -136,13 +136,13 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 
 	if (_currentWeapon->_Itemid == 1)
 	{
-		//UIMANAGER->GetSkillUI()->SetSkillSlot(0, 5.0f, _currentWeapon->_Itemid);
-		//UIMANAGER->GetSkillUI()->ResetSkillSlot(1);
+		_currentWeapon->SetActorScale3D(FVector(1.0f, 2.5f, 2.0f));
+
 	}
 	else if (_currentWeapon->_Itemid == 2)
 	{
-		//UIMANAGER->GetSkillUI()->SetSkillSlot(1, 8.0f, _currentWeapon->_Itemid);
-		//UIMANAGER->GetSkillUI()->ResetSkillSlot(0);
+		_spareWeapon->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+
 	}
 }
 

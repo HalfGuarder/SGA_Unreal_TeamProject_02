@@ -23,6 +23,6 @@ public:
 	void StartPageEvent();
 
 	DeathEvent _ReStartDelegate;
-	DeathEvent _StartPageDelegate;
+	DeathEvent _startPageDelegate;
 
 };

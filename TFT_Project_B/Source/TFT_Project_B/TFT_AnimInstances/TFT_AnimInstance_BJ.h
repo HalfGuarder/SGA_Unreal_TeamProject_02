@@ -25,6 +25,7 @@ public:
 	void PlayAttackMontage();
 	void PlaySkillMontage();
 	void PlaySlashMontage();
+	void PlayDeathMontage();
 
 	void JumpToSection(int32 sectionIndex);
 
@@ -47,13 +48,16 @@ public:
 	DeathEndDelegate _deathEndDelegate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _myAnimMontage;
+	class UAnimMontage* _attackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _skillMontage;
+	UAnimMontage* _skillMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _slashMontage;
+	UAnimMontage* _slashMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* _deathMontage;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
@@ -67,6 +71,4 @@ private:
 	float _vertical;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	float _horizontal;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack, Meta = (AllowPrivateAccess = true))
-	class UAnimMontage* _attackMontage;
 };

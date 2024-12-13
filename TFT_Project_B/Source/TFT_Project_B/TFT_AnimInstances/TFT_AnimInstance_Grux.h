@@ -7,10 +7,6 @@
 #include "TFT_AnimInstance_Grux.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(GruxAnimEvent);
-//DECLARE_MULTICAST_DELEGATE(AttackHitDelegate);
-//DECLARE_MULTICAST_DELEGATE(AttackEndDelegate);
-//DECLARE_MULTICAST_DELEGATE(DeathStartDelegate);
-//DECLARE_MULTICAST_DELEGATE(DeathEndDelegate);
 
 UCLASS()
 class TFT_PROJECT_B_API UTFT_AnimInstance_Grux : public UAnimInstance

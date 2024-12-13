@@ -21,15 +21,21 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	UFUNCTION()
 	void GameStart();
 
 	void ReStart();
 
 	void MouseUnLock();
+
 	void MouseLock();
 
 	GameModeEvent _reEvent;
+
+	float GetPlayTime() { return _playTime; }
+
 private:
 	UPROPERTY()
 	class UTFT_GameStartWidget* GameStartInstance;
@@ -37,4 +43,7 @@ private:
 	TSubclassOf<APawn> _player;
 
 	bool _restart = false;
+
+	float _playTime = 0.0f;
+	bool bGameEnd = false;
 };

@@ -22,14 +22,6 @@
 
 ATFT_NormalMonster_BJ::ATFT_NormalMonster_BJ()
 {
-    GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -88.f));
-
-    ConstructorHelpers::FObjectFinder<USkeletalMesh> SkeletalMeshAsset(TEXT("/Script/Engine.SkeletalMesh'/Game/Asset/SciFi_Soldiers/Mesh/Male/SK_SciFi_Soldier_Male_Skin4.SK_SciFi_Soldier_Male_Skin4'"));
-    if (SkeletalMeshAsset.Succeeded())
-    {
-        GetMesh()->SetSkeletalMesh(SkeletalMeshAsset.Object);
-    }
-
     static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
     if (HpBar.Succeeded())
     {
@@ -44,7 +36,6 @@ void ATFT_NormalMonster_BJ::BeginPlay()
 {
     Super::BeginPlay();
 
-    _statCom->SetLevelAndInit(1);
 
     GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 }
@@ -52,28 +43,15 @@ void ATFT_NormalMonster_BJ::BeginPlay()
 void ATFT_NormalMonster_BJ::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-    _animInstance_BJ = Cast<UTFT_AnimInstance_NormalBJ>(GetMesh()->GetAnimInstance());
-    if (_animInstance_BJ->IsValidLowLevel())
+    
+    if (_statCom->IsValidLowLevel())
     {
-        _animInstance_BJ->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
-        _animInstance_BJ->_attackStartDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::AttackStart);
-        _animInstance_BJ->_attackHitDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::AttackHit_Boss);
-        _animInstance_BJ->_deathStartDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::DeathStart);
-        _animInstance_BJ->_deathEndDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::BossDisable);
+        _statCom->SetLevelAndInit(1);
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::DeathStart);
     }
-
-    //if (HpBarWidgetClass)
-    //{
-    //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-    //    if (HpBarWidgetInstance)
-    //    {
-    //        HpBarWidgetInstance->AddToViewport();
-    //    }
-    //}
 
     if (HpBarWidgetInstance)
     {
-
         UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
         if (HpBar)
         {
@@ -174,7 +152,7 @@ void ATFT_NormalMonster_BJ::AttackHit_Boss()
             drawColor = FColor::Red;
 
             // 상태 효과 적용
-            ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
+            /*ATFT_Creature* targetCreature = Cast<ATFT_Creature>(targetActor);
             if (targetCreature != nullptr)
             {
                 switch (_curAttackIndex)
@@ -191,7 +169,7 @@ void ATFT_NormalMonster_BJ::AttackHit_Boss()
                 default:
                     break;
                 }
-            }
+            }*/
         }
     }
 
@@ -205,7 +183,7 @@ void ATFT_NormalMonster_BJ::Attack_AI()
     if (!_isAttacking && _animInstance_BJ != nullptr)
     {
         // 스킬 애니메이션이 재생 중이 아닌 경우에만 실행
-        if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_myAnimMontage))
+        if (!_animInstance_BJ->Montage_IsPlaying(_animInstance_BJ->_attackMontage))
         {
             // 일반 공격 애니메이션 실행
             _animInstance_BJ->PlayAttackMontage();
@@ -230,7 +208,6 @@ float ATFT_NormalMonster_BJ::TakeDamage(float Damage, FDamageEvent const& Damage
 {
     float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-
     return ActualDamage;
 }
 
@@ -238,26 +215,68 @@ void ATFT_NormalMonster_BJ::DeathStart()
 {
     Super::DeathStart();
 
-    _animInstance_BJ->_deathStartDelegate.RemoveAll(this);
+    _animInstance_BJ->PlayDeathMontage();
+
+    GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_NormalMonster_BJ::BossDisable, 2.0f, false);
 }
 
 void ATFT_NormalMonster_BJ::BossDisable()
 {
-    Super::DropItem(MonsterType::BOSS);
-
-    this->SetActorHiddenInGame(true);
-
-    _animInstance_BJ->_deathEndDelegate.RemoveAll(this);
-    //_animInstance_BJ->_attackStartDelegate.RemoveAll(this);
-    //_animInstance_BJ->_attackHitDelegate.RemoveAll(this);
+    Super::DropItem(MonsterType::Normal);
 
     PrimaryActorTick.bCanEverTick = false;
-    auto controller = GetController();
-    if (controller != nullptr) GetController()->UnPossess();
 
     if (HpBarWidgetInstance)
     {
         HpBarWidgetInstance->RemoveFromParent();
         HpBarWidgetInstance = nullptr;
+    }
+
+    DeActive();
+}
+
+void ATFT_NormalMonster_BJ::SetAnimInstanceBind()
+{
+    Super::SetAnimInstanceBind();
+    if (!bAnimBind)
+    {
+        _animInstance_BJ = Cast<UTFT_AnimInstance_NormalBJ>(GetMesh()->GetAnimInstance());
+        
+        if (_animInstance_BJ->IsValidLowLevel())
+        {
+            _animInstance_BJ->OnMontageEnded.AddDynamic(this, &ATFT_Creature::OnAttackEnded);
+            _animInstance_BJ->_attackStartDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::AttackStart);
+            _animInstance_BJ->_attackHitDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::AttackHit_Boss);
+            _animInstance_BJ->_deathStartDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::DeathStart);
+            _animInstance_BJ->_deathEndDelegate.AddUObject(this, &ATFT_NormalMonster_BJ::BossDisable);
+        
+            bAnimBind = true;
+        }
+    }
+}
+
+void ATFT_NormalMonster_BJ::PreActive()
+{
+    Super::PreActive();
+
+}
+
+void ATFT_NormalMonster_BJ::Active()
+{
+    Super::Active();
+
+}
+
+void ATFT_NormalMonster_BJ::DeActive()
+{
+    Super::DeActive();
+
+    if (_animInstance_BJ->IsValidLowLevel())
+    {
+        _animInstance_BJ->OnMontageEnded.Clear();
+        _animInstance_BJ->_attackStartDelegate.Clear();
+        _animInstance_BJ->_attackHitDelegate.Clear();
+        _animInstance_BJ->_deathStartDelegate.Clear();
+        _animInstance_BJ->_deathEndDelegate.Clear();
     }
 }
