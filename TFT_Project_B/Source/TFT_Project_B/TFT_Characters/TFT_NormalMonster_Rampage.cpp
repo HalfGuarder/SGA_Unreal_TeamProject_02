@@ -45,8 +45,12 @@ void ATFT_NormalMonster_Rampage::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
 
-    _statCom->SetLevelAndInit(1);
-
+    if (_statCom->IsValidLowLevel())
+    {
+        _statCom->SetLevelAndInit(1);
+        _statCom->_deathDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::DeathStart);
+    }
+    
     //if (HpBarWidgetClass)
     //{
     //    HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
@@ -96,11 +100,6 @@ void ATFT_NormalMonster_Rampage::Tick(float DeltaTime)
     if (_isAttacking)
     {
         SetActorLocation(LockedLocation);
-    }
-
-    if (_statCom->IsValidLowLevel())
-    {
-        _statCom->_deathDelegate.AddUObject(this, &ATFT_NormalMonster_Rampage::DeathStart);
     }
 }
 

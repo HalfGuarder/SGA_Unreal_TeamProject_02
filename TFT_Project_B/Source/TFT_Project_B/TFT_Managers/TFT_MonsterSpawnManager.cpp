@@ -85,6 +85,12 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 	CreateMonster(_bjBossClass, _bjBossArray, 10);
 	CreateMonster(_bjNormalClass, _bjNormalArray, 50);
 
+	AddTimerHandleInArray(&_gruxSpawnTimerHandle);
+	AddTimerHandleInArray(&_rampageBossSpawnTimerHandle);
+	AddTimerHandleInArray(&_rampageNormalSpawnTimerHandle);
+	AddTimerHandleInArray(&_bjBossSpawnTimerHandle);
+	AddTimerHandleInArray(&_bjNormalSpawnTimerHandle);
+
 	// SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
 	// SetSpawnTimer(_rampageBossArray,  _rampageBossSpawnTimerHandle, 10.0f, true);
 }
@@ -138,6 +144,56 @@ void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 	{
 		ChangeSpawnTimer(_bjNormalArray, _bjNormalAnimClass, _bjNormalMesh, 4, _bjNormalSpawnTimerHandle, 2.0f, true);
 		bOnStage_6 = true;
+	}
+
+	if (_playTime >= 90.0f && !bOnEndStage)
+	{
+		PauseAllTimerHandle();
+
+		bOnEndStage = true;
+	}
+}
+
+bool ATFT_MonsterSpawnManager::IsAllCleared()
+{
+	for (auto m : _gruxArray)
+	{
+		if (m->bIsSpawned) return false;
+	}
+
+	for (auto m : _rampageBossArray)
+	{
+		if (m->bIsSpawned) return false;
+	}
+
+	for (auto m : _rampageNormalArray)
+	{
+		if (m->bIsSpawned) return false;
+	}
+
+	for (auto m : _bjBossArray)
+	{
+		if (m->bIsSpawned) return false;
+	}
+
+	for (auto m : _bjNormalArray)
+	{
+		if (m->bIsSpawned) return false;
+	}
+
+	return true;
+}
+
+void ATFT_MonsterSpawnManager::AddTimerHandleInArray(FTimerHandle* timerHandle)
+{
+	_timerHandles.Add(timerHandle);
+}
+
+void ATFT_MonsterSpawnManager::PauseAllTimerHandle()
+{
+	for (auto handle : _timerHandles)
+	{
+		GetWorldTimerManager().PauseTimer(*handle);
 	}
 }
 

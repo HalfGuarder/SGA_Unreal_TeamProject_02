@@ -17,6 +17,7 @@ class ATFT_MonsterSpawnManager;
 #define UIMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetUIManager()
 #define EFFECTMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetEffectManager()
 #define SOUNDMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetSoundManager()
+#define SPAWNMANAGER Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())->GetSpawnManager()
 #define GAMEINSTANCE Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance())
 
 DECLARE_MULTICAST_DELEGATE(InstanceEvent);
@@ -39,6 +40,8 @@ public:
 	ATFT_EffectManager* GetEffectManager();
 	UFUNCTION(BlueprintCallable)
 	ATFT_SoundManager* GetSoundManager(); 
+	UFUNCTION(BlueprintCallable)
+	ATFT_MonsterSpawnManager* GetSpawnManager();
 
 	void SpawnManager();
 
@@ -49,16 +52,16 @@ public:
 	class UDataTable* _statTable;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
-	ATFT_UIManager* _uiManager;
+	ATFT_UIManager* _uiManager = nullptr;;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
-	ATFT_EffectManager* _effectManager;
+	ATFT_EffectManager* _effectManager = nullptr;;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
 	ATFT_SoundManager* _soundManager = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))
-	ATFT_MonsterSpawnManager* _monsterSpawnManager;
+	ATFT_MonsterSpawnManager* _spawnManager = nullptr;;
 
 	bool _reStartTrg = false;
 };

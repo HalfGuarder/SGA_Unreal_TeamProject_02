@@ -4,6 +4,7 @@
 #include "TFT_GameModeBase.h"
 #include "TFT_GameInstance.h"
 #include "TFT_UIManager.h"
+#include "TFT_MonsterSpawnManager.h"
 #include "TFT_Widgets/TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -62,7 +63,7 @@ void ATFT_GameModeBase::Tick(float DeltaTime)
 
 	_playTime += DeltaTime;
 
-	if (_playTime >= 90.0f && !bGameEnd)
+	if (_playTime >= 90.0f && !bGameEnd && SPAWNMANAGER->IsAllCleared())
 	{
 		UIMANAGER->EndingUIOn();
 

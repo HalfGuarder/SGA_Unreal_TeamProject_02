@@ -30,6 +30,12 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	bool IsAllCleared();
+
+	void AddTimerHandleInArray(FTimerHandle* timerHandle);
+
+	void PauseAllTimerHandle();
+
 private:
 	template <typename MonsterType>
 	void ConstructMonsterSubclass(TSubclassOf<MonsterType> &subclass, FString path);
@@ -73,9 +79,12 @@ private:
 	// Stages
 	bool bOnStage_1 = false; bool bOnStage_2 = false; bool bOnStage_3 = false; bool bOnStage_4 = false;
 	bool bOnStage_5 = false; bool bOnStage_6 = false; bool bOnStage_7 = false; bool bOnStage_8 = false;
+	bool bOnEndStage = false;
 
 	// Events
 	bool bSrdSpawn_1 = false;
+
+	TArray<FTimerHandle*> _timerHandles;
 
 #pragma region Monsters
 

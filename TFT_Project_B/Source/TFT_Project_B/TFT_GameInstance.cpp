@@ -57,6 +57,14 @@ ATFT_SoundManager* UTFT_GameInstance::GetSoundManager()
 	return _soundManager;
 }
 
+ATFT_MonsterSpawnManager* UTFT_GameInstance::GetSpawnManager()
+{
+	if (!_spawnManager)
+		SpawnManager();
+
+	return _spawnManager;
+}
+
 void UTFT_GameInstance::SpawnManager()
 {
 	UWorld* World = GetWorld();
@@ -82,10 +90,10 @@ void UTFT_GameInstance::SpawnManager()
 		Params.Name = TEXT("SoundManager");
 		_soundManager = World->SpawnActor<ATFT_SoundManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
 	}
-	if (!_monsterSpawnManager || !_monsterSpawnManager->IsValidLowLevel())
+	if (!_spawnManager || !_spawnManager->IsValidLowLevel())
 	{
-		Params.Name = TEXT("MonsterSpawnManager");
-		_monsterSpawnManager = World->SpawnActor<ATFT_MonsterSpawnManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
+		Params.Name = TEXT("SpawnManager");
+		_spawnManager = World->SpawnActor<ATFT_MonsterSpawnManager>(FVector::ZeroVector, FRotator::ZeroRotator, Params);
 	}
 }
 
