@@ -38,6 +38,11 @@ void ATFT_NormalMonster_Rampage::BeginPlay()
 
     PlayerController = GetWorld()->GetFirstPlayerController();
 
+    if (GetMesh())
+    {
+        GetMesh()->SetAnimInstanceClass(UTFT_AnimInstance_NormalRampage::StaticClass());
+    }
+
     GetCharacterMovement()->MaxWalkSpeed = 400.0f;
 }
 
@@ -233,7 +238,16 @@ void ATFT_NormalMonster_Rampage::DeathStart()
 
     // _animInstance_Boss->_deathStartDelegate.RemoveAll(this);
 
-    // _animInstance_Rampage->PlayDeathMontage();
+    if (_animInstance_Rampage)
+    {
+        _animInstance_Rampage->PlayDeathMontage();
+    }
+    else
+    {
+        return;
+    }
+
+    
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_NormalMonster_Rampage::BossDisable, 2.0f, false);
 }
 

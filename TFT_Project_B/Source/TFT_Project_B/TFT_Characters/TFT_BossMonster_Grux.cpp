@@ -43,6 +43,11 @@ void ATFT_BossMonster_Grux::BeginPlay()
     //}
 
     // UIMANAGER->OpenWidget(UIType::Tutorial);
+
+    if (GetMesh())
+    {
+        GetMesh()->SetAnimInstanceClass(UTFT_AnimInstance_Grux::StaticClass());
+    }
 }
 
 void ATFT_BossMonster_Grux::PostInitializeComponents()
@@ -246,7 +251,15 @@ void ATFT_BossMonster_Grux::DeathStart()
 {
     Super::DeathStart();
 
-    _animInstance_Grux->PlayDeathMontage();
+    if (_animInstance_Grux)
+    {
+        _animInstance_Grux->PlayDeathMontage();
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("_animInstance_Grux is NULL in DeathStart! Check AnimInstance setup."));
+        return; 
+    }
 
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_BossMonster_Grux::BossDisable, 2.0f, false);
 

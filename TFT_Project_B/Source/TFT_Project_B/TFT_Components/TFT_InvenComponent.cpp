@@ -73,7 +73,7 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 			UE_LOG(LogTemp, Log, TEXT("PoisonAttack Effect Triggered"));
 
 			// 주변 몬스터에게 데미지 적용
-			float damageRadius = 500.0f; // 반경 500
+			float damageRadius = 700.0f; // 반경 500
 			float poisonDamage = 30.0f;  // 데미지 수치
 
 			TArray<FOverlapResult> overlapResults;
@@ -293,7 +293,7 @@ void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 	{
 		int32 NormalDropItemIndex = FMath::RandRange(100, 103);
 
-		if (dropProbability <= 99) // 30%
+		if (dropProbability <= 29) // 30%
 		{
 			SetMonsterItem(NormalDropItemIndex);
 

@@ -36,6 +36,11 @@ void ATFT_NormalMonster_BJ::BeginPlay()
 {
     Super::BeginPlay();
 
+    if (GetMesh())
+    {
+        GetMesh()->SetAnimInstanceClass(UTFT_AnimInstance_NormalBJ::StaticClass());
+    }
+
 
     GetCharacterMovement()->MaxWalkSpeed = 450.0f;
 }
@@ -215,7 +220,16 @@ void ATFT_NormalMonster_BJ::DeathStart()
 {
     Super::DeathStart();
 
-    _animInstance_BJ->PlayDeathMontage();
+    if (_animInstance_BJ)
+    {
+        _animInstance_BJ->PlayDeathMontage();
+    }
+    else
+    {
+        return;
+    }
+
+  
 
     GetWorldTimerManager().SetTimer(_deathTimerHandle, this, &ATFT_NormalMonster_BJ::BossDisable, 2.0f, false);
 }

@@ -106,4 +106,6 @@ public:
 	void SetMonsterItem(int32 lineNum);
 
 	void DropMonsterItem(FVector pos, MonsterType type);
+
+
 };
