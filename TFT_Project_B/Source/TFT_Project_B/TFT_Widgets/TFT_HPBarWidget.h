@@ -37,6 +37,8 @@ public:
 	void SetLevelText(int32 curLevel);
 
 	void SetMaxHPText(int32 maxHP);
+
+	void MaxHpChangeHandle(int32 curHP, int32 maxHP);
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_HpBar;

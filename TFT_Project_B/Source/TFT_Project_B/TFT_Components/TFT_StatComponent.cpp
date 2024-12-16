@@ -92,7 +92,7 @@ void UTFT_StatComponent::SetBarrier(int32 barrier)
 int32 UTFT_StatComponent::AddCurHp(float amount)
 {
 	int32 remainB = 0;
-	if (_curBarrier > 0 && (amount < 0)) // ����� 1�̶� �ְ� �������϶���
+	if (_curBarrier > 0 && (amount < 0)) 
 	{
 		int32 b = AddCurBarrier(amount);
 		
@@ -103,7 +103,7 @@ int32 UTFT_StatComponent::AddCurHp(float amount)
 			SetBarrier(_curBarrier);
 		}
 		else return 0;
-	} //����� ���� ���¿����� hp������ �״�� ����
+	} 
 
 	int32 beforeHp = _curHp + remainB;
 
@@ -140,7 +140,24 @@ void UTFT_StatComponent::AddAttackDamage(float amount)
 void UTFT_StatComponent::AddMaxHp(int32 amount)
 {
 	_maxHp += amount;
-	AddsItem_HP += amount;
+	//_curHp += amount;
+	AddsItem_HP += amount; // Level Up... stat BackUp
+
+	_maxHpChangerdDelegate.Broadcast(_curHp, _maxHp);
+
+	float playerratio = HpRatio();
+	_PlayerhpChangedDelegate.Broadcast(playerratio);
+}
+
+void UTFT_StatComponent::AddMaxBarrier(int32 amount)
+{
+	_maxBarrier += amount;
+	//AddsItem_Barrier += amount;
+
+	if (_curBarrier > 0)
+	{
+		SetBarrier(_curBarrier);
+	}
 }
 
 void UTFT_StatComponent::AddExp(int32 amount)
@@ -166,6 +183,11 @@ void UTFT_StatComponent::AddExp(int32 amount)
 		_levelUpDelegate.Broadcast(_curLevel); // Level up effect
 
 		SetLevelAndInit(100 + _curLevel);
+		AddBackUpStat();
+
+		float playerratio = HpRatio();
+		_PlayerhpChangedDelegate.Broadcast(playerratio);
+		_CurHpText.Broadcast(_maxHp);
 
 		_HpUpDelegate.Broadcast(_maxHp);
 		_ExpUpDelegate.Broadcast(_maxExp);
@@ -175,4 +197,10 @@ void UTFT_StatComponent::AddExp(int32 amount)
 	float ratio = ExpRatio();
 
 	_expChangedDelegate.Broadcast(ratio);
+}
+
+void UTFT_StatComponent::AddBackUpStat()
+{
+	_maxHp += AddsItem_HP;
+	//_maxBarrier += AddsItem_Barrier;
 }

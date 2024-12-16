@@ -49,6 +49,7 @@
 
 #include "TFT_SkillUI.h"
 #include "TFT_Menu.h"
+#include "TFT_RandomBoxWidget.h"
 
 #include "TFT_PlayerSkillComponent.h"
 
@@ -172,6 +173,7 @@ void ATFT_Player::BeginPlay()
 		UIMANAGER->GetEquipmentUI()->_ItemChangeEvent_stat.AddUObject(this, &ATFT_Player::UseItemPlayer_Equipment);*/
 		_invenCom->_BulletEvent.AddUObject(this, &ATFT_Player::BulletHendle);
 		_invenCom->_BuffGetDelegate.AddUObject(this, &ATFT_Player::AddBuffItemPlayer);
+		_invenCom->_RandomBoxGetDelegate.AddUObject(this, &ATFT_Player::AddRandomBoxPlayer);
 	}
 
 	if (_shieldDashAttackSphere != nullptr)
@@ -247,6 +249,7 @@ void ATFT_Player::PostInitializeComponents()
 			_statCom->_levelUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetLevelText);
 			_statCom->_HpUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetMaxHPText);
 			_statCom->_ExpUpDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetExpText);
+			_statCom->_maxHpChangerdDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::MaxHpChangeHandle);
 		}
 	}
 
@@ -1326,6 +1329,28 @@ void ATFT_Player::AddBuffItemPlayer(ATFT_Item* item)
 		UE_LOG(LogTemp, Warning, TEXT("Barrier up"));
 		_statCom->AddCurBarrier(item->GetItemAttackDamage());
 	}
+}
+
+void ATFT_Player::AddRandomBoxPlayer(ATFT_Item* item)
+{
+	UIMANAGER->_RandomBoxOpenEvent.Broadcast();
+
+
+	/*int32 randoms = FMath::RandRange(1, 2);
+	if (randoms == 1)
+	{
+		_statCom->AddMaxHp(50);
+		UE_LOG(LogTemp, Error, TEXT("Max HP 50 PLUS !!"));
+	}
+	else if (randoms == 2)
+	{
+		_statCom->AddMaxBarrier(50);
+		UE_LOG(LogTemp, Error, TEXT("Max Barrier 50 PLUS"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Not Events"));
+	}*/
 }
 
 void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)

@@ -130,6 +130,16 @@ void UTFT_HPBarWidget::SetMaxHPText(int32 maxHP)
 	MaxHp_Text->SetText(FText::FromString(hpstring));
 }
 
+void UTFT_HPBarWidget::MaxHpChangeHandle(int32 curHP, int32 maxHP)
+{
+	FString curhpstring = FString::Printf(TEXT("%d"), curHP);
+	FString maxhpstring = FString::Printf(TEXT("%d"), maxHP);
+
+	CurHp_Text->SetText(FText::FromString(curhpstring));
+	MaxHp_Text->SetText(FText::FromString(maxhpstring));
+}
+
+
 
 
 

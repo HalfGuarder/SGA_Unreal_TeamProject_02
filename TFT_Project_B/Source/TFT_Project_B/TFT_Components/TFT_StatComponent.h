@@ -11,7 +11,7 @@
 DECLARE_MULTICAST_DELEGATE(StatDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(StatChanged, float)
 DECLARE_MULTICAST_DELEGATE_OneParam(CurHpText, int32)
-
+DECLARE_MULTICAST_DELEGATE_TwoParams(maxChanged, int32 cur, int32 max)
 
 USTRUCT()
 struct FTFT_StatData : public FTableRowBase
@@ -74,10 +74,12 @@ public:
 	int32 AddCurBarrier(float amount);
 	void AddAttackDamage(float amount);
 	void AddMaxHp(int32 amount);
+	void AddMaxBarrier(int32 amount);
+	void AddBackUpStat();
+	void AddExp(int32 amount);
 
 	bool IsDead() { return _curHp <= 0; }
 
-	void AddExp(int32 amount);
 
 	StatChanged _hpChangedDelegate;
 	StatChanged _BosshpChangedDelegate;
@@ -91,6 +93,8 @@ public:
 	CurHpText _levelUpDelegate;
 	CurHpText _HpUpDelegate;
 	CurHpText _ExpUpDelegate;
+	maxChanged _maxHpChangerdDelegate;
+	maxChanged _maxBarrierChangedDelegate;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
@@ -136,5 +140,6 @@ protected:
 
 private:
 	int32 AddsItem_HP = 0;
+	int32 AddsItem_Barrier = 0;
 	int32 AddsItem_Attack = 0;
 };

@@ -177,7 +177,7 @@ void UTFT_InvenWidget::SetItemSlot(UTexture2D* texture, int32 slotIndex)
 
 void UTFT_InvenWidget::AddUiItem(ATFT_Item* item, int32 index)
 {
-	UE_LOG(LogTemp, Log, TEXT("AddUIItem In"));
+	//UE_LOG(LogTemp, Log, TEXT("AddUIItem In"));
 	if (!item)
 	{
 		UE_LOG(LogTemp, Log, TEXT("NO ITem"));

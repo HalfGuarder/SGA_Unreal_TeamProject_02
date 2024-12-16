@@ -13,6 +13,7 @@ class UTFT_SkillUI;
 class UTFT_Menu;
 class UTFT_DeathWidget;
 class UTFT_EndingWidget;
+class UTFT_RandomBoxWidget;
 
 DECLARE_MULTICAST_DELEGATE(UIOpenEvent);
 
@@ -27,6 +28,7 @@ enum class UIType : int32
 	DeathUI,
 	Tutorial,
 	EndingUI,
+	RandomBoxUI,
 };
 
 
@@ -71,11 +73,15 @@ public:
 	UFUNCTION()
 	void EndingUIOn();
 
+	UFUNCTION()
+	void RandomBoxUIA();
+
 	UTFT_InvenWidget* GetInvenUI() { return _invenWidget; }
 	UTFT_EquipmentWidget* GetEquipmentUI() { return _EquipmentWidget; }
 	UTFT_SkillUI* GetSkillUI() { return _SkillWidget; }
 	UTFT_Menu* GetMenuUI() { return _MenuWidget; }
 	UTFT_DeathWidget* GetDeathUI() { return _DeathWidget; }
+	UTFT_RandomBoxWidget* GetRandomBoxUI() { return _RandomBoxWidget; }
 	
 
 	UFUNCTION(BlueprintCallable)
@@ -96,6 +102,7 @@ public:
 	UIOpenEvent _EquipmentCloseResetEvent;
 	UIOpenEvent _WeaponZoomEvent;
 	UIOpenEvent _MenuOpenEvent;
+	UIOpenEvent _RandomBoxOpenEvent;
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UUserWidget*> _widgets;
@@ -125,9 +132,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UTFT_EndingWidget* _EndingWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	UTFT_RandomBoxWidget* _RandomBoxWidget;
+
 	bool _UIInvenarea = false;
 	bool _UIEquipmentarea = false;
 	bool _UICrossHair = false;
 	bool _UIPlayMenu = false;
 	bool _UIDeath = false;
+	bool _UIRandom = false;
 };

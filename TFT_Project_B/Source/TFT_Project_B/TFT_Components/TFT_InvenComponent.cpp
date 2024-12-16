@@ -56,9 +56,8 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 		_BuffGetDelegate.Broadcast(item);
 		item->Disable();
 	}
-	else if (item->GetItemType() == "RendomBox")
+	else if (item->GetItemType() == "RandomBox")
 	{
-		UE_LOG(LogTemp, Error, TEXT("In development"));
 		_RandomBoxGetDelegate.Broadcast(item);
 		item->Disable();
 	}
