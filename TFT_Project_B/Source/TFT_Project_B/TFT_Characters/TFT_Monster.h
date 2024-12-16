@@ -48,6 +48,8 @@ public:
 
 	virtual void ChangeLevel(int32 level);
 
+	void ReStartBT(AActor* target);
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Spawn, meta = (AllowPrivateAccess = true))
 	bool bIsSpawned = false;

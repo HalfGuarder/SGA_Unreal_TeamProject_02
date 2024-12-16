@@ -149,3 +149,13 @@ void ATFT_Monster::ChangeLevel(int32 level)
 {
     _statCom->SetLevelAndInit(level);
 }
+
+void ATFT_Monster::ReStartBT(AActor* target)
+{
+    if (_controller)
+    {
+       _controller->GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), target);
+       _controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("ReStart")), true);
+       _controller->GetBlackboardComponent()->SetValueAsBool(FName(TEXT("ReStart")), false);
+    }
+}

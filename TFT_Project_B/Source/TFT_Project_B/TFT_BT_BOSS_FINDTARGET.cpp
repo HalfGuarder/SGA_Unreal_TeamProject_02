@@ -11,11 +11,12 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/OverlapResult.h"
 #include "TFT_Player.h"
+#include "TFT_Turret.h"
 
 UTFT_BT_BOSS_FINDTARGET::UTFT_BT_BOSS_FINDTARGET()
 {
 	NodeName = TEXT("Find Target");
-	Interval = 1.0f;
+	Interval = 0.3f;
 }
 
 void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -28,7 +29,7 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
     auto world = GetWorld();
     FVector center = currentPawn->GetActorLocation();
-    float searchRadius = 2000.0f;
+    float searchRadius = 5000.0f;
 
     if (world == nullptr)
         return;
@@ -50,6 +51,13 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
     {
         for (auto& result : overlapResult)
         {
+            auto turret = Cast<ATFT_Turret>(result.GetActor());
+            if (turret != nullptr)
+            {
+                OwnerComp.GetBlackboardComponent()->SetValueAsObject(FName(TEXT("Target")), turret);
+
+                break;
+            }
 
             auto myPlayer = Cast<ATFT_Player>(result.GetActor());
             if (myPlayer != nullptr)
@@ -63,7 +71,6 @@ void UTFT_BT_BOSS_FINDTARGET::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
                 }
             }
         }
-
     }
     else
     {

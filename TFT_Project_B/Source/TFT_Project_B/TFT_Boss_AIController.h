@@ -22,6 +22,8 @@ public:
 
 	void RandMove();
 
+	void ReStartBT();
+
 private:
 
 	UPROPERTY()
@@ -29,4 +31,6 @@ private:
 
 	UPROPERTY()
 	class UBehaviorTree* _bt;
+
+	class UBehaviorTreeComponent* _btc;
 };

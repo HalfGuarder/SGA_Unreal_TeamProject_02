@@ -17,10 +17,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
 private:
+	void Attract();
+	
 	void FindTarget();
 
 	void Aiming();
@@ -51,5 +57,10 @@ private:
 	float timer = 0.0f;
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	class UTFT_StatComponent* _statCom;
+
 	bool bIsPreview = true;
+
+	bool bIsSpawned = false;
 };

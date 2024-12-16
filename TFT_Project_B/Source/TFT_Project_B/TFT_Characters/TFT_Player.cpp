@@ -1108,7 +1108,6 @@ void ATFT_Player::SpawnTurret()
 	FVector lineStart = GetActorLocation() + start;
 	FVector lineEnd = GetActorLocation() + end * 500.0f;
 
-	
 	bool bResult = GetWorld()->LineTraceSingleByChannel
 	(
 		hitResult,

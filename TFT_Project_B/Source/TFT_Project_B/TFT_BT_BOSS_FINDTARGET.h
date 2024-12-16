@@ -18,4 +18,7 @@ public:
 	UTFT_BT_BOSS_FINDTARGET();
 
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
+private:
+	
 };

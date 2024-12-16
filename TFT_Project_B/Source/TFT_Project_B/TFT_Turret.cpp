@@ -10,10 +10,13 @@
 
 #include "TFT_Monster.h"
 #include "TFT_Projectile.h"
+#include "TFT_StatComponent.h"
 
 ATFT_Turret::ATFT_Turret()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	_statCom = CreateDefaultSubobject<UTFT_StatComponent>(TEXT("Stat_Com"));
 
 	_btmMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BottomMesh"));
 
@@ -40,20 +43,83 @@ void ATFT_Turret::BeginPlay()
 	GetWorldTimerManager().SetTimer(_destroyTimerHandle, this, &ATFT_Turret::DeleteSelf, 8.0f, false);
 }
 
+void ATFT_Turret::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (_statCom->IsValidLowLevel())
+	{
+		_statCom->SetLevelAndInit(1);		
+	}	
+}
+
 void ATFT_Turret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!bIsPreview)
-	{
-		timer += DeltaTime;
+	timer += DeltaTime;
 
+	if (!bIsPreview && !bIsSpawned && timer >= 0.05f)
+	{
+		Attract();
+		bIsSpawned = true;
+	}
+
+	if (!bIsPreview && timer >= 0.5f)
+	{
 		FindTarget();
 
-		if (timer > 1.0f)
+		if (timer >= 1.0f)
 		{
 			Fire();
 			timer = 0;
+		}
+	}
+}
+
+float ATFT_Turret::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	float damaged = -(_statCom->AddCurHp(-Damage));
+
+	return damaged;
+}
+
+void ATFT_Turret::Attract()
+{
+	if (bIsPreview) return;
+
+	auto world = GetWorld();
+	FVector center = this->GetActorLocation();
+	float searchRadius = 5000.0f;
+
+	if (world == nullptr) return;
+	TArray<FOverlapResult> overlapResult;
+	FCollisionQueryParams qParams(NAME_None, false, this);
+
+	bool bResult = world->OverlapMultiByChannel
+	(
+		overlapResult,
+		center,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel9,
+		FCollisionShape::MakeSphere(searchRadius),
+		qParams
+	);
+
+	FColor drawColor = FColor::Green;
+
+	if (bResult)
+	{
+		for (auto& result : overlapResult)
+		{
+			ATFT_Monster* enemy = Cast<ATFT_Monster>(result.GetActor());
+			if (enemy != nullptr)
+			{
+				auto param = Cast<AActor>(this);
+				enemy->ReStartBT(param);
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 
 ATFT_Boss_AIController::ATFT_Boss_AIController()
 {
@@ -24,7 +25,7 @@ void ATFT_Boss_AIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-
+	_btc = Cast<UBehaviorTreeComponent>(BrainComponent);
 
 	UBlackboardComponent* blackBoardComponent = Blackboard;
 	if (UseBlackboard(_bb, blackBoardComponent))
@@ -58,4 +59,14 @@ void ATFT_Boss_AIController::RandMove()
 	{
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, randLocation);
 	}
+}
+
+void ATFT_Boss_AIController::ReStartBT()
+{
+	if (_btc)
+	{
+		_btc->RestartTree();
+	}
+	
+	// RunBehaviorTree(_bt);
 }
