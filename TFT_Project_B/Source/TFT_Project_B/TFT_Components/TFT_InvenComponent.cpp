@@ -6,6 +6,10 @@
 #include "TFT_Item.h"
 #include "TFT_Player.h"
 #include "TFT_UIManager.h"
+#include "TFT_Managers/TFT_EffectManager.h"
+#include "TFT_GameInstance.h"
+#include "Engine/DamageEvents.h"
+#include "Engine/OverlapResult.h"
 
 UTFT_InvenComponent::UTFT_InvenComponent()
 {
@@ -40,7 +44,6 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 	{
 		AddPlayerGold(item->GetItemGold());
 		item->Disable();
-
 		return;
 	}
 	else if (item->GetItemType() == "Bullet")
@@ -58,6 +61,56 @@ void UTFT_InvenComponent::AddItem(ATFT_Item* item)
 		UE_LOG(LogTemp, Error, TEXT("In development"));
 		_RandomBoxGetDelegate.Broadcast(item);
 		item->Disable();
+	}
+	else if (item->GetItemType() == "poison") // poison 아이템 처리
+	{
+		auto player = Cast<ATFT_Player>(GetOwner());
+		if (player)
+		{
+			// PoisonAttack 이펙트 생성
+			FVector playerLocation = player->GetActorLocation();
+			EFFECTMANAGER->Play("posionattack", 1, playerLocation);
+			UE_LOG(LogTemp, Log, TEXT("PoisonAttack Effect Triggered"));
+
+			// 주변 몬스터에게 데미지 적용
+			float damageRadius = 500.0f; // 반경 500
+			float poisonDamage = 30.0f;  // 데미지 수치
+
+			TArray<FOverlapResult> overlapResults;
+			FCollisionShape sphere = FCollisionShape::MakeSphere(damageRadius);
+			FCollisionQueryParams queryParams;
+			queryParams.AddIgnoredActor(player); // 플레이어 제외
+
+			UWorld* world = GetWorld();
+			if (world)
+			{
+				bool bHit = world->OverlapMultiByChannel(
+					overlapResults,
+					playerLocation,
+					FQuat::Identity,
+					ECC_GameTraceChannel7, // Pawn 채널 사용
+					sphere,
+					queryParams
+				);
+
+				if (bHit)
+				{
+					for (auto& result : overlapResults)
+					{
+						AActor* hitActor = result.GetActor();
+						if (hitActor)
+						{
+							hitActor->TakeDamage(poisonDamage, FDamageEvent(), nullptr, player);
+							UE_LOG(LogTemp, Log, TEXT("Poison Damage Applied to: %s"), *hitActor->GetName());
+						}
+					}
+				}
+			}
+		}
+
+		// 아이템 비활성화
+		item->Disable();
+		return;
 	}
 	else
 	{
@@ -238,9 +291,9 @@ void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 		break;
 	case MonsterType::Normal:
 	{
-		int32 NormalDropItemIndex = FMath::RandRange(100, 101);
+		int32 NormalDropItemIndex = FMath::RandRange(100, 103);
 
-		if (dropProbability <= 29) // 30%
+		if (dropProbability <= 99) // 30%
 		{
 			SetMonsterItem(NormalDropItemIndex);
 
