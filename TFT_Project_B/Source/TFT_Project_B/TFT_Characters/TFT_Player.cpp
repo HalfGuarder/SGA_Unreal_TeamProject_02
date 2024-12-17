@@ -1359,7 +1359,7 @@ void ATFT_Player::AddRandomBoxPlayer(ATFT_Item* item)
 	UIMANAGER->_RandomBoxOpenEvent.Broadcast();
 
 
-	/*int32 randoms = FMath::RandRange(1, 2);
+	int32 randoms = FMath::RandRange(1, 2);
 	if (randoms == 1)
 	{
 		_statCom->AddMaxHp(50);
@@ -1373,7 +1373,7 @@ void ATFT_Player::AddRandomBoxPlayer(ATFT_Item* item)
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Not Events"));
-	}*/
+	}
 }
 
 void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)

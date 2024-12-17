@@ -52,10 +52,10 @@ private:
 	void SpawnMonster(TArray<MonsterType*> mArray, TSubclassOf<MonsterAnim> anim, TObjectPtr<USkeletalMesh> mesh, int32 level);
 
 	template <typename MonsterType, typename MonsterAnim>
-	void SetSpawnTimer(TArray<MonsterType*> &mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop);
+	void SetSpawnTimer(TArray<MonsterType*> &mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop, bool timerPause);
 
 	template <typename MonsterType, typename MonsterAnim>
-	void ChangeSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop);
+	void ChangeSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop, bool timerPause);
 
 	void SetSpawnPos();
 
@@ -79,10 +79,11 @@ private:
 	// Stages
 	bool bOnStage_1 = false; bool bOnStage_2 = false; bool bOnStage_3 = false; bool bOnStage_4 = false;
 	bool bOnStage_5 = false; bool bOnStage_6 = false; bool bOnStage_7 = false; bool bOnStage_8 = false;
+	bool bOnStage_9 = false; bool bOnStage_10 = false; bool bOnStage_11 = false; bool bOnStage_12 = false;
 	bool bOnEndStage = false;
 
 	// Events
-	bool bSrdSpawn_1 = false;
+	bool bSrdSpawn_1 = false; bool bSrdSpawn_2 = false; bool bSrdSpawn_3 = false; bool bSrdSpawn_4 = false;
 
 	TArray<FTimerHandle*> _timerHandles;
 
@@ -94,15 +95,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UTFT_AnimInstance_Grux> _gruxAnimClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _gruxNormalMesh_1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _gruxNormalMesh_2;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _gruxNormalMesh_3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_BossMonster_Grux*> _gruxArray;
@@ -117,9 +109,6 @@ private:
 	TSubclassOf<class UTFT_AnimInstance_Rampage> _rampageBossAnimClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _rampageBossMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_BossMonster_Rampage*> _rampageBossArray;
 
 	FTimerHandle _rampageBossSpawnTimerHandle;
@@ -130,9 +119,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UTFT_AnimInstance_NormalRampage> _rampageNormalAnimClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _rampageNormalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_NormalMonster_Rampage*> _rampageNormalArray;
@@ -147,9 +133,6 @@ private:
 	TSubclassOf<class UTFT_AnimInstance_BJ> _bjBossAnimClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _bjBossMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_Boss_BJ*> _bjBossArray;
 
 	FTimerHandle _bjBossSpawnTimerHandle;
@@ -162,15 +145,41 @@ private:
 	TSubclassOf<class UTFT_AnimInstance_NormalBJ> _bjNormalAnimClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USkeletalMesh> _bjNormalMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
 	TArray<ATFT_NormalMonster_BJ*> _bjNormalArray;
 
 	FTimerHandle _bjNormalSpawnTimerHandle;
 
 #pragma endregion
 
+#pragma region Meshes
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _gruxMesh_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _gruxMesh_2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Grux, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _gruxMesh_3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _rampageMesh_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _rampageMesh_2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _rampageMesh_3;
+
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rampage, meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<USkeletalMesh> _rampageMesh_4;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BJ, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _bjMesh_1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = BJ, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USkeletalMesh> _bjMesh_2;
+
+#pragma endregion
 };
 
 template<typename MonsterType>
@@ -238,9 +247,9 @@ inline void ATFT_MonsterSpawnManager::SpawnMonster(TArray<MonsterType*> mArray, 
 
 template<typename MonsterType, typename MonsterAnim>
 inline void ATFT_MonsterSpawnManager::SetSpawnTimer
-(TArray<MonsterType*> &mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop)
+(TArray<MonsterType*> &mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop, bool timerPause)
 {
-	GetWorldTimerManager().PauseTimer(timerHandle);
+	if(timerPause) GetWorldTimerManager().PauseTimer(timerHandle);
 
 	FTimerDelegate dlgt = FTimerDelegate::CreateUObject(this, &ATFT_MonsterSpawnManager::SpawnMonster, mArray, anim, mesh, level);
 
@@ -249,9 +258,9 @@ inline void ATFT_MonsterSpawnManager::SetSpawnTimer
 }
 
 template<typename MonsterType, typename MonsterAnim>
-inline void ATFT_MonsterSpawnManager::ChangeSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop)
+inline void ATFT_MonsterSpawnManager::ChangeSpawnTimer(TArray<MonsterType*>& mArray, TSubclassOf<MonsterAnim>& anim, TObjectPtr<USkeletalMesh>& mesh, int32 level, FTimerHandle& timerHandle, float inRate, bool bLoop, bool timerPause)
 {
-	SetSpawnTimer(mArray, anim, mesh, level, timerHandle, inRate, bLoop);
+	SetSpawnTimer(mArray, anim, mesh, level, timerHandle, inRate, bLoop, timerPause);
 }
 
 template<typename MonsterType, typename MonsterAnim>
