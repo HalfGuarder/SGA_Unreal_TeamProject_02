@@ -105,8 +105,6 @@ public:
 	void BulletHendle(int32 curBullet, int32 ALLBullet);
 	void BulletReLoadA();
 
-	void RandomBoxHandle(int32 type, int32 value);
-
 	UFUNCTION()
 	void PairWeaponUI();
 
@@ -295,5 +293,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Tutorial, meta = (AllowPrivateAccess = "true"))
 	bool bClearTutorial = false;
-
+	bool bIsSkillActive = false;
 };

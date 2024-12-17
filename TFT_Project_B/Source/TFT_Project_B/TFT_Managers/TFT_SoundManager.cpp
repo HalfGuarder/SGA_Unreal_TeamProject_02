@@ -20,6 +20,7 @@ ATFT_SoundManager::ATFT_SoundManager()
 	CreateSoundCue("P_Shield_On", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldOn_SQ.TFT_Player_ShieldOn_SQ'");
 	CreateSoundCue("P_Shield_Off", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldOff_SQ.TFT_Player_ShieldOff_SQ'");
 	CreateSoundCue("P_Shield_Hit", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_ShieldHit_SQ.TFT_Player_ShieldHit_SQ'");
+	CreateSoundCue("P_EskillSound", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/Sound/PlayerSlash.PlayerSlash'");
 	// Rifle
 	CreateSoundCue("P_ChangeWeapon_Rifle", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_SetWeapon_Rifle_SQ.TFT_Player_SetWeapon_Rifle_SQ'");
 	CreateSoundCue("P_Rifle_Fire", "/Script/Engine.SoundCue'/Game/Blueprints/Characters/Player/FX/SFX/Cue/TFT_Player_Rifle_Fire_SQ.TFT_Player_Rifle_Fire_SQ'");

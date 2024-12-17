@@ -33,7 +33,6 @@
 #include "TFT_InvenWidget.h"
 #include "TFT_EquipmentWidget.h"
 #include "TFT_Item.h"
-#include "TFT_RandomBoxWidget.h"
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -204,13 +203,6 @@ void ATFT_Player::BeginPlay()
 		}
 
 	}
-
-	if (UIMANAGER && UIMANAGER->GetRandomBoxUI())
-	{
-		UIMANAGER->GetRandomBoxUI()->_LeftEvent.AddUObject(this, &ATFT_Player::RandomBoxHandle);
-		UIMANAGER->GetRandomBoxUI()->_RightEvent.AddUObject(this, &ATFT_Player::RandomBoxHandle);
-	}
-	
 
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -467,7 +459,7 @@ void ATFT_Player::JumpA(const FInputActionValue& value)
 
 void ATFT_Player::AttackA(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsSkillActive) return;
 
 	bool isPressed = value.Get<bool>();
 
@@ -551,26 +543,34 @@ void ATFT_Player::AttackEnd()
 
 void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsSkillActive) return;
 
 	bool isPressed = value.Get<bool>();
-	
-	if (bEquipSword)
+
+	if (bEquipSword) 
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(1)->bCoolDownOn == false)
 		{
 			if (bIsDefense) return;
-			_animInstancePlayer->PlayUpperSwingMontage();
 
+			
+			bIsSkillActive = true;
+
+			_animInstancePlayer->PlayUpperSwingMontage();
 			UIMANAGER->GetSkillUI()->RunCDT(1);
+
+			FTimerHandle SkillTimerHandle;
+			GetWorldTimerManager().SetTimer(SkillTimerHandle, FTimerDelegate::CreateLambda([this]()
+				{
+					bIsSkillActive = false;
+				}), 2.0f, false); 
 		}
 	}
-	else
+	else 
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(3)->bCoolDownOn == false)
 		{
-			// 프리뷰 터렛이 활성화되어 있을 때, 다시 E를 누르면 취소
-			if (bTurretBuildMode)
+			if (bTurretBuildMode) 
 			{
 				if (_turret)
 				{
@@ -582,7 +582,6 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 				bBuildTurret = false;
 
 				GetWorldTimerManager().PauseTimer(_turretTimerHandle);
-
 				return;
 			}
 
@@ -591,38 +590,47 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 				GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
 			}
 
-
+		
 			GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
-
-			
 		}
 	}
-	
 }
 
 void ATFT_Player::Q_Skill(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsSkillActive) return;
 
 	bool isPressed = value.Get<bool>();
 
-	if (bEquipSword)
+	if (bEquipSword) // 검 스킬
 	{
-		if(UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
+		if (UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
 		{
 			if (bIsDefense) return;
 
-			_animInstancePlayer->PlayShieldDashMontage();
+			// 스킬 시작: 일반 공격 비활성화
+			bIsSkillActive = true;
 
+			_animInstancePlayer->PlayShieldDashMontage();
 			UIMANAGER->GetSkillUI()->RunCDT(0);
+
+			// 2초 후 일반 공격 활성화
+			FTimerHandle SwordSkillTimerHandle;
+			GetWorldTimerManager().SetTimer(SwordSkillTimerHandle, FTimerDelegate::CreateLambda([this]()
+				{
+					bIsSkillActive = false;
+				}), 2.0f, false);
 		}
 	}
-	else
+	else // 총 스킬
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(2)->bCoolDownOn == false)
 		{
 			if (_laserClass)
 			{
+				// 스킬 시작: 일반 공격 비활성화
+				bIsSkillActive = true;
+
 				FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
 				FVector end = (GetControlRotation().Vector()) + start;
 
@@ -636,6 +644,13 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 				raser->SetOwner(this);
 
 				UIMANAGER->GetSkillUI()->RunCDT(2);
+
+				// 5초 후 일반 공격 활성화
+				FTimerHandle GunSkillTimerHandle;
+				GetWorldTimerManager().SetTimer(GunSkillTimerHandle, FTimerDelegate::CreateLambda([this]()
+					{
+						bIsSkillActive = false;
+					}), 5.0f, false);
 			}
 		}
 	}
@@ -1369,25 +1384,6 @@ void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)
 void ATFT_Player::BulletReLoadA()
 {
 	_invenCom->ReLoadBullet();
-}
-
-void ATFT_Player::RandomBoxHandle(int32 type, int32 value)
-{
-	if (type == 1)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Max Hp %d PLUS ~~!"), value);
-		_statCom->AddMaxHp(value);
-	}
-	else if (type == 2)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Max Barrier %d PLUS ~~!"), value);
-		_statCom->AddMaxBarrier(value);
-	}
-	else if (type == 3)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Max Roader %d PLUS ~~!"), value);
-		_invenCom->AddMaxRoadBullet(value);
-	}
 }
 
 void ATFT_Player::PairWeaponUI()
