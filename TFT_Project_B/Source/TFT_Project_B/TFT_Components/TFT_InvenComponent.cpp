@@ -225,6 +225,11 @@ void UTFT_InvenComponent::AddPlayerBullet(int32 Bullet)
 	_BulletEvent.Broadcast(_curBullet, _Bullet);
 }
 
+void UTFT_InvenComponent::AddMaxRoadBullet(int32 amount)
+{
+	_ReLoadCount += amount;
+}
+
 bool UTFT_InvenComponent::UseBullet()
 {
 	if (_curBullet <= 0)

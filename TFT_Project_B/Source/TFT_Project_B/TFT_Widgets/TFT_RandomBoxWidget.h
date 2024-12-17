@@ -49,6 +49,11 @@ private:
 	UTexture2D* _PlusBarrierImg;
 	UTexture2D* _AddAmmoImg;
 
+	UTexture2D* _HPrecrveryImg;
+	UTexture2D* _SupplyImg;
+	UTexture2D* _BarrierRecrveryImg;
+
+
 	//FText _maxHPstring = FText::FromString(TEXT("최대 체력"));
 	//FText _maxBarrierstring = FText::FromString(TEXT("최대 보호막"));
 	//FText _maxAmmostring = FText::FromString(TEXT("최대 장전량"));

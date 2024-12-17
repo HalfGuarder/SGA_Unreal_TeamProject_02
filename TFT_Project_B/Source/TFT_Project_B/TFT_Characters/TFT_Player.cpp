@@ -33,6 +33,7 @@
 #include "TFT_InvenWidget.h"
 #include "TFT_EquipmentWidget.h"
 #include "TFT_Item.h"
+#include "TFT_RandomBoxWidget.h"
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -203,6 +204,13 @@ void ATFT_Player::BeginPlay()
 		}
 
 	}
+
+	if (UIMANAGER && UIMANAGER->GetRandomBoxUI())
+	{
+		UIMANAGER->GetRandomBoxUI()->_LeftEvent.AddUObject(this, &ATFT_Player::RandomBoxHandle);
+		UIMANAGER->GetRandomBoxUI()->_RightEvent.AddUObject(this, &ATFT_Player::RandomBoxHandle);
+	}
+	
 
 	_shield->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -1361,6 +1369,25 @@ void ATFT_Player::BulletHendle(int32 curBullet, int32 ALLBullet)
 void ATFT_Player::BulletReLoadA()
 {
 	_invenCom->ReLoadBullet();
+}
+
+void ATFT_Player::RandomBoxHandle(int32 type, int32 value)
+{
+	if (type == 1)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Max Hp %d PLUS ~~!"), value);
+		_statCom->AddMaxHp(value);
+	}
+	else if (type == 2)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Max Barrier %d PLUS ~~!"), value);
+		_statCom->AddMaxBarrier(value);
+	}
+	else if (type == 3)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Max Roader %d PLUS ~~!"), value);
+		_invenCom->AddMaxRoadBullet(value);
+	}
 }
 
 void ATFT_Player::PairWeaponUI()

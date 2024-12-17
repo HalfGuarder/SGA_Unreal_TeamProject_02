@@ -64,6 +64,7 @@ public:
 	int32 GetPlayerBullet() { return _Bullet; }
 	int32 GetPlayerCurBullet() { return _curBullet; }
 	void AddPlayerBullet(int32 Bullet);
+	void AddMaxRoadBullet(int32 amount);
 
 
 	bool UseBullet();
@@ -78,7 +79,7 @@ private:
 
 	int32 _Bullet = 30;
 	int32 _curBullet = 10;
-	const int32 _ReLoadCount = 10;
+	int32 _ReLoadCount = 10;
 public:
 
 	InvenEvent _invenOpenDelegate;
