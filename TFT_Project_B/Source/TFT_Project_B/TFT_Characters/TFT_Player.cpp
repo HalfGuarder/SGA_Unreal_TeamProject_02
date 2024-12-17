@@ -658,11 +658,9 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsDashCooldown) return; 
 
-	if (bIsRunning) return;
-
-	if (!_canMove) return;
+	if (bIsRunning || !_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -670,14 +668,20 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 		bFDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
+		bIsDashCooldown = true;
 
 		FVector from = GetActorLocation();
 		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
 		to.Z = from.Z;
 
 		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(180.0f, FVector(0, 0, 1));
-
 		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle DashCooldownTimerHandle;
+		GetWorldTimerManager().SetTimer(DashCooldownTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				bIsDashCooldown = false; 
+			}), DashCooldownTime, false);
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
@@ -688,11 +692,9 @@ void ATFT_Player::DoubleTapDash_Front(const FInputActionValue& value)
 
 void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsDashCooldown) return;
 
-	if (bIsRunning) return;
-
-	if (!_canMove) return;
+	if (bIsRunning || !_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -700,14 +702,20 @@ void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 		bBDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
+		bIsDashCooldown = true;
 
 		FVector from = GetActorLocation();
 		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
 		to.Z = from.Z;
 
 		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to);
-
 		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle DashCooldownTimerHandle;
+		GetWorldTimerManager().SetTimer(DashCooldownTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				bIsDashCooldown = false;
+			}), DashCooldownTime, false);
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
@@ -718,11 +726,9 @@ void ATFT_Player::DoubleTapDash_Back(const FInputActionValue& value)
 
 void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsDashCooldown) return;
 
-	if (bIsRunning) return;
-
-	if (!_canMove) return;
+	if (bIsRunning || !_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -730,14 +736,20 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 		bLDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
+		bIsDashCooldown = true;
 
 		FVector from = GetActorLocation();
 		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
 		to.Z = from.Z;
 
 		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(90.0f, FVector(0, 0, 1));
-
 		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle DashCooldownTimerHandle;
+		GetWorldTimerManager().SetTimer(DashCooldownTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				bIsDashCooldown = false;
+			}), DashCooldownTime, false);
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);
@@ -748,11 +760,9 @@ void ATFT_Player::DoubleTapDash_Left(const FInputActionValue& value)
 
 void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0) return;
+	if (GetCurHp() <= 0 || bIsDashCooldown) return;
 
-	if (bIsRunning) return;
-
-	if (!_canMove) return;
+	if (bIsRunning || !_canMove) return;
 
 	if (bCanDash && !GetCharacterMovement()->IsFalling())
 	{
@@ -760,14 +770,20 @@ void ATFT_Player::DoubleTapDash_Right(const FInputActionValue& value)
 		bRDashing = true;
 		bBlockInputOnDash = true;
 		bCanDash = false;
+		bIsDashCooldown = true;
 
 		FVector from = GetActorLocation();
 		FVector to = GetWorld()->GetFirstPlayerController()->GetPawn()->FindComponentByClass<UCameraComponent>()->GetComponentLocation();
 		to.Z = from.Z;
 
 		FVector _dir = UKismetMathLibrary::GetDirectionUnitVector(from, to).RotateAngleAxis(270.0f, FVector(0, 0, 1));
-
 		LaunchCharacter((_dir * dashStrength_Ground), false, false);
+
+		FTimerHandle DashCooldownTimerHandle;
+		GetWorldTimerManager().SetTimer(DashCooldownTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				bIsDashCooldown = false;
+			}), DashCooldownTime, false);
 
 		FTimerHandle _timerHandle;
 		GetWorldTimerManager().SetTimer(_timerHandle, this, &ATFT_Player::SetBlockInputOnDash_False, 0.5f, false);

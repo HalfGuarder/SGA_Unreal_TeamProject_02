@@ -90,11 +90,25 @@ void ATFT_UIManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
+	if (_tutorial)
+	{
+		_tutorial->AddToViewport();
+
+		
+		FTimerHandle TutorialTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TutorialTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				if (_tutorial)
+				{
+					_tutorial->SetVisibility(ESlateVisibility::Hidden);
+				}
+			}), 10.0f, false); 
+	}
+
+	
 	OnoffWidget(UIType::Menu);
-
 	OpenWidget(UIType::SkillUI);
-
-
 
 	_invenOpenEvent.AddUObject(this, &ATFT_UIManager::OpenInvenUIA);
 	_invenWidget->_CloseInvenBtn.AddUObject(this, &ATFT_UIManager::CloseInvenBtn);
@@ -113,7 +127,6 @@ void ATFT_UIManager::BeginPlay()
 
 	_RandomBoxOpenEvent.AddUObject(this, &ATFT_UIManager::RandomBoxUIA);
 	_RandomBoxWidget->_SelectEvent.AddUObject(this, &ATFT_UIManager::RandomBoxUIA);
-
 }
 
 void ATFT_UIManager::Tick(float DeltaTime)

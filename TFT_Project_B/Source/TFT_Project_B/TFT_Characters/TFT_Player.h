@@ -222,7 +222,7 @@ protected:
 	bool bBlockInputOnDash = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	float dashStrength_Ground = 4000.0f;
+	float dashStrength_Ground = 8000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float dashStrength_Air = 300.0f;
@@ -294,4 +294,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Tutorial, meta = (AllowPrivateAccess = "true"))
 	bool bClearTutorial = false;
 	bool bIsSkillActive = false;
+
+	
+	bool bIsDashCooldown = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dash Cooldown")
+	float DashCooldownTime = 0.7f; 
 };
