@@ -20,13 +20,15 @@ ATFT_EffectManager::ATFT_EffectManager()
 	CreateParticleClass(TEXT("chainExplosion"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Rampage_ChainExplosion.TFT_Rampage_ChainExplosion_C'"));
 
 	//Player
-	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TestEffect.TFT_Player_TestEffect_C'"));
+	CreateParticleClass(TEXT("ShieldOn"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_ShieldOnFX_BP.TFT_Player_ShieldOnFX_BP_C'"));
 	CreateParticleClass(TEXT("Energy"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/energy.energy_C'"));
 	CreateParticleClass(TEXT("TrunAttack"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_TurnAttack.TFT_Player_TurnAttack_C'"));
 	CreateParticleClass(TEXT("PosionAttack"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_PosionEffect_BP.TFT_Player_PosionEffect_BP_C'"));
 
 	CreateParticleClass(TEXT("ATTACKUP"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/AOE_ATTACK_BP.AOE_ATTACK_BP_C'"));
 	CreateParticleClass(TEXT("SPEEDUP"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/AOE_SPEED_BP.AOE_SPEED_BP_C'"));
+
+	CreateParticleClass(TEXT("FireMuzzle"), TEXT("/Script/Engine.Blueprint'/Game/Blueprints/VFX/TFT_Player_FireMuzzleFX_BP.TFT_Player_FireMuzzleFX_BP_C'"));
 }
 
 

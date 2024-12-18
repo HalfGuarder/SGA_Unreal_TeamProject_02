@@ -190,6 +190,10 @@ public:
 	class USpringArmComponent* _springArm;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* _camera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UCameraShakeBase> _fireCameraShaker;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCameraShakeBase> _damagedCameraShaker;
 
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* _rollingMontage;
@@ -301,4 +305,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dash Cooldown")
 	float DashCooldownTime = 0.7f; 
+
 };

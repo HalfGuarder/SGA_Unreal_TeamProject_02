@@ -936,6 +936,14 @@ float ATFT_Player::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACo
 {
 	Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
+	if (Damage >= 30.0f)
+	{
+		if (_damagedCameraShaker)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(_damagedCameraShaker);
+		}
+	}
+
 	if (bIsDefense)
 	{
 		SOUNDMANAGER->PlaySound("P_Shield_Hit", GetActorLocation());
@@ -1236,7 +1244,13 @@ void ATFT_Player::Fire()
 
 			_skillCom->Fire(start, fireRotation, _projectileDir);
 
+			if (_fireCameraShaker)
+			{
+				GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(_fireCameraShaker);
+			}
+
 			SOUNDMANAGER->PlaySound(TEXT("P_Rifle_Fire"), start, fireRotation);
+			EFFECTMANAGER->Play(TEXT("FireMuzzle"), 0, start);
 		}
 	}
 }
