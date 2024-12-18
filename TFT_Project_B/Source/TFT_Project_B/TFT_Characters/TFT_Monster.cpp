@@ -8,7 +8,6 @@
 #include "AIController.h"
 #include "TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "TFT_DamageIndicator.h"
 
 ATFT_Monster::ATFT_Monster()
 {
@@ -62,18 +61,6 @@ float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AC
 			player->_statCom->AddExp(_possessionExp);
 		}
 	}
-
-	if (auto Player = Cast<ATFT_Player>(DamageCauser))
-	{
-		UTFT_DamageIndicator* DamageIndicatorWidget = CreateWidget<UTFT_DamageIndicator>(GetWorld(), LoadClass<UTFT_DamageIndicator>(nullptr, TEXT("/Game/Blueprints/Widget/TFT_DamageIndicator_BP.TFT_DamageIndicator_BP")));
-
-		if (DamageIndicatorWidget)
-		{
-			DamageIndicatorWidget->AddToViewport();
-			DamageIndicatorWidget->ShowDamageIndicator();
-		}
-	}
-
 	return damage;
 }
 
