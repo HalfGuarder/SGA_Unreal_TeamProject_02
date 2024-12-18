@@ -550,11 +550,10 @@ void ATFT_Player::AttackEnd()
 
 void ATFT_Player::E_Skill(const FInputActionValue& value)
 {
-	if (GetCurHp() <= 0 || bIsSkillActive) return;
 
 	bool isPressed = value.Get<bool>();
 
-	if (bEquipSword) 
+	if (bEquipSword)
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(1)->bCoolDownOn == false)
 		{
@@ -562,6 +561,9 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 
 			
 			bIsSkillActive = true;
+			_canMove = false; 
+			bIsRunning = false; 
+			GetCharacterMovement()->DisableMovement();
 
 			_animInstancePlayer->PlayUpperSwingMontage();
 			UIMANAGER->GetSkillUI()->RunCDT(1);
@@ -569,7 +571,11 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 			FTimerHandle SkillTimerHandle;
 			GetWorldTimerManager().SetTimer(SkillTimerHandle, FTimerDelegate::CreateLambda([this]()
 				{
+					
 					bIsSkillActive = false;
+					_canMove = true; 
+					GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+					GetCharacterMovement()->MaxWalkSpeed = walkSpeed; 
 				}), 2.0f, false); 
 		}
 	}
@@ -577,7 +583,7 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(3)->bCoolDownOn == false)
 		{
-			if (bTurretBuildMode) 
+			if (bTurretBuildMode)
 			{
 				if (_turret)
 				{
@@ -597,8 +603,15 @@ void ATFT_Player::E_Skill(const FInputActionValue& value)
 				GetWorldTimerManager().UnPauseTimer(_turretTimerHandle);
 			}
 
-		
+			bIsSkillActive = true;
+
 			GetWorldTimerManager().SetTimer(_turretTimerHandle, this, &ATFT_Player::SpawnTurret, 0.05f, true);
+
+			FTimerHandle SkillEndTimerHandle;
+			GetWorldTimerManager().SetTimer(SkillEndTimerHandle, FTimerDelegate::CreateLambda([this]()
+				{
+					bIsSkillActive = false; 
+				}), 2.0f, false);
 		}
 	}
 }
@@ -609,19 +622,19 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 	bool isPressed = value.Get<bool>();
 
-	if (bEquipSword) // 검 스킬
+	if (bEquipSword) 
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(0)->bCoolDownOn == false)
 		{
 			if (bIsDefense) return;
 
-			// 스킬 시작: 일반 공격 비활성화
+			
 			bIsSkillActive = true;
 
 			_animInstancePlayer->PlayShieldDashMontage();
 			UIMANAGER->GetSkillUI()->RunCDT(0);
 
-			// 2초 후 일반 공격 활성화
+			
 			FTimerHandle SwordSkillTimerHandle;
 			GetWorldTimerManager().SetTimer(SwordSkillTimerHandle, FTimerDelegate::CreateLambda([this]()
 				{
@@ -629,13 +642,13 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 				}), 2.0f, false);
 		}
 	}
-	else // 총 스킬
+	else 
 	{
 		if (UIMANAGER->GetSkillUI()->GetSkillSlot(2)->bCoolDownOn == false)
 		{
 			if (_laserClass)
 			{
-				// 스킬 시작: 일반 공격 비활성화
+				
 				bIsSkillActive = true;
 
 				FVector start = GetActorForwardVector() + FVector(40.0f, 10.0f, 50.0f);
@@ -652,7 +665,7 @@ void ATFT_Player::Q_Skill(const FInputActionValue& value)
 
 				UIMANAGER->GetSkillUI()->RunCDT(2);
 
-				// 5초 후 일반 공격 활성화
+				
 				FTimerHandle GunSkillTimerHandle;
 				GetWorldTimerManager().SetTimer(GunSkillTimerHandle, FTimerDelegate::CreateLambda([this]()
 					{
@@ -1589,6 +1602,7 @@ void ATFT_Player::OpenTaggedDoor(FName DoorTag)
 		}
 	}
 }
+
 void ATFT_Player::Interact()
 {
 	TArray<AActor*> OverlappingActors;

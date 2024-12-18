@@ -63,4 +63,5 @@ private:
 	int32 _RightValue;
 	int32 _RightPlusValue;
 
+	int32 randCheck;
 };

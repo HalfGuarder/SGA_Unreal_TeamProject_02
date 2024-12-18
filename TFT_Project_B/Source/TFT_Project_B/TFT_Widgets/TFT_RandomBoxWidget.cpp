@@ -47,6 +47,20 @@ bool UTFT_RandomBoxWidget::Initialize()
 void UTFT_RandomBoxWidget::RandomBoxSetting(int32 num)
 {
 	int32 randoms = FMath::RandRange(1, 4);
+	if (num == 1) randCheck = randoms;
+
+	if (num == 2)
+	{
+		if (randCheck == randoms)
+		{
+			while (true)
+			{
+				randoms = FMath::RandRange(1, 4);
+
+				if (randCheck != randoms) break;
+			}
+		}
+	}
 
 	if (randoms == 1) // Max HP Plus
 	{

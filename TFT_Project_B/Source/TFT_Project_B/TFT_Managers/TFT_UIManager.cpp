@@ -91,20 +91,20 @@ void ATFT_UIManager::BeginPlay()
 	Super::BeginPlay();
 
 	
-	if (_tutorial)
-	{
-		_tutorial->AddToViewport();
+	//if (_tutorial)
+	//{
+	//	_tutorial->AddToViewport();
 
-		
-		FTimerHandle TutorialTimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TutorialTimerHandle, FTimerDelegate::CreateLambda([this]()
-			{
-				if (_tutorial)
-				{
-					_tutorial->SetVisibility(ESlateVisibility::Hidden);
-				}
-			}), 10.0f, false); 
-	}
+	//	
+	//	FTimerHandle TutorialTimerHandle;
+	//	GetWorld()->GetTimerManager().SetTimer(TutorialTimerHandle, FTimerDelegate::CreateLambda([this]()
+	//		{
+	//			if (_tutorial)
+	//			{
+	//				_tutorial->SetVisibility(ESlateVisibility::Hidden);
+	//			}
+	//		}), 10.0f, false); 
+	//}
 
 	
 	OnoffWidget(UIType::Menu);
