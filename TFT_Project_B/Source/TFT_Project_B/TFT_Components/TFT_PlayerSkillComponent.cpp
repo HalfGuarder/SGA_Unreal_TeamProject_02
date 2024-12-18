@@ -256,7 +256,7 @@ void UTFT_PlayerSkillComponent::Q_SkillHit(float damage, AController* controller
 		}
 	}
 
-	DrawDebugSphere(GetWorld(), center, _swordAttackRadius, 20, drawColor, false, 2.0f);
+	// DrawDebugSphere(GetWorld(), center, _swordAttackRadius, 20, drawColor, false, 2.0f);
 }
 
 void UTFT_PlayerSkillComponent::CreateBullet(TSubclassOf<ATFT_Projectile> subclass, TArray<ATFT_Projectile*>& array, int32 num)

@@ -358,6 +358,7 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 			if (_invenCom->_spareWeapon->GetItemID() == 2)
 			{
 				SOUNDMANAGER->PlaySound(TEXT("P_ChangeWeapon_Rifle"), GetActorLocation());
+				
 			}
 			else
 			{
@@ -375,6 +376,7 @@ void ATFT_Player::ChangeWeapon(const FInputActionValue& value)
 					GetWorldTimerManager().PauseTimer(_turretTimerHandle);
 				}
 				SOUNDMANAGER->PlaySound(TEXT("P_ChangeWeapon_Sword"), GetActorLocation());
+
 			}
 		}
 
@@ -882,7 +884,6 @@ void ATFT_Player::StartRightClick()
 	}
 	else
 	{
-		UIMANAGER->_WeaponZoomEvent.Broadcast();
 		_cameraTLCom->Play();
 		bIsZoom = true;
 	}
@@ -907,7 +908,6 @@ void ATFT_Player::StopRightClick()
 	}
 	else
 	{
-		UIMANAGER->_WeaponZoomEvent.Broadcast();
 		_cameraTLCom->Reverse();
 		bIsZoom = false;
 	}

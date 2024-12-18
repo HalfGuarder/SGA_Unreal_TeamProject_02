@@ -86,7 +86,7 @@ void ATFT_Projectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		enemy->TakeDamage(10.0f, damageEvent, GetInstigatorController(), this);
 		FVector hitPoint = GetActorLocation();
 
-		DrawDebugSphere(GetWorld(), hitPoint, 10.0f, 10, FColor::Red, false, 0.5f);
+		// DrawDebugSphere(GetWorld(), hitPoint, 10.0f, 10, FColor::Red, false, 0.5f);
 
 		float rate = FMath::FRandRange(0.0f, 100.0f);
 		if(_penetrationRate <= rate)

@@ -114,7 +114,8 @@ void ATFT_UIManager::BeginPlay()
 	_invenWidget->_CloseInvenBtn.AddUObject(this, &ATFT_UIManager::CloseInvenBtn);
 	_EquipmentOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffEquipmentUIA);
 	_EquipmentWidget->_CloseEquipmentBtn.AddUObject(this, &ATFT_UIManager::CloseEquipmentUIA);
-	_WeaponZoomEvent.AddUObject(this, &ATFT_UIManager::WeaponCrossHairUIA);
+	_OpenCrossHairEvent.AddUObject(this, &ATFT_UIManager::OpenClossHairUI);
+	_CloseCrossHairEvent.AddUObject(this, &ATFT_UIManager::CloseClossHairUI);
 
 	_MenuOpenEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
 	_MenuWidget->_MenuContinueEvent.AddUObject(this, &ATFT_UIManager::OnOffPlayMenu);
@@ -224,9 +225,9 @@ void ATFT_UIManager::CloseEquipmentUIA()
 	MouseLock(UIType::EquipmentUI);
 }
 
-void ATFT_UIManager::WeaponCrossHairUIA()
+void ATFT_UIManager::OpenClossHairUI()
 {
-	if (_UICrossHair == false)
+	/*if (_UICrossHair == false)
 	{
 		_UICrossHair = true;
 		OpenWidget(UIType::CrossHair);
@@ -235,7 +236,13 @@ void ATFT_UIManager::WeaponCrossHairUIA()
 	{
 		_UICrossHair = false;
 		CloseWidget(UIType::CrossHair);
-	}
+	}*/
+	OpenWidget(UIType::CrossHair);
+}
+
+void ATFT_UIManager::CloseClossHairUI()
+{
+	CloseWidget(UIType::CrossHair);
 }
 
 void ATFT_UIManager::OnOffPlayMenu()

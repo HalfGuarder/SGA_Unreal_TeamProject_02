@@ -62,7 +62,9 @@ public:
 	void CloseEquipmentUIA();
 
 	UFUNCTION()
-	void WeaponCrossHairUIA();
+	void OpenClossHairUI();
+	UFUNCTION()
+	void CloseClossHairUI();
 
 	UFUNCTION()
 	void OnOffPlayMenu();
@@ -100,7 +102,8 @@ public:
 	UIOpenEvent _invenOpenEvent;
 	UIOpenEvent _EquipmentOpenEvent;
 	UIOpenEvent _EquipmentCloseResetEvent;
-	UIOpenEvent _WeaponZoomEvent;
+	UIOpenEvent _OpenCrossHairEvent;
+	UIOpenEvent _CloseCrossHairEvent;
 	UIOpenEvent _MenuOpenEvent;
 	UIOpenEvent _RandomBoxOpenEvent;
 public:

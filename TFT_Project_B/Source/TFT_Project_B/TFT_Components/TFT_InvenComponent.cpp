@@ -189,12 +189,12 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 	if (_currentWeapon->_Itemid == 1)
 	{
 		_currentWeapon->SetActorScale3D(FVector(1.0f, 2.5f, 2.0f));
-
+		UIMANAGER->_CloseCrossHairEvent.Broadcast();
 	}
 	else if (_currentWeapon->_Itemid == 2)
 	{
 		_spareWeapon->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
-
+		UIMANAGER->_OpenCrossHairEvent.Broadcast();
 	}
 }
 
