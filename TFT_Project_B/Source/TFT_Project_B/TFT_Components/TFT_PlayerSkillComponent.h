@@ -28,7 +28,6 @@ public:
 
 private:
 	void CreateBullet(TSubclassOf<ATFT_Projectile> subclass, TArray<ATFT_Projectile*>& array, int32 num);
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Sword, meta = (AllowPrivateAccess = "true"))
 	float _swordAttackRange = 150.0f;
