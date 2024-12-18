@@ -29,7 +29,7 @@ ATFT_NormalMonster_Rampage::ATFT_NormalMonster_Rampage()
         HpBarWidgetClass = HpBar.Class;
     }
 
-    _possessionExp = 100;
+    _possessionExp = 20;
 }
 
 void ATFT_NormalMonster_Rampage::BeginPlay()
@@ -187,7 +187,7 @@ void ATFT_NormalMonster_Rampage::AttackHit_Boss()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+    // DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_NormalMonster_Rampage::Attack_AI()

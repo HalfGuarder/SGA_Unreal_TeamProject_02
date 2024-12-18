@@ -27,7 +27,7 @@ ATFT_Boss_BJ::ATFT_Boss_BJ()
         HpBarWidgetClass = HpBar.Class;
     }
 
-    _possessionExp = 100;
+    _possessionExp = 30;
 }
 
 void ATFT_Boss_BJ::BeginPlay()
@@ -227,7 +227,7 @@ void ATFT_Boss_BJ::AttackHit_Boss()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+    // DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_Boss_BJ::Attack_AI()

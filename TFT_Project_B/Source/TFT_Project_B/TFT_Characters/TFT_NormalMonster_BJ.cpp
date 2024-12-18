@@ -28,7 +28,7 @@ ATFT_NormalMonster_BJ::ATFT_NormalMonster_BJ()
         HpBarWidgetClass = HpBar.Class;
     }
 
-    _possessionExp = 100;
+    _possessionExp = 20;
 
 }
 
@@ -178,7 +178,7 @@ void ATFT_NormalMonster_BJ::AttackHit_Boss()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+    // DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_NormalMonster_BJ::Attack_AI()

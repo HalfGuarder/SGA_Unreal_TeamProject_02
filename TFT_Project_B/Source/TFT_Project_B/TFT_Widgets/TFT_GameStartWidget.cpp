@@ -92,7 +92,7 @@ void UTFT_GameStartWidget::ShowLoadingScreen()
                             PlayerController->SetIgnoreLookInput(false);
                         }
                     }),
-                5.0f,
+                3.0f,
                 false
             );
         }

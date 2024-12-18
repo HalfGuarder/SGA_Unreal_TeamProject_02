@@ -103,7 +103,7 @@ void UTFT_PlayerSkillComponent::AttackHit(float damage, AController* controller)
 					HitActor->TakeDamage(damage, DamageEvent, controller, GetOwner());
 
 					// 타격된 위치에 점 찍기
-					DrawDebugPoint(GetWorld(), Hit.ImpactPoint, 10.0f, FColor::Red, false, DebugDuration);
+					// DrawDebugPoint(GetWorld(), Hit.ImpactPoint, 10.0f, FColor::Red, false, DebugDuration);
 				}
 			}
 		}
@@ -122,7 +122,7 @@ void UTFT_PlayerSkillComponent::AttackHit(float damage, AController* controller)
 		FVector Point2 = PlayerLocation + PlayerForwardVector.RotateAngleAxis(Angle2, FVector::UpVector) * SwordAttackRange;
 
 		// 두 점을 이은 라인 그리기
-		DrawDebugLine(GetWorld(), Point1, Point2, LineColor, false, DebugDuration, 0, 1.5f);
+		// DrawDebugLine(GetWorld(), Point1, Point2, LineColor, false, DebugDuration, 0, 1.5f);
 	}
 
 

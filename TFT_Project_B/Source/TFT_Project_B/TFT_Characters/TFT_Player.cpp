@@ -1139,7 +1139,7 @@ void ATFT_Player::E_SkillHit()
 			FDamageEvent damageEvent;
 
 			
-			float actualDamage = hitResult.GetActor()->TakeDamage(100.0f, damageEvent, GetController(), this);
+			float actualDamage = hitResult.GetActor()->TakeDamage(50.0f, damageEvent, GetController(), this);
 
 			
 			ATFT_Monster* target = Cast<ATFT_Monster>(hitResult.GetActor());
@@ -1151,7 +1151,7 @@ void ATFT_Player::E_SkillHit()
 	}
 
 	// 디버그 구체 그리기
-	DrawDebugSphere(GetWorld(), GetActorLocation(), attackRadius, 20, drawColor, false, 0.1f);
+	// DrawDebugSphere(GetWorld(), GetActorLocation(), attackRadius, 20, drawColor, false, 0.1f);
 }
 
 void ATFT_Player::SpawnTurret()

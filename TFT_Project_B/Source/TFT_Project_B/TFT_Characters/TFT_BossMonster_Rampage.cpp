@@ -27,7 +27,7 @@ ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
         HpBarWidgetClass = HpBar.Class;
     }
 
-    _possessionExp = 100;
+    _possessionExp = 20;
 }
 
 void ATFT_BossMonster_Rampage::BeginPlay()
@@ -181,7 +181,7 @@ void ATFT_BossMonster_Rampage::AttackHit_Boss()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+    // DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_BossMonster_Rampage::Attack_AI()
@@ -368,7 +368,7 @@ void ATFT_BossMonster_Rampage::ExplosionHit()
     }
 
     // 디버그용 구체를 그려서 확인
-    DrawDebugSphere(GetWorld(), center, explosionRadius, 20, drawColor, false, 0.1f);
+    //DrawDebugSphere(GetWorld(), center, explosionRadius, 20, drawColor, false, 0.1f);
 }
 
 void ATFT_BossMonster_Rampage::ChainExplosionHit()
@@ -426,7 +426,7 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, chainRadius, 20, drawColor, false, 0.1f);
+    // DrawDebugSphere(GetWorld(), center, chainRadius, 20, drawColor, false, 0.1f);
 
     // 추가 구체 처리
     TArray<FHitResult> secondHitResults;
@@ -477,7 +477,7 @@ void ATFT_BossMonster_Rampage::ChainExplosionHit()
         }
     }
 
-    DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
+    // DrawDebugSphere(GetWorld(), secondCenter, chainRadius, 20, secondDrawColor, false, 0.1f);
 }
 
 void ATFT_BossMonster_Rampage::PreActive()

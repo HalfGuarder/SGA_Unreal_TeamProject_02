@@ -26,7 +26,7 @@
 
 ATFT_BossMonster_Grux::ATFT_BossMonster_Grux()
 {
-    _possessionExp = 100;
+    _possessionExp = 5;
 }
 
 void ATFT_BossMonster_Grux::BeginPlay()
@@ -187,7 +187,7 @@ void ATFT_BossMonster_Grux::AttackHit_Boss()
         }
     }
 
-    DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
+    // DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 2.0f);
 }
 
 void ATFT_BossMonster_Grux::Attack_AI()
