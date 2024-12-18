@@ -1051,46 +1051,47 @@ void ATFT_Player::AttackHit()
 
 void ATFT_Player::Q_SkillHit()
 {
-	FHitResult hitResult;
-	FCollisionQueryParams params(NAME_None, false, this);
+	_skillCom->Q_SkillHit(_statCom->GetQSkillDamage(), GetController());
+	//FHitResult hitResult;
+	//FCollisionQueryParams params(NAME_None, false, this);
 
-	float attackRange = 500.0f;
-	float attackRadius = 100.0f;
+	//float attackRange = 500.0f;
+	//float attackRadius = 100.0f;
 
-	bool bResult = GetWorld()->SweepSingleByChannel
-	(
-		hitResult,
-		GetActorLocation(),
-		GetActorLocation() + GetActorForwardVector() * attackRange,
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel7,
-		FCollisionShape::MakeSphere(attackRadius),
-		params
-	);
+	//bool bResult = GetWorld()->SweepSingleByChannel
+	//(
+	//	hitResult,
+	//	GetActorLocation(),
+	//	GetActorLocation() + GetActorForwardVector() * attackRange,
+	//	FQuat::Identity,
+	//	ECollisionChannel::ECC_GameTraceChannel7,
+	//	FCollisionShape::MakeSphere(attackRadius),
+	//	params
+	//);
 
-	FVector vec = GetActorForwardVector() * attackRange;
-	FVector center = GetActorLocation() + vec * 0.5f;
-	FColor drawColor = FColor::Green;
+	//FVector vec = GetActorForwardVector() * attackRange;
+	//FVector center = GetActorLocation() + vec * 0.5f;
+	//FColor drawColor = FColor::Green;
 
-	if (bResult && hitResult.GetActor()->IsValidLowLevel())
-	{
-		drawColor = FColor::Red;
-		FDamageEvent damageEvent;
+	//if (bResult && hitResult.GetActor()->IsValidLowLevel())
+	//{
+	//	drawColor = FColor::Red;
+	//	FDamageEvent damageEvent;
 
-		float actualDamage = hitResult.GetActor()->TakeDamage(30.0f, damageEvent, GetController(), this);
-		_hitPoint = hitResult.ImpactPoint;
+	//	float actualDamage = hitResult.GetActor()->TakeDamage(30.0f, damageEvent, GetController(), this);
+	//	_hitPoint = hitResult.ImpactPoint;
 
-		if (actualDamage > 0)
-		{
-			ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
-			if (target != nullptr && !target->bIsOnState)
-			{
-				target->SetState(StateType::Stun);
-			}
-		}
-	}
+	//	if (actualDamage > 0)
+	//	{
+	//		ATFT_Creature* target = Cast<ATFT_Creature>(hitResult.GetActor());
+	//		if (target != nullptr && !target->bIsOnState)
+	//		{
+	//			target->SetState(StateType::Stun);
+	//		}
+	//	}
+	//}
 
-	DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
+	//DrawDebugSphere(GetWorld(), center, attackRadius, 20, drawColor, false, 0.1f);
 }
 
 void ATFT_Player::E_SkillHit()

@@ -31,6 +31,8 @@ public:
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	void DisplayDamageText(float DamageAmount, FVector Location);
+
 	UFUNCTION(BlueprintCallable)
 	virtual void TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
@@ -60,6 +62,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Anim, meta = (AllowPrivateAccess = true))
 	class ATFT_Boss_AIController* _controller = nullptr;
+
+	UPROPERTY()
+	class UUserWidget* DamageUIWidget;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = EXP, meta = (AllowPrivateAccess = true))

@@ -26,6 +26,8 @@ public:
 
 	void AttackHit(float damage, class AController* controller);
 
+	void Q_SkillHit(float damage, AController* controller);
+
 private:
 	void CreateBullet(TSubclassOf<ATFT_Projectile> subclass, TArray<ATFT_Projectile*>& array, int32 num);
 public:
@@ -35,6 +37,8 @@ public:
 	float _swordAttackRadius = 300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Rifle, meta = (AllowPrivateAccess = "true"))
 	float _bulletPenetrationRate = 0.0f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AttackHit, meta = (AllowPrivateAccess = "true"))
+	FVector _hitPoint;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Rifle, meta = (AllowPrivateAccess = "true"))

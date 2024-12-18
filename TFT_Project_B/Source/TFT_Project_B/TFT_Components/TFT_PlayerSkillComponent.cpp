@@ -4,6 +4,7 @@
 #include "TFT_Components/TFT_PlayerSkillComponent.h"
 
 #include "TFT_Projectile.h"
+#include "TFT_Creature.h"
 
 #include "Engine/OverlapResult.h"
 #include "Engine/DamageEvents.h"
@@ -206,6 +207,56 @@ void UTFT_PlayerSkillComponent::AttackHit(float damage, AController* controller)
 	}*/
 
 	//DrawDebugSphere(GetWorld(), center, _swordAttackRadius, 20, drawColor, false, 2.0f);
+}
+
+void UTFT_PlayerSkillComponent::Q_SkillHit(float damage, AController* controller)
+{
+	FCollisionQueryParams params(NAME_None, false, GetOwner());
+	FVector playerLocation = GetOwner()->GetActorLocation();
+	FVector playerFwdVector = GetOwner()->GetActorForwardVector();
+
+	TArray<FHitResult> hitResults;
+
+	bool bResult = GetWorld()->SweepMultiByChannel
+	(
+		hitResults,
+		playerLocation,
+		playerLocation + playerFwdVector * _swordAttackRange,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel7,
+		FCollisionShape::MakeSphere(_swordAttackRadius),
+		params
+	);
+
+	FVector vec = playerFwdVector * _swordAttackRange;
+	FVector center = playerLocation + vec;
+	FColor drawColor = FColor::Green;
+
+	if (bResult && !hitResults.IsEmpty())
+	{
+		for (int32 i = 0; i < hitResults.Num(); i++)
+		{
+			if (hitResults[i].GetActor()->IsValidLowLevel())
+			{
+				drawColor = FColor::Red;
+				FDamageEvent damageEvent;
+
+				float actualDamage = hitResults[i].GetActor()->TakeDamage(damage, damageEvent, controller, GetOwner());
+				_hitPoint = hitResults[i].ImpactPoint;
+
+				if (actualDamage > 0)
+				{
+					ATFT_Creature* target = Cast<ATFT_Creature>(hitResults[i].GetActor());
+					if (target != nullptr && !target->bIsOnState)
+					{
+						target->SetState(StateType::Stun);
+					}
+				}
+			}
+		}
+	}
+
+	DrawDebugSphere(GetWorld(), center, _swordAttackRadius, 20, drawColor, false, 2.0f);
 }
 
 void UTFT_PlayerSkillComponent::CreateBullet(TSubclassOf<ATFT_Projectile> subclass, TArray<ATFT_Projectile*>& array, int32 num)

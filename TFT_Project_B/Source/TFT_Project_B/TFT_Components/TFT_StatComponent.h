@@ -29,9 +29,9 @@ struct FTFT_StatData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 attack = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 attackSpeed = 0;
+	int32 swordQskillDamage = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 skillDamage = 0;
+	int32 swordEskillDamage = 0;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -58,8 +58,8 @@ public:
 	int32 GetCurExp() { return _curExp; }
 	int32 GetMaxExp() { return _maxExp; }
 	int32 GetAttackDamage() { return _attackDamage; }
-	int32 GetAttackSpeed() { return _attackSpeed; }
-	int32 GetSkillDamage() { return _skillDamage; }
+	int32 GetQSkillDamage() { return _swordQskillDamage; }
+	int32 GetESkillDamage() { return _swordEskillDamage; }
 	int32 GetCurBarrier() { return _curBarrier; }
 	float HpRatio() { return _curHp / (float)_maxHp; }
 	float ExpRatio() { return _curExp / (float)_maxExp; }
@@ -125,10 +125,10 @@ protected:
 	int32 _attackDamage = 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	int32 _attackSpeed = 1;
+	int32 _swordQskillDamage = 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
-	int32 _skillDamage = 1;
+	int32 _swordEskillDamage = 1;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = "true"))
 	int32 _defense = 0;

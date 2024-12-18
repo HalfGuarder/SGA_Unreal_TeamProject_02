@@ -19,6 +19,9 @@ public:
 	UFUNCTION()
 	void ExitEvent();
 
+	UFUNCTION()
+	void ShowLoadingScreen();
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Event")
 	FStartPageEvent _StartEvent;

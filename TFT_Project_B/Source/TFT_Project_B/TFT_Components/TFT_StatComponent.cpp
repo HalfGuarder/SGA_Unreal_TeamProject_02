@@ -42,12 +42,12 @@ void UTFT_StatComponent::SetLevelAndInit(int32 level)
 		_curMp = _maxMp;
 		_maxExp = data->maxExp;
 		_attackDamage = data->attack;
-		_attackSpeed = data->attackSpeed;
-		_skillDamage = data->skillDamage;
+		_swordQskillDamage = data->swordQskillDamage;
+		_swordEskillDamage = data->swordEskillDamage;
 
 		if (AddsItem_Attack != 0) _attackDamage += AddsItem_Attack;
 
-		UE_LOG(LogTemp,Error, TEXT("%s..., Level : %d, hp : %d, attackDamage : %d, skillDamage : %d"), *GetOwner()->GetName(), _curLevel, _maxHp, _attackDamage, _skillDamage);
+		UE_LOG(LogTemp,Error, TEXT("%s..., Level : %d, hp : %d, attackDamage : %d, skillDamage : %d"), *GetOwner()->GetName(), _curLevel, _maxHp, _attackDamage, _swordQskillDamage);
 	}
 }
 
