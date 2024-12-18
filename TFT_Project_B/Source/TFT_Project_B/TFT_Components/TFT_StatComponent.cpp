@@ -185,8 +185,8 @@ void UTFT_StatComponent::AddExp(int32 amount)
 		SetLevelAndInit(100 + _curLevel);
 		AddBackUpStat();
 
-		float playerratio = HpRatio();
-		_PlayerhpChangedDelegate.Broadcast(playerratio);
+		//float playerratio = HpRatio();
+		_PlayerhpChangedDelegate.Broadcast(1.0f); // full Hp = 1.0f
 		_CurHpText.Broadcast(_maxHp);
 
 		_HpUpDelegate.Broadcast(_maxHp);
