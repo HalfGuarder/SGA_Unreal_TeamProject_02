@@ -156,16 +156,16 @@ void ATFT_Item::SetItemPos(FVector pos, FRotator rot)
 }
 
 
-void ATFT_Item::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
-{
-	Super::PostEditChangeProperty(PropertyChangedEvent);
-
-	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
-
-	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATFT_Item, _Itemid))
-	{
-		LoadItemData();
-		UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty called. ID changed to: %d"), _Itemid);
-	}
-}
+//void ATFT_Item::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+//{
+//	Super::PostEditChangeProperty(PropertyChangedEvent);
+//
+//	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+//
+//	if (PropertyName == GET_MEMBER_NAME_CHECKED(ATFT_Item, _Itemid))
+//	{
+//		LoadItemData();
+//		UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty called. ID changed to: %d"), _Itemid);
+//	}
+//}
 

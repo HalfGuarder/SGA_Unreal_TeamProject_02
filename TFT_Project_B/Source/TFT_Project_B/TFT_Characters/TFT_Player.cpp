@@ -102,7 +102,7 @@ ATFT_Player::ATFT_Player()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> sm
-	(TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Blueprints/Characters/Player/FX/M_Steel_Armor_ShieldSphere_Impact_Inst.M_Steel_Armor_ShieldSphere_Impact_Inst'"));
+	(TEXT("/Script/Engine.Material'/Game/ParagonSteel/FX/Materials/Heroes/Steel/M_Steel_Armor_ShieldSphere_Impact.M_Steel_Armor_ShieldSphere_Impact'"));
 	if (sm.Succeeded())
 	{
 		_shieldMaterial = sm.Object;

@@ -6,8 +6,6 @@
 #include "TFT_Creature.h"
 #include "TFT_Monster.generated.h"
 
-
-
 UCLASS(Abstract)
 class TFT_PROJECT_B_API ATFT_Monster : public ATFT_Creature
 {
@@ -26,12 +24,12 @@ public:
 	UFUNCTION()
 	virtual void AttackEnd();
 
-	UFUNCTION()
-	virtual void DropItem(MonsterType type);
+	/*UFUNCTION()
+	virtual void DropItem(MonsterType type);*/
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	void DisplayDamageText(float DamageAmount, FVector Location);
+	// void DisplayDamageText(float DamageAmount, FVector Location);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void TakeDamage_BP(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);

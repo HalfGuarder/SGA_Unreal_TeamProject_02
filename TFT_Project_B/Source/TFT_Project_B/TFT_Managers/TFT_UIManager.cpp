@@ -10,6 +10,7 @@
 #include "TFT_DeathWidget.h"
 #include "TFT_EndingWidget.h"
 #include "TFT_RandomBoxWidget.h"
+#include "TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "TFT_GameInstance.h"
@@ -18,7 +19,15 @@ ATFT_UIManager::ATFT_UIManager()
 {
  	PrimaryActorTick.bCanEverTick = false;
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> crossHair(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_CrossHair_BP.TFT_CrossHair_BP_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> startWidget
+	(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'"));
+	if (startWidget.Succeeded())
+	{
+		_GameStartInstance = CreateWidget<UTFT_GameStartWidget>(GetWorld(), startWidget.Class);
+	}
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> crossHair
+	(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_CrossHair_BP.TFT_CrossHair_BP_C'"));
 	if (crossHair.Succeeded())
 	{
 		_crossHair = CreateWidget<UUserWidget>(GetWorld(), crossHair.Class);
@@ -84,6 +93,7 @@ ATFT_UIManager::ATFT_UIManager()
 	_widgets.Add(_tutorial);
 	_widgets.Add(_EndingWidget);
 	_widgets.Add(_RandomBoxWidget);
+	_widgets.Add(_GameStartInstance);
 }
 
 void ATFT_UIManager::BeginPlay()

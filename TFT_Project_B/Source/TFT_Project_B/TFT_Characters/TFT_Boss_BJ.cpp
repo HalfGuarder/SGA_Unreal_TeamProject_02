@@ -317,7 +317,7 @@ void ATFT_Boss_BJ::DeathStart()
 
 void ATFT_Boss_BJ::BossDisable()
 {
-    Super::DropItem(MonsterType::BOSS);
+    // Super::DropItem(MonsterType::BOSS);
 
     PrimaryActorTick.bCanEverTick = false;
 

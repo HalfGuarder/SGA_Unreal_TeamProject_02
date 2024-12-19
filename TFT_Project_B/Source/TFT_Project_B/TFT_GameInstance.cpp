@@ -3,6 +3,7 @@
 
 #include "TFT_GameInstance.h"
 
+#include "Engine/DataTable.h"
 #include "TFT_UIManager.h"
 #include "TFT_EffectManager.h"
 #include "TFT_SoundManager.h"
@@ -10,14 +11,14 @@
 
 UTFT_GameInstance::UTFT_GameInstance()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> dataTable
-	(TEXT("/Script/Engine.DataTable'/Game/Data/TFT_StatDataTable.TFT_StatDataTable'"));
+	//ConstructorHelpers::FClassFinder<UDataTable> dataTable
+	//(TEXT("/Script/Engine.DataTable'/Game/Data/TFT_StatDataTable.TFT_StatDataTable'"));
 
-	if (dataTable.Succeeded())
-	{
-		_statTable = dataTable.Object;
-		UE_LOG(LogTemp, Error, TEXT("StatTable Load Complete"));
-	}
+	//if (dataTable.Succeeded())
+	//{
+	//	_statTable = dataTable.Class;
+	//	// UE_LOG(LogTemp, Error, TEXT("StatTable Load Complete"));
+	//}
 }
 
 void UTFT_GameInstance::Init()
@@ -29,8 +30,16 @@ void UTFT_GameInstance::Init()
 
 FTFT_StatData* UTFT_GameInstance::GetStatDataByLevel(int32 level)
 {
-	auto statData = _statTable->FindRow<FTFT_StatData>(*FString::FromInt(level), TEXT(""));
-	return statData;
+	if (_statTable)
+	{
+		//auto statData = Cast<UDataTable>(_statTable);
+		//auto data = statData->FindRow<FTFT_StatData>(*FString::FromInt(level), TEXT(""));
+		auto data = _statTable->FindRow<FTFT_StatData>(*FString::FromInt(level), TEXT(""));
+		return data;
+	}
+	// auto statData = _statTable->FindRow<FTFT_StatData>(*FString::FromInt(level), TEXT(""));
+
+	return nullptr;
 }
 
 ATFT_UIManager* UTFT_GameInstance::GetUIManager()

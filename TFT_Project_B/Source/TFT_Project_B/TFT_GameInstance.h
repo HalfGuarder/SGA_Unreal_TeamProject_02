@@ -31,6 +31,7 @@ public:
 	UTFT_GameInstance();
 
 	virtual void Init() override;
+
 public:
 	FTFT_StatData* GetStatDataByLevel(int32 level);
 
@@ -48,7 +49,7 @@ public:
 	InstanceEvent _reStartDelegate;
 	void ReStart();
 public:
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	class UDataTable* _statTable;
 
 	UPROPERTY(VisibleAnywhere, BluePrintReadWrite, meta = (AllowPrivateAccess = "true"))

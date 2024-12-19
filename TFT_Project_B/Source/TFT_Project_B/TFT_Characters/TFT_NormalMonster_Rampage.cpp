@@ -220,9 +220,9 @@ void ATFT_NormalMonster_Rampage::AttackEnd()
 {
 }
 
-void ATFT_NormalMonster_Rampage::DropItem()
-{
-}
+//void ATFT_NormalMonster_Rampage::DropItem()
+//{
+//}
 
 float ATFT_NormalMonster_Rampage::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -260,7 +260,7 @@ void ATFT_NormalMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool b
 
 void ATFT_NormalMonster_Rampage::BossDisable()
 {
-    Super::DropItem(MonsterType::Normal);
+    // Super::DropItem(MonsterType::Normal);
 
     // this->SetActorHiddenInGame(true);
 

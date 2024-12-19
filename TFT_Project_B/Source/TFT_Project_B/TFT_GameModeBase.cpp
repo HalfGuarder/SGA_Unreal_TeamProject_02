@@ -21,40 +21,58 @@ ATFT_GameModeBase::ATFT_GameModeBase()
 		_player = player.Class;
 	}
 
-	if (UClass* StartWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'")))
+	/*if (UClass* StartWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'")))
 	{
 		GameStartInstance = CreateWidget<UTFT_GameStartWidget>(GetWorld(), StartWidgetClass);
-	}
+	}*/
 }
 
 void ATFT_GameModeBase::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	if (GameStartInstance->IsValidLowLevel())
+	/*if (GameStartInstance->IsValidLowLevel())
 	{
 		GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
-	}
+	}*/
 
-	GAMEINSTANCE->_reStartDelegate.AddUObject(this, &ATFT_GameModeBase::ReStart);
 }
 
 void ATFT_GameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GAMEINSTANCE->_reStartTrg == false)
-	{
-		if (GameStartInstance)
-		{
-			GameStartInstance->AddToViewport(9999);
-		}
-		MouseUnLock();
-	}
-	else
-	{
-		GameStart();
-	}
+	UIMANAGER->_GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
+	UIMANAGER->OpenWidget(UIType::GameStartUI);
+
+	GameStart();
+	
+	MouseUnLock();
+
+	//GameStartInstance->AddToViewport(9999);
+	
+
+	//auto gameInstance = Cast<UTFT_GameInstance>(GetWorld()->GetGameInstance());
+	//if (gameInstance)
+	//{
+	//	GAMEINSTANCE->SpawnManager();
+	//	
+	//	gameInstance->_reStartDelegate.AddUObject(this, &ATFT_GameModeBase::ReStart);
+	//}
+
+	//if (GAMEINSTANCE->_reStartTrg == false)
+	//{
+	//	if (GameStartInstance)
+	//	{
+	//		GameStartInstance->AddToViewport(9999);
+	//	}
+	//	MouseUnLock();
+	//}
+	//else
+	//{
+	//	GameStart();
+	//}
+
 }
 
 void ATFT_GameModeBase::Tick(float DeltaTime)
@@ -63,7 +81,7 @@ void ATFT_GameModeBase::Tick(float DeltaTime)
 
 	_playTime += DeltaTime;
 
-	if (_playTime >= 90.0f && !bGameEnd && SPAWNMANAGER->IsAllCleared())
+	if (_playTime >= 300.0f && !bGameEnd && SPAWNMANAGER->IsAllCleared())
 	{
 		UIMANAGER->EndingUIOn();
 
@@ -78,7 +96,7 @@ void ATFT_GameModeBase::GameStart()
 	FVector location = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	FRotator rotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
 
-	ATFT_Player* player = GetWorld()->SpawnActor<ATFT_Player>(_player, location, rotation);
+	ATFT_Player* player = GetWorld()->SpawnActor<ATFT_Player>(_player, FVector::ZeroVector, FRotator::ZeroRotator);
 	APawn* oldpawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	oldpawn->SetActorHiddenInGame(true);
 	oldpawn->SetActorEnableCollision(false);
@@ -93,10 +111,10 @@ void ATFT_GameModeBase::GameStart()
 
 void ATFT_GameModeBase::ReStart()
 {
-	if (GameStartInstance)
+	/*if (GameStartInstance)
 	{
 		GameStartInstance->RemoveFromViewport();
-	}
+	}*/
 
 	UWorld* World = GetWorld();
 	if (World)
@@ -113,7 +131,7 @@ void ATFT_GameModeBase::MouseUnLock()
 	if (APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
 		FInputModeUIOnly InputMode;
-		InputMode.SetWidgetToFocus(GameStartInstance->TakeWidget());
+		InputMode.SetWidgetToFocus(UIMANAGER->_GameStartInstance->TakeWidget());
 		PC->SetInputMode(InputMode);
 		PC->bShowMouseCursor = true;
 	}

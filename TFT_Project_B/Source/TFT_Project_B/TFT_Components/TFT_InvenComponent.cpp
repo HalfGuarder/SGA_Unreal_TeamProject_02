@@ -193,7 +193,7 @@ void UTFT_InvenComponent::SetWeapon(ATFT_Item* NewWeapon)
 	}
 	else if (_currentWeapon->_Itemid == 2)
 	{
-		_spareWeapon->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+		if(_spareWeapon) _spareWeapon->SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
 		UIMANAGER->_OpenCrossHairEvent.Broadcast();
 	}
 }

@@ -37,8 +37,8 @@ public:
 	float GetPlayTime() { return _playTime; }
 
 private:
-	UPROPERTY()
-	class UTFT_GameStartWidget* GameStartInstance;
+	/*UPROPERTY()
+	class UTFT_GameStartWidget* GameStartInstance;*/
 
 	TSubclassOf<APawn> _player;
 

@@ -29,6 +29,7 @@ enum class UIType : int32
 	Tutorial,
 	EndingUI,
 	RandomBoxUI,
+	GameStartUI,
 };
 
 
@@ -110,6 +111,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UUserWidget*> _widgets;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
+	class UTFT_GameStartWidget* _GameStartInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (AllowPrivateAccess = "true"))
 	UUserWidget* _crossHair;

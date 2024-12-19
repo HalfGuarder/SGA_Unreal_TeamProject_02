@@ -34,19 +34,19 @@ void ATFT_Monster::AttackEnd()
 {
 }
 
-void ATFT_Monster::DropItem(MonsterType type)
-{
-    if (bItemDroped) return;
-
-	if (IsValid(this)) // �Ǵ� IsValid(GetWorld())
-	{
-		FVector monsterPos = GetActorLocation();
-		_invenCom->DropMonsterItem(monsterPos, type);
-
-        bItemDroped = true;
-	}
-	//_invenCom->DropMonsterItem(monsterPos);
-}
+//void ATFT_Monster::DropItem(MonsterType type)
+//{
+//    if (bItemDroped) return;
+//
+//	if (IsValid(this)) // �Ǵ� IsValid(GetWorld())
+//	{
+//		FVector monsterPos = GetActorLocation();
+//		_invenCom->DropMonsterItem(monsterPos, type);
+//
+//        bItemDroped = true;
+//	}
+//	//_invenCom->DropMonsterItem(monsterPos);
+//}
 
 float ATFT_Monster::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
