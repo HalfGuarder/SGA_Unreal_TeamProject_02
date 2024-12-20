@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
 
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"

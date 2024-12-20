@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Projectile.h"
+#include "TFT_Project_B/TFT_Projectile.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -9,7 +9,7 @@
 #include "Engine/DamageEvents.h"
 #include "TimerManager.h"
 
-#include "TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
 
 ATFT_Projectile::ATFT_Projectile()
 {

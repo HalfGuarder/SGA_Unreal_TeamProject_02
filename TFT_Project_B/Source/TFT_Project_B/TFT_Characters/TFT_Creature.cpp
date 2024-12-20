@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 
 #include "Engine/DamageEvents.h"
 #include "Math/UnrealMathUtility.h"
@@ -11,15 +11,15 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 
-#include "TFT_PlayerController.h"
+#include "TFT_Project_B/TFT_Controllers/TFT_PlayerController.h"
 
-#include "TFT_GameInstance.h"
-#include "TFT_InvenComponent.h"
-#include "TFT_StatComponent.h"
-#include "TFT_StateComponent.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Components/TFT_InvenComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StateComponent.h"
 
-#include "TFT_Item.h"
-#include "TFT_HPBarWidget.h"
+#include "TFT_Project_B/TFT_Item.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_HPBarWidget.h"
 
 ATFT_Creature::ATFT_Creature()
 {

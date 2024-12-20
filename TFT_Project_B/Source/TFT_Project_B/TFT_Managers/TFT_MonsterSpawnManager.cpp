@@ -1,29 +1,29 @@
-#include "TFT_Managers/TFT_MonsterSpawnManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_MonsterSpawnManager.h"
 
 #include "TimerManager.h"
 
-#include "TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
 
-#include "TFT_BossMonster_Grux.h"
-#include "TFT_AnimInstance_Grux.h"
+#include "TFT_Project_B/TFT_Characters/TFT_BossMonster_Grux.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Grux.h"
 
-#include "TFT_BossMonster_Rampage.h"
-#include "TFT_AnimInstance_Rampage.h"
+#include "TFT_Project_B/TFT_Characters/TFT_BossMonster_Rampage.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
 
-#include "TFT_NormalMonster_Rampage.h"
-#include "TFT_AnimInstance_NormalRampage.h"
+#include "TFT_Project_B/TFT_Characters/TFT_NormalMonster_Rampage.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_NormalRampage.h"
 
-#include "TFT_Boss_BJ.h"
-#include "TFT_AnimInstance_BJ.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Boss_BJ.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_BJ.h"
 
-#include "TFT_NormalMonster_BJ.h"
-#include "TFT_AnimInstance_NormalBJ.h"
+#include "TFT_Project_B/TFT_Characters/TFT_NormalMonster_BJ.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_NormalBJ.h"
 
 ATFT_MonsterSpawnManager::ATFT_MonsterSpawnManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FClassFinder<AActor> sPos
+	/*static ConstructorHelpers::FClassFinder<AActor> sPos
 	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Spawn/TFT_SpawnPos_BP.TFT_SpawnPos_BP_C'"));
 	if (sPos.Succeeded())
 	{
@@ -59,7 +59,7 @@ ATFT_MonsterSpawnManager::ATFT_MonsterSpawnManager()
 	ConstructMonsterMesh(_rampageMesh_3, "/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier_1/Rampage_RedNeck/Mesh/Rampage_Redneck.Rampage_Redneck'");
 	// ConstructMonsterMesh(_rampageMesh_4, "/Script/Engine.SkeletalMesh'/Game/ParagonRampage/Characters/Heroes/Rampage/Skins/Tier2/Tough/Mesh/Tough_LP_Master_ForVariants_Test.Tough_LP_Master_ForVariants_Test'");
 	ConstructMonsterMesh(_bjMesh_1, "/Script/Engine.SkeletalMesh'/Game/Asset/SciFi_Soldiers/Mesh/Male/SK_SciFi_Soldier_Male_Skin4.SK_SciFi_Soldier_Male_Skin4'");
-	ConstructMonsterMesh(_bjMesh_2, "/Script/Engine.SkeletalMesh'/Game/Asset/SciFi_Soldiers/Mesh/Male/SK_SciFi_Soldier_Male_Skin1.SK_SciFi_Soldier_Male_Skin1'");
+	ConstructMonsterMesh(_bjMesh_2, "/Script/Engine.SkeletalMesh'/Game/Asset/SciFi_Soldiers/Mesh/Male/SK_SciFi_Soldier_Male_Skin1.SK_SciFi_Soldier_Male_Skin1'");*/
 }
 
 void ATFT_MonsterSpawnManager::BeginDestroy()
@@ -83,7 +83,7 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 	_gruxArray.Empty();
 	_rampageBossArray.Empty();
 
-	CreateMonster(_gruxClass, _gruxArray, 150);
+	/*CreateMonster(_gruxClass, _gruxArray, 150);
 	CreateMonster(_rampageBossClass, _rampageBossArray, 15);
 	CreateMonster(_rampageNormalClass, _rampageNormalArray, 120);
 	CreateMonster(_bjBossClass, _bjBossArray, 15);
@@ -93,10 +93,7 @@ void ATFT_MonsterSpawnManager::PostInitializeComponents()
 	AddTimerHandleInArray(&_rampageBossSpawnTimerHandle);
 	AddTimerHandleInArray(&_rampageNormalSpawnTimerHandle);
 	AddTimerHandleInArray(&_bjBossSpawnTimerHandle);
-	AddTimerHandleInArray(&_bjNormalSpawnTimerHandle);
-
-	// SetSpawnTimer(_gruxArray, _gruxSpawnTimerHandle, 3.0f, true);
-	// SetSpawnTimer(_rampageBossArray,  _rampageBossSpawnTimerHandle, 10.0f, true);
+	AddTimerHandleInArray(&_bjNormalSpawnTimerHandle);*/
 }
 
 void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
@@ -105,7 +102,7 @@ void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 
 	_playTime += DeltaTime;
 
-	if (_playTime >= 1.0f && !bOnStage_1)
+	/*if (_playTime >= 1.0f && !bOnStage_1)
 	{
 		ChangeSpawnTimer(_gruxArray, _gruxAnimClass, _gruxMesh_1, 1, _gruxSpawnTimerHandle, 1.5f, true, true);
 		bOnStage_1 = true;
@@ -264,7 +261,7 @@ void ATFT_MonsterSpawnManager::Tick(float DeltaTime)
 		PauseAllTimerHandle();
 
 		bOnEndStage = true;
-	}
+	}*/
 }
 
 bool ATFT_MonsterSpawnManager::IsAllCleared()

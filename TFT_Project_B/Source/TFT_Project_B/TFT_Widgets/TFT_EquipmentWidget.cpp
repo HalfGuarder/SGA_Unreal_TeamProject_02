@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Widgets/TFT_EquipmentWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_EquipmentWidget.h"
 
-#include "TFT_Item.h"
-#include "TFT_InvenComponent.h"
+#include "TFT_Project_B/TFT_Item.h"
+#include "TFT_Project_B/TFT_Components/TFT_InvenComponent.h"
 
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
@@ -13,10 +13,10 @@
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
 
-#include "TFT_GameInstance.h"
-#include "TFT_UIManager.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
 
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 bool UTFT_EquipmentWidget::Initialize()
 {

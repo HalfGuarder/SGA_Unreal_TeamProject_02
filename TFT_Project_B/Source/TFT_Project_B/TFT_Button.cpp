@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Button.h"
+#include "TFT_Project_B/TFT_Button.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
 #include "TFT_Managers/TFT_EffectManager.h"
 #include "Engine/DamageEvents.h"
-#include "TFT_Characters/TFT_Monster.h"
-#include "TFT_Characters/TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 ATFT_Button::ATFT_Button()
 {

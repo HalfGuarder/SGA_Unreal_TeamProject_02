@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Effect.h"
+#include "TFT_Project_B/TFT_FXs/TFT_Effect.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "NiagaraSystem.h"

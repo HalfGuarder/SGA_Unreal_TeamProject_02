@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_AnimInstances/TFT_AnimInstance_BJ.h"
-#include "TFT_Characters/TFT_Boss_BJ.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_BJ.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Boss_BJ.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Animation/AnimMontage.h"
 

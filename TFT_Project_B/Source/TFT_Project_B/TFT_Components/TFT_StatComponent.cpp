@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
 
-#include "TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
 
 UTFT_StatComponent::UTFT_StatComponent()
 {

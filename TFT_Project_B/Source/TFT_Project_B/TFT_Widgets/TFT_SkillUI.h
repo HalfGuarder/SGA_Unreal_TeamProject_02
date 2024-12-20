@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "TFT_Skill_piece.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_Skill_piece.h"
 #include "TFT_SkillUI.generated.h"
 
 UCLASS()

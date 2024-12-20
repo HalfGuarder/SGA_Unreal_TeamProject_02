@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Turret.h"
+#include "TFT_Project_B/TFT_Turret.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/OverlapResult.h"
 #include "TimerManager.h"
 
-#include "TFT_Monster.h"
-#include "TFT_Projectile.h"
-#include "TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Characters//TFT_Monster.h"
+#include "TFT_Project_B/TFT_Projectile.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
 
 ATFT_Turret::ATFT_Turret()
 {

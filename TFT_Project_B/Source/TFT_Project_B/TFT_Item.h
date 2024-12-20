@@ -16,33 +16,33 @@ struct FTFT_ItemData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemId;
+	FString ItemId = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemType;
+	FString ItemType = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemName;
+	FString ItemName = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 AttackPower;
+	int32 AttackPower = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Defense;
+	int32 Defense = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Buy;
+	int32 Buy = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Sell;
+	int32 Sell = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Space;
+	int32 Space = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Explanation;
+	FString Explanation = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString MiniInfo;
+	FString MiniInfo = "";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemRegion;
+	FString ItemRegion = "";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* ItemTexture;
+	UTexture2D* ItemTexture = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* ItemMesh;
+	UStaticMesh* ItemMesh = nullptr;
 };
 
 UCLASS()

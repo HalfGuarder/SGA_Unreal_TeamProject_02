@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_AnimInstances/TFT_AnimInstance_NormalRampage.h"
-#include "TFT_Characters/TFT_NormalMonster_Rampage.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_NormalRampage.h"
+#include "TFT_Project_B/TFT_Characters/TFT_NormalMonster_Rampage.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Animation/AnimMontage.h"
-#include "TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
 
 UTFT_AnimInstance_NormalRampage::UTFT_AnimInstance_NormalRampage()
 {

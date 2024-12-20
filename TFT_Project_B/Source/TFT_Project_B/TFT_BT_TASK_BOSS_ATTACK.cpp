@@ -1,13 +1,13 @@
-#include "TFT_BT_TASK_BOSS_ATTACK.h"
+#include "TFT_Project_B/TFT_BT_TASK_BOSS_ATTACK.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "TFT_Boss_AIController.h"
-#include "TFT_Creature.h"
-#include "TFT_Boss_BJ.h"
-#include "TFT_Player.h"
-#include "TFT_Monster.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Boss_BJ.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
 
 UTFT_BT_TASK_BOSS_ATTACK::UTFT_BT_TASK_BOSS_ATTACK()
 {

@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_AnimInstances/TFT_AnimInstance_Grux.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Grux.h"
 
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 
 #include "GameFramework/PawnMovementComponent.h"
 #include "Animation/AnimMontage.h"

@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Characters/TFT_BossMonster_Rampage.h"
-#include "TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
-#include "TFT_Widgets/TFT_HPBarWidget.h"
-#include "TFT_Characters/TFT_Player.h"
-#include "../TFT_Components/TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Characters/TFT_BossMonster_Rampage.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Rampage.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_HPBarWidget.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Engine/DamageEvents.h"
@@ -14,7 +14,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/WidgetComponent.h"
 #include "EngineUtils.h" 
-#include "TFT_NPC2.h"
+#include "TFT_Project_B/TFT_AI/TFT_NPC2.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"

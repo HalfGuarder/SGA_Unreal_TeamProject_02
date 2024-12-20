@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TFT_Widgets/TFT_GameStartWidget.h"
-#include "TFT_Widgets/TFT_LoadingScreen.h"
-#include "TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_GameStartWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_LoadingScreen.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/Button.h"

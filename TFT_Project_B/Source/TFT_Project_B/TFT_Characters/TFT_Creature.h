@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
-#include "TFT_MeshComponent.h"
-#include "TFT_StatComponent.h"
-#include "TFT_InvenComponent.h"
-#include "TFT_StateComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_MeshComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_InvenComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StateComponent.h"
 
 #include "TFT_Creature.generated.h"
 

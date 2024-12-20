@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_BT_BOSS_DECO_CANATTACK.h"
+#include "TFT_Project_B/TFT_BT_BOSS_DECO_CANATTACK.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Controller.h"
-#include "TFT_Boss_AIController.h"
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 
 UTFT_BT_BOSS_DECO_CANATTACK::UTFT_BT_BOSS_DECO_CANATTACK()
 {

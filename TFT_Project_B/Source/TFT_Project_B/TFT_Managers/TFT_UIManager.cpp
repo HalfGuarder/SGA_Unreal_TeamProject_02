@@ -1,19 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
 
-#include "TFT_InvenWidget.h"
-#include "TFT_EquipmentWidget.h"
-#include "TFT_SkillUI.h"
-#include "TFT_Menu.h"
-#include "TFT_DeathWidget.h"
-#include "TFT_EndingWidget.h"
-#include "TFT_RandomBoxWidget.h"
-#include "TFT_GameStartWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_InvenWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_EquipmentWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_SkillUI.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_Menu.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_DeathWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_EndingWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_RandomBoxWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
 
 ATFT_UIManager::ATFT_UIManager()
 {

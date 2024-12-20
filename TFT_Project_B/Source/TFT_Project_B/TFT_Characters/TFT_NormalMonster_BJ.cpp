@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Characters/TFT_NormalMonster_BJ.h"
+#include "TFT_Project_B/TFT_Characters/TFT_NormalMonster_BJ.h"
 
-#include "TFT_Player.h"
-#include "TFT_AnimInstances/TFT_AnimInstance_NormalBJ.h"
-#include "TFT_Widgets/TFT_HPBarWidget.h"
-#include "TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_NormalBJ.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_HPBarWidget.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Components/SkeletalMeshComponent.h"
@@ -17,8 +17,8 @@
 #include "Niagara/Public/NiagaraFunctionLibrary.h"
 #include "TimerManager.h"
 #include "Engine/DamageEvents.h"
-#include "TFT_GameInstance.h"
-#include "TFT_EffectManager.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_EffectManager.h"
 
 ATFT_NormalMonster_BJ::ATFT_NormalMonster_BJ()
 {

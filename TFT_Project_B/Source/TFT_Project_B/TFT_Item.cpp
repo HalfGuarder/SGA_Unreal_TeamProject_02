@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Item.h"
+#include "TFT_Project_B/TFT_Item.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/DataTable.h"
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 ATFT_Item::ATFT_Item()
 {

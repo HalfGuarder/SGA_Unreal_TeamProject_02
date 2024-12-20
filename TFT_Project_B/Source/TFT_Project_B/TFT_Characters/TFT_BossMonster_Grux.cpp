@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Characters/TFT_BossMonster_Grux.h"
+#include "TFT_Project_B/TFT_Characters/TFT_BossMonster_Grux.h"
 
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -9,17 +9,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
 
-#include "TFT_AnimInstance_Grux.h"
-#include "TFT_HPBarWidget.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Grux.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_HPBarWidget.h"
 
-#include "TFT_GameInstance.h"
-#include "TFT_UIManager.h"
-#include "TFT_SoundManager.h"
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "AIController.h"
-#include "TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 #include "TimerManager.h"

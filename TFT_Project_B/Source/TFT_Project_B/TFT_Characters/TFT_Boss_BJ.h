@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TFT_Creature.h"
-#include "TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
 #include "NiagaraSystem.h"
 #include "TFT_Boss_BJ.generated.h"
 

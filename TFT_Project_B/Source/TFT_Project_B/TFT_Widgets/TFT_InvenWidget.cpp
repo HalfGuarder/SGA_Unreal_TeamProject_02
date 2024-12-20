@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_InvenWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_InvenWidget.h"
 
-#include "TFT_Item.h"
-#include "TFT_InvenComponent.h"
+#include "TFT_Project_B/TFT_Item.h"
+#include "TFT_Project_B/TFT_Components/TFT_InvenComponent.h"
 
 #include "Components/UniformGridPanel.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
-#include "TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
 
 bool UTFT_InvenWidget::Initialize()
 {

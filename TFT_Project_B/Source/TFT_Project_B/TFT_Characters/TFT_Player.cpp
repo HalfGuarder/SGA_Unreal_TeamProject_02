@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
-#include "TFT_Creature.h"
-#include "TFT_Monster.h"
-#include "TFT_Widgets/TFT_HPBarWidget.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_HPBarWidget.h"
 
-#include "TFT_AnimInstance_Player.h"
-#include "TFT_NPC.h"
-#include "TFT_Door.h"
-#include "TFT_NPC2.h"
-#include "TFT_Button.h"
+#include "TFT_Project_B/TFT_AnimInstances/TFT_AnimInstance_Player.h"
+#include "TFT_Project_B/TFT_AI/TFT_NPC.h"
+#include "TFT_Project_B/TFT_Door.h"
+#include "TFT_Project_B/TFT_AI/TFT_NPC2.h"
+#include "TFT_Project_B/TFT_Button.h"
 
 #include "EngineUtils.h"
 
@@ -25,15 +25,15 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
-#include "TFT_GameInstance.h"
-#include "TFT_UIManager.h"
-#include "TFT_SoundManager.h"
-#include "TFT_EffectManager.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_EffectManager.h"
 
-#include "TFT_InvenWidget.h"
-#include "TFT_EquipmentWidget.h"
-#include "TFT_Item.h"
-#include "TFT_RandomBoxWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_InvenWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_EquipmentWidget.h"
+#include "TFT_Project_B/TFT_Item.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_RandomBoxWidget.h"
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
@@ -44,15 +44,15 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/OverlapResult.h"
 
-#include "TFT_Projectile.h"
-#include "TFT_Turret.h"
+#include "TFT_Project_B/TFT_Projectile.h"
+#include "TFT_Project_B/TFT_Turret.h"
 #include "Engine/SkeletalMeshSocket.h"
 
-#include "TFT_SkillUI.h"
-#include "TFT_Menu.h"
-#include "TFT_RandomBoxWidget.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_SkillUI.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_Menu.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_RandomBoxWidget.h"
 
-#include "TFT_PlayerSkillComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_PlayerSkillComponent.h"
 
 ATFT_Player::ATFT_Player()
 {

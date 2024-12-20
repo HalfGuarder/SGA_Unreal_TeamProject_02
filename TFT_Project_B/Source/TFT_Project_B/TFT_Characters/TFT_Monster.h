@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 #include "TFT_Monster.generated.h"
 
 UCLASS(Abstract)

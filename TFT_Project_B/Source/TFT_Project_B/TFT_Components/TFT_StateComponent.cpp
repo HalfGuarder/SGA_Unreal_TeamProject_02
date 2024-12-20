@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_StateComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StateComponent.h"
 
 UTFT_StateComponent::UTFT_StateComponent()
 {

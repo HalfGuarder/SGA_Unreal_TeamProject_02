@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Animnotify_Sound.h"
-#include "TFT_Characters/TFT_Monster.h"
-#include "TFT_GameInstance.h"
-#include "TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_Animnotify_Sound.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
 
 void UTFT_Animnotify_Sound::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {

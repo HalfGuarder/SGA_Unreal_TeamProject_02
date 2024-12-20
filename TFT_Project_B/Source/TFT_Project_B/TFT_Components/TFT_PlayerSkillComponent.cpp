@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Components/TFT_PlayerSkillComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_PlayerSkillComponent.h"
 
-#include "TFT_Projectile.h"
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Projectile.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 
 #include "Engine/OverlapResult.h"
 #include "Engine/DamageEvents.h"

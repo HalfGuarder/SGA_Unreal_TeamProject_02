@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_AI/TFT_NPC.h"
+#include "TFT_Project_B/TFT_AI/TFT_NPC.h"
 #include "Components/BoxComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Blueprint/UserWidget.h"
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 // Sets default values
 ATFT_NPC::ATFT_NPC()

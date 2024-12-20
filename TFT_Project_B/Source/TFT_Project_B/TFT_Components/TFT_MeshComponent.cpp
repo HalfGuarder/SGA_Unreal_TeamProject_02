@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_MeshComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_MeshComponent.h"
 
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 
 
 UTFT_MeshComponent::UTFT_MeshComponent()

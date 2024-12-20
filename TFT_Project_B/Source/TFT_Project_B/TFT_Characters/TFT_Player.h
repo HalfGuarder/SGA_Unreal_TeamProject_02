@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 #include "Components/TimelineComponent.h"
 #include "TFT_Player.generated.h"
 

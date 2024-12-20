@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
-#include "TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
 
 #include "TFT_GameInstance.generated.h"
 

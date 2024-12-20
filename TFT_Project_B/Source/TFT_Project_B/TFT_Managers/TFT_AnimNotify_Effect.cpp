@@ -2,9 +2,9 @@
 
 
 #include "TFT_AnimNotify_Effect.h"
-#include "TFT_Characters/TFT_Monster.h"
-#include "TFT_GameInstance.h"
-#include "TFT_EffectManager.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_EffectManager.h"
 
 void UTFT_AnimNotify_Effect::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {

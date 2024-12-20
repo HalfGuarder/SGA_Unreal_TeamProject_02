@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
 
 #include "Engine/DataTable.h"
-#include "TFT_UIManager.h"
-#include "TFT_EffectManager.h"
-#include "TFT_SoundManager.h"
-#include "TFT_MonsterSpawnManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_EffectManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_SoundManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_MonsterSpawnManager.h"
 
 UTFT_GameInstance::UTFT_GameInstance()
 {

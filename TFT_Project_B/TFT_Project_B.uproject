@@ -26,16 +26,33 @@
 			]
 		},
 		{
-			"Name": "ChaosCloth",
+			"Name": "Paper2D",
 			"Enabled": false
 		},
 		{
-			"Name": "NiagaraSimCaching",
-			"Enabled": false
-		},
-		{
-			"Name": "WaveformEditor",
+			"Name": "EOSShared",
 			"Enabled": true
+		},
+		{
+			"Name": "Landmass",
+			"Enabled": true
+		},
+		{
+			"Name": "ChaosCaching",
+			"Enabled": true
+		},
+		{
+			"Name": "Takes",
+			"Enabled": true
+		},
+		{
+			"Name": "Fab",
+			"Enabled": false,
+			"SupportedTargetPlatforms": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
 		}
 	],
 	"TargetPlatforms": [

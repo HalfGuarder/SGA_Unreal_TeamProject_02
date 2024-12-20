@@ -1,25 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_GameModeBase.h"
-#include "TFT_GameInstance.h"
-#include "TFT_UIManager.h"
-#include "TFT_MonsterSpawnManager.h"
-#include "TFT_Widgets/TFT_GameStartWidget.h"
+#include "TFT_Project_B/TFT_GameModeBase.h"
+#include "TFT_Project_B/TFT_GameInstance.h"
+#include "TFT_Project_B/TFT_Managers/TFT_UIManager.h"
+#include "TFT_Project_B/TFT_Managers/TFT_MonsterSpawnManager.h"
+#include "TFT_Project_B/TFT_Widgets/TFT_GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 
 ATFT_GameModeBase::ATFT_GameModeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FClassFinder<ATFT_Player> player
+	/*static ConstructorHelpers::FClassFinder<ATFT_Player> player
 	(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Characters/Player/TFT_Player_BP.TFT_Player_BP_C'"));
 	if (player.Succeeded())
 	{
 		_player = player.Class;
-	}
+	}*/
 
 	/*if (UClass* StartWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/TFT_GameStartWidget_BP.TFT_GameStartWidget_BP_C'")))
 	{
@@ -45,7 +45,7 @@ void ATFT_GameModeBase::BeginPlay()
 	UIMANAGER->_GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
 	UIMANAGER->OpenWidget(UIType::GameStartUI);
 
-	GameStart();
+	// GameStart();
 	
 	MouseUnLock();
 
@@ -91,7 +91,7 @@ void ATFT_GameModeBase::Tick(float DeltaTime)
 
 void ATFT_GameModeBase::GameStart()
 {
-	DefaultPawnClass = _player;
+	/*DefaultPawnClass = _player;
 
 	FVector location = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 	FRotator rotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
@@ -106,7 +106,7 @@ void ATFT_GameModeBase::GameStart()
 
 	GAMEINSTANCE->_reStartTrg = false;
 
-	MouseLock();
+	MouseLock();*/
 }
 
 void ATFT_GameModeBase::ReStart()

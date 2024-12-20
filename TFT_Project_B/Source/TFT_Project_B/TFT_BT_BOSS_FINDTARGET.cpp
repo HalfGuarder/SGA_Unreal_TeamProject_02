@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_BT_BOSS_FINDTARGET.h"
+#include "TFT_Project_B/TFT_BT_BOSS_FINDTARGET.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardData.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "TFT_Boss_AIController.h"
-#include "TFT_Creature.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Creature.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/OverlapResult.h"
-#include "TFT_Player.h"
-#include "TFT_Turret.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
+#include "TFT_Project_B/TFT_Turret.h"
 
 UTFT_BT_BOSS_FINDTARGET::UTFT_BT_BOSS_FINDTARGET()
 {

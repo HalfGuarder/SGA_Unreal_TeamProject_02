@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TFT_Monster.h"
-#include "TFT_Player.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Player.h"
 #include "Engine/DamageEvents.h"
-#include "TFT_StatComponent.h"
+#include "TFT_Project_B/TFT_Components/TFT_StatComponent.h"
 #include "AIController.h"
-#include "TFT_Boss_AIController.h"
+#include "TFT_Project_B/TFT_Boss_AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 ATFT_Monster::ATFT_Monster()

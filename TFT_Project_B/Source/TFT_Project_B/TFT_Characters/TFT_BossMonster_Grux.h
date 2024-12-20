@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TFT_Characters/TFT_Monster.h"
+#include "TFT_Project_B/TFT_Characters/TFT_Monster.h"
 #include "TFT_BossMonster_Grux.generated.h"
 
 /**
