@@ -44,10 +44,10 @@ void ATFT_GameModeBase::BeginPlay()
 
 	UIMANAGER->_GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
 	UIMANAGER->OpenWidget(UIType::GameStartUI);
-
-	GameStart();
-	
 	MouseUnLock();
+
+	//GameStart();
+	
 
 	//GameStartInstance->AddToViewport(9999);
 	

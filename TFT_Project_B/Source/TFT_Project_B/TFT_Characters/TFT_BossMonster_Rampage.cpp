@@ -21,12 +21,6 @@
 
 ATFT_BossMonster_Rampage::ATFT_BossMonster_Rampage()
 {
-    static ConstructorHelpers::FClassFinder<UUserWidget> HpBar(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/HP_Bar_BP.HP_Bar_BP_C'"));
-    if (HpBar.Succeeded())
-    {
-        HpBarWidgetClass = HpBar.Class;
-    }
-
     _possessionExp = 20;
 }
 
@@ -45,28 +39,6 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
 	
     _statCom->SetLevelAndInit(201);
 
-    if (HpBarWidgetClass)
-    {
-        HpBarWidgetInstance = CreateWidget<UUserWidget>(GetWorld(), HpBarWidgetClass);
-        if (HpBarWidgetInstance)
-        {
-            HpBarWidgetInstance->AddToViewport();
-        }
-    }
-
-    if (HpBarWidgetInstance)
-    {
-
-        UTFT_HPBarWidget* HpBar = Cast<UTFT_HPBarWidget>(HpBarWidgetInstance);
-        if (HpBar)
-        {
-            HpBar->SetProfileImage(ProfileType::BOSS1);
-            HpBar->SetHpText(_statCom->GetMaxHp());
-            _statCom->_BosshpChangedDelegate.AddUObject(HpBar, &UTFT_HPBarWidget::SetHpBarValue);
-            _statCom->_CurHpText.AddUObject(HpBar, &UTFT_HPBarWidget::CurHpText);
-        }
-    }
-
     if (_statCom->IsValidLowLevel())
     {
         _statCom->_deathDelegate.AddUObject(this, &ATFT_BossMonster_Rampage::DeathStart);
@@ -76,25 +48,6 @@ void ATFT_BossMonster_Rampage::PostInitializeComponents()
 void ATFT_BossMonster_Rampage::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-
-    AActor* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-
-    if (Player)
-    {
-        float Distance = FVector::Dist(Player->GetActorLocation(), GetActorLocation());
-
-        if (HpBarWidgetInstance)
-        {
-            if (Distance <= 1000.0f)
-            {
-                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Visible);
-            }
-            else
-            {
-                HpBarWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
-            }
-        }
-    }
 
     if (_isAttacking)
     {
