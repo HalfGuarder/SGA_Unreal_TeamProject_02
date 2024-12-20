@@ -37,7 +37,9 @@ void ATFT_NPC::OnDialogueClosed()
 {
     if (DialogueWidgetInstance)
     {
-        DialogueWidgetInstance->RemoveFromViewport();
+        //ycg-change
+       // DialogueWidgetInstance->RemoveFromViewport();
+        DialogueWidgetInstance->RemoveFromParent();
         DialogueWidgetInstance = nullptr;
     }
 

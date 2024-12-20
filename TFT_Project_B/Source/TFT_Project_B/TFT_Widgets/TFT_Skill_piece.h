@@ -7,7 +7,7 @@
 enum WEAPON_TYPE
 {
 	closeRange,
-	longLange
+	longRange
 };
 
 /**

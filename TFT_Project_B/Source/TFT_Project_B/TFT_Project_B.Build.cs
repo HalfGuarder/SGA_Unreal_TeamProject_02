@@ -8,9 +8,7 @@ public class TFT_Project_B : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "LevelSequence", "NavigationSystem", "UMG", "Niagara", "MovieScene"  });
-
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "AIModule", "LevelSequence", "SlateCore", "NavigationSystem", "UMG", "Niagara", "MovieScene"  });
 
         PublicIncludePaths.AddRange(new string[] {
             "TFT_Project_B",
@@ -25,7 +23,7 @@ public class TFT_Project_B : ModuleRules
         });
 
         // Uncomment if you are using Slate UI
-        // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+        //PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
         // Uncomment if you are using online features
         // PrivateDependencyModuleNames.Add("OnlineSubsystem");

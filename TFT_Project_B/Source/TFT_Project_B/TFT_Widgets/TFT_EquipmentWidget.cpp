@@ -277,7 +277,18 @@ void UTFT_EquipmentWidget::Changes(ATFT_Item* item, int32 index)
 void UTFT_EquipmentWidget::SetItemChoice(UTexture2D* texture, int32 slotIndex)
 {
 	choiceCheck = true;
-	_slotBtns[slotIndex]->WidgetStyle.Normal.SetResourceObject(texture);
+	//_slotBtns[slotIndex]->WidgetStyle.Normal.SetResourceObject(texture);
+
+	// 24/12/20 YCG
+	if (_slotBtns.IsValidIndex(slotIndex) && texture)
+	{
+		FButtonStyle NewStyle = _slotBtns[slotIndex]->WidgetStyle; // 기존 스타일 복사
+		FSlateBrush NewBrush = NewStyle.Normal; // 기존 Brush 복사
+		NewBrush.SetResourceObject(texture);   // Texture 설정
+		NewStyle.SetNormal(NewBrush);          // 수정된 Brush를 스타일에 설정
+		_slotBtns[slotIndex]->SetStyle(NewStyle); // 수정된 스타일을 버튼에 설정
+	}
+	
 
 }
 
@@ -285,7 +296,19 @@ void UTFT_EquipmentWidget::ResetChoice()
 {
 	if (this_Item != nullptr)
 	{
-		_slotBtns[this_Index]->WidgetStyle.Normal.SetResourceObject(_emptySlot);
+		//_slotBtns[this_Index]->WidgetStyle.Normal.SetResourceObject(_emptySlot);
+
+		// 24/12/20 YCG
+		if (_slotBtns.IsValidIndex(this_Index))
+		{
+		FButtonStyle NewStyle = _slotBtns[this_Index]->WidgetStyle; // 기존 스타일 복사
+		FSlateBrush NewBrush = NewStyle.Normal; // 기존 Brush 복사
+		NewBrush.SetResourceObject(_emptySlot);   // Texture 설정
+		NewStyle.SetNormal(NewBrush);          // 수정된 Brush를 스타일에 설정
+		_slotBtns[this_Index]->SetStyle(NewStyle); // 수정된 스타일을 버튼에 설정
+
+		}
+
 
 		this_Index = -1;
 		this_Item = nullptr;

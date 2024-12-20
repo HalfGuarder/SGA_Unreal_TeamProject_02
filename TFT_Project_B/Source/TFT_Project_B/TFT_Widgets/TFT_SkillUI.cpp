@@ -75,7 +75,7 @@ void UTFT_SkillUI::VisbleSkillSlot(WEAPON_TYPE itemtype)
 		_MyWeapon = true;
 	}
 	break;
-	case longLange:
+	case longRange:
 	{
 		_skillSlots[2]->SetSlotImg(itemtype, 2);
 		_skillSlots[2]->changedText = false;

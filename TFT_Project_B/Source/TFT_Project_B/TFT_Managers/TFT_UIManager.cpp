@@ -162,7 +162,8 @@ void ATFT_UIManager::CloseWidget(UIType type)
 		return;
 
 	_widgets[typeNum]->SetVisibility(ESlateVisibility::Hidden);
-	_widgets[typeNum]->RemoveFromViewport();
+	// YCG - 주석
+	//_widgets[typeNum]->RemoveFromViewport();
 }
 
 void ATFT_UIManager::OnoffWidget(UIType type)
@@ -177,7 +178,8 @@ void ATFT_UIManager::CloseAll()
 	for (auto widget : _widgets)
 	{
 		widget->SetVisibility(ESlateVisibility::Hidden);
-		widget->RemoveFromViewport();
+		// YCG - 주석
+		//widget->RemoveFromViewport();
 	}
 }
 

@@ -82,34 +82,43 @@ void UTFT_Skill_piece::SetSlotImg(WEAPON_TYPE itemtype, int32 socket)
 	{
 	case closeRange:
 	{
-		if(changedText)
-
-		if (socket == 0)
+		if (changedText)
 		{
-			SkillSlotPB->WidgetStyle.BackgroundImage = _brushCloseQ;
-			SkillSlotPB->WidgetStyle.FillImage = _brushCloseQ_Black;
-		}
-		else if (socket == 1)
-		{
-			SkillSlotPB->WidgetStyle.BackgroundImage = _brushCloseE;
-			SkillSlotPB->WidgetStyle.FillImage = _brushCloseE_Black;
+			if (socket == 0)
+			{
+				FProgressBarStyle NewStyle = SkillSlotPB->GetWidgetStyle();
+				NewStyle.BackgroundImage = _brushCloseQ;
+				NewStyle.FillImage = _brushCloseQ_Black;
+				SkillSlotPB->SetWidgetStyle(NewStyle); // 수정된 스타일을 다시 설정
+			}
+			else if (socket == 1)
+			{
+				FProgressBarStyle NewStyle = SkillSlotPB->GetWidgetStyle();
+				NewStyle.BackgroundImage = _brushCloseE;
+				NewStyle.FillImage = _brushCloseE_Black;
+				SkillSlotPB->SetWidgetStyle(NewStyle);
+			}
 		}
 	}
-		break;
-	case longLange:
+	break;
+	case longRange:
 	{
 		if (socket == 2)
 		{
-			SkillSlotPB->WidgetStyle.BackgroundImage = _brushLongQ;
-			SkillSlotPB->WidgetStyle.FillImage = _brushLongQ_Black;
+			FProgressBarStyle NewStyle = SkillSlotPB->GetWidgetStyle();
+			NewStyle.BackgroundImage = _brushLongQ;
+			NewStyle.FillImage = _brushLongQ_Black;
+			SkillSlotPB->SetWidgetStyle(NewStyle);
 		}
 		else if (socket == 3)
 		{
-			SkillSlotPB->WidgetStyle.BackgroundImage = _brushLongE;
-			SkillSlotPB->WidgetStyle.FillImage = _brushLongE_Black;
+			FProgressBarStyle NewStyle = SkillSlotPB->GetWidgetStyle();
+			NewStyle.BackgroundImage = _brushLongE;
+			NewStyle.FillImage = _brushLongE_Black;
+			SkillSlotPB->SetWidgetStyle(NewStyle);
 		}
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -117,8 +126,10 @@ void UTFT_Skill_piece::SetSlotImg(WEAPON_TYPE itemtype, int32 socket)
 
 void UTFT_Skill_piece::HeddenSlotImg()
 {
-	SkillSlotPB->WidgetStyle.BackgroundImage = _nullBrush;
-	SkillSlotPB->WidgetStyle.FillImage = _nullBrush;
+	FProgressBarStyle NewStyle = SkillSlotPB->GetWidgetStyle();
+	NewStyle.BackgroundImage = _nullBrush;
+	NewStyle.FillImage = _nullBrush;
+	SkillSlotPB->SetWidgetStyle(NewStyle);
 
 	changedText = true;
 	SkillCountText->SetText(_nullText);

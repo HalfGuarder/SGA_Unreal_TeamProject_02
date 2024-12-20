@@ -42,9 +42,17 @@ void ATFT_GameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GAMEINSTANCE->_reStartDelegate.AddUObject(this, &ATFT_GameModeBase::ReStart);
 	UIMANAGER->_GameStartInstance->_StartEvent.AddDynamic(this, &ATFT_GameModeBase::GameStart);
-	UIMANAGER->OpenWidget(UIType::GameStartUI);
-	MouseUnLock();
+	if (GAMEINSTANCE->_reStartTrg == false)
+	{
+		UIMANAGER->OpenWidget(UIType::GameStartUI);
+		MouseUnLock();	
+	}
+	else
+	{
+		GameStart();
+	}
 
 	//GameStart();
 	
@@ -115,6 +123,8 @@ void ATFT_GameModeBase::ReStart()
 	{
 		GameStartInstance->RemoveFromViewport();
 	}*/
+
+	
 
 	UWorld* World = GetWorld();
 	if (World)

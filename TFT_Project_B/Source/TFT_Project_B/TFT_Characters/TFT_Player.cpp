@@ -189,8 +189,8 @@ void ATFT_Player::BeginPlay()
 	{
 		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::closeRange, 0, 2.0f); // Q 0
 		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::closeRange, 1, 6.0f); // E 1
-		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longLange, 2, 10.0f); // Q 2
-		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longLange, 3, 20.0f); // E 3
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longRange, 2, 10.0f); // Q 2
+		UIMANAGER->GetSkillUI()->SetSkillSlot(WEAPON_TYPE::longRange, 3, 20.0f); // E 3
 
 		UIMANAGER->GetSkillUI()->HiddenSkillSlot();
 
@@ -200,7 +200,7 @@ void ATFT_Player::BeginPlay()
 		}
 		if (bEquipSword == false)
 		{
-			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longRange);
 		}
 
 	}
@@ -1479,7 +1479,7 @@ void ATFT_Player::PairWeaponUI()
 
 		case 2:
 			bEquipSword = false;
-			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longLange);
+			UIMANAGER->GetSkillUI()->VisbleSkillSlot(WEAPON_TYPE::longRange);
 			_invenCom->SetcurBullet();
 			break;
 
@@ -1520,7 +1520,9 @@ void ATFT_Player::CloseDialogueUI()
 		// NPC의 UI 창 닫기
 		if (DialogueWidgetInstance)
 		{
-			DialogueWidgetInstance->RemoveFromViewport();
+			//ycg - change
+			//DialogueWidgetInstance->RemoveFromViewport();
+			DialogueWidgetInstance->RemoveFromParent();
 			DialogueWidgetInstance = nullptr;
 		}
 
@@ -1542,7 +1544,9 @@ void ATFT_Player::CloseDialogueUI()
 		// NPC2의 UI 창 닫기
 		if (DialogueWidget2Instance)
 		{
-			DialogueWidget2Instance->RemoveFromViewport();
+			//ycg - change
+			//DialogueWidget2Instance->RemoveFromViewport();
+			DialogueWidget2Instance->RemoveFromParent();
 			DialogueWidget2Instance = nullptr;
 		}
 

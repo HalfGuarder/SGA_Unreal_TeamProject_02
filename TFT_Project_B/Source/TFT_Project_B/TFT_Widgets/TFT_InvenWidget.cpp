@@ -172,7 +172,17 @@ void UTFT_InvenWidget::UseItem()
 
 void UTFT_InvenWidget::SetItemSlot(UTexture2D* texture, int32 slotIndex)
 {
-	_slotBtns[slotIndex]->WidgetStyle.Normal.SetResourceObject(texture);
+	//_slotBtns[slotIndex]->WidgetStyle.Normal.SetResourceObject(texture);
+
+	// 24/12/20 YCG
+	if (_slotBtns.IsValidIndex(slotIndex) && texture)
+	{
+		FButtonStyle NewStyle = _slotBtns[slotIndex]->WidgetStyle; // 기존 스타일 복사
+		FSlateBrush NewBrush = NewStyle.Normal; // 기존 Brush 복사
+		NewBrush.SetResourceObject(texture);   // Texture 설정
+		NewStyle.SetNormal(NewBrush);          // 수정된 Brush를 스타일에 설정
+		_slotBtns[slotIndex]->SetStyle(NewStyle); // 수정된 스타일을 버튼에 설정
+	}
 }
 
 void UTFT_InvenWidget::AddUiItem(ATFT_Item* item, int32 index)
