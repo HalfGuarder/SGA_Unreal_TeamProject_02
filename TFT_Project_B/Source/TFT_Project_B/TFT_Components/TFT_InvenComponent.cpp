@@ -283,16 +283,16 @@ void UTFT_InvenComponent::SetMonsterItem(int32 lineNum)
 
 void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 {
-	int32 dropProbability = FMath::RandRange(0, 99);	
+	int32 dropProbability = FMath::RandRange(1, 100);	
 	switch (type)
 	{
 	case MonsterType::NONE:
 		break;
 	case MonsterType::Normal:
 	{
-		int32 NormalDropItemIndex = FMath::RandRange(100, 103);
+		int32 NormalDropItemIndex = FMath::RandRange(100, 102);
 
-		if (dropProbability <= 29) // 30%
+		if (dropProbability <= 10) // 10%
 		{
 			SetMonsterItem(NormalDropItemIndex);
 
@@ -303,7 +303,7 @@ void UTFT_InvenComponent::DropMonsterItem(FVector pos, MonsterType type)
 		break;
 	case MonsterType::BOSS:
 	{
-		int32 BossDropItemIndex = FMath::RandRange(100, 102);
+		int32 BossDropItemIndex = FMath::RandRange(100, 103);
 
 		SetMonsterItem(BossDropItemIndex);
 

@@ -246,10 +246,6 @@ void ATFT_Boss_BJ::AttackEnd()
 {
 }
 
-//void ATFT_Boss_BJ::DropItem()
-//{
-//}
-
 float ATFT_Boss_BJ::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
     float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
@@ -271,7 +267,7 @@ void ATFT_Boss_BJ::DeathStart()
 
 void ATFT_Boss_BJ::BossDisable()
 {
-    // Super::DropItem(MonsterType::BOSS);
+    Super::DropItem(MonsterType::BOSS);
 
     PrimaryActorTick.bCanEverTick = false;
 

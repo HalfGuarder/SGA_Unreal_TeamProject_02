@@ -239,7 +239,7 @@ void ATFT_BossMonster_Rampage::ResetMovementLock(UAnimMontage* Montage, bool bIn
 
 void ATFT_BossMonster_Rampage::BossDisable()
 {
-    // Super::DropItem(MonsterType::BOSS);
+    Super::DropItem(MonsterType::BOSS);
 
     // this->SetActorHiddenInGame(true);
 

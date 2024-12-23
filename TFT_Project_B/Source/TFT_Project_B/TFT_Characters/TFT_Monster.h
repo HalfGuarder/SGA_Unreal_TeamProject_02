@@ -24,8 +24,8 @@ public:
 	UFUNCTION()
 	virtual void AttackEnd();
 
-	/*UFUNCTION()
-	virtual void DropItem(MonsterType type);*/
+	UFUNCTION()
+	virtual void DropItem(MonsterType type);
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 

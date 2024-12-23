@@ -232,15 +232,9 @@ void ATFT_BossMonster_Grux::DeathStart()
 
 void ATFT_BossMonster_Grux::BossDisable()
 {
-    // Super::DropItem(MonsterType::Normal);
+    Super::DropItem(MonsterType::Normal);
 
     PrimaryActorTick.bCanEverTick = false;
-
-    if (HpBarWidgetInstance)
-    {
-        HpBarWidgetInstance->RemoveFromParent();
-        HpBarWidgetInstance = nullptr;
-    }
 
     DeActive();
 }
